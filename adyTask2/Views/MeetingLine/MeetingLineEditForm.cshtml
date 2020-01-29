@@ -1,0 +1,280 @@
+﻿@using adyTask2.Models
+
+@{
+    MeetingLine _meetingLine = Model;
+    int[] _dep = ViewData["Department"] as int[];
+    string[] inform_user = ViewData["InformedUser"] as string[];
+    string s_time = ViewData["STime"] as string;
+    string f_time = ViewData["FTime"] as string;
+    string _attach = ViewData["Attachment"] as string;
+    string _tags = ViewData["Name"] as string;
+}
+
+<div class="ml_add ml_update" id="ml_update">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary" data-collapsed="0">
+
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        İclas sətiri nizamlama formu
+                    </div>
+
+                    <div class="panel-options">
+                        <a href="#" data-rel="collapse" class="hidden"><i class="entypo-down-open"></i></a>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <form role="form" class="form-horizontal form-groups-bordered" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Qeyd növü</label>
+                                    <div class="col-sm-7">
+                                        <select class="js-example-basic-single select2c form-control ml_up_type" name="ml_type">
+                                            @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                            {
+                                                <option></option>
+                                                foreach (MlType item in adyContext.MlType.AsQueryable())
+                                                {
+                                                    if (item.Id == _meetingLine.MlType)
+                                                    {
+                                                        <option value="@item.Id" selected>@item.Name</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Id">@item.Name</option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Departament</label>
+
+                                    <div class="col-sm-7">
+
+                                        <select name="departmentId" class="js-example-basic-single select2c ml_up_department" required multiple>
+                                            <option></option>
+                                            @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                            {
+                                                foreach (int item in _dep)
+                                                {
+                                                    <option selected value="@item">@adyContext.Department.FirstOrDefault(x => x.Id == item).Name</option>
+                                                }
+                                            }
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Teqlər</label>
+
+                                    <div class="col-sm-7">
+                                        <input type="text" value="@_tags" class="form-control tagsinput ml_up_tags" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row row_twenty">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <label for="description" class="col-sm-2 control-label">Açıqlama</label>
+                                    <div class="col-sm-10">
+                                        <textarea class="form-control m_description ml_up_description" required placeholder="Açıqlama" name="description">@_meetingLine.Description</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row row_twenty">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Məsul şəxs</label>
+
+                                    <div class="col-sm-7">
+                                        <select class="js-example-basic-single select2c form-control ml_up_resp_user" required name="responsibleUser">
+                                            <option></option>
+                                            @{
+                                                using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                                {
+                                                    adyTask2.Models.User _user;
+                                                    foreach (string item in _meetingLine.ResponsibleEmail.Split(';'))
+                                                    {
+                                                        _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == item);
+                                                        <option selected value="@item">@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Təqib edən</label>
+
+                                    <div class="col-sm-7">
+                                        <select class="js-example-basic-single select2c form-control ml_up_follower_user" required name="mlFollowerUser">
+                                            <option></option>
+                                            @{
+                                                using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                                {
+                                                    adyTask2.Models.User _user;
+                                                    foreach (string item in _meetingLine.FollowerEmail.Split(';'))
+                                                    {
+                                                        _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == item);
+                                                        <option selected value="@item">@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Təsdiq edən</label>
+
+                                    <div class="col-sm-7">
+                                        <select class="js-example-basic-single select2c form-control ml_up_ident_user" required name="identifierUser">
+                                            <option></option>
+                                            @{
+                                                using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                                {
+                                                    adyTask2.Models.User _user;
+                                                    foreach (string item in _meetingLine.IdentifierEmail.Split(';'))
+                                                    {
+                                                        _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == item);
+                                                        <option selected value="@item">@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row row_twenty">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Məlumat veriləcək</label>
+
+                                    <div class="col-sm-7">
+
+                                        <select name="informedUser" class="js-example-basic-single select2c ml_up_inf_user" multiple>
+                                            <option></option>
+
+
+                                            @{
+                                                if (inform_user!=null)
+                                                    using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                                    {
+                                                        User _user;
+                                                        foreach (var item in inform_user)
+                                                        {
+                                                            _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == item);
+                                                            <option selected value="@item">@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
+                                                        }
+                                                    }
+                                            }
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Başlama Tarixi</label>
+
+                                    <div class="col-sm-7">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control datepicker ml_up_s_date" required data-format="dd/mm/yyyy" value="@s_time">
+
+                                            <div class="input-group-addon meeting_l_si">
+                                                <a href="javascript:void(0)"><i class="entypo-calendar"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Bitmə Tarixi</label>
+
+                                    <div class="col-sm-7">
+                                        <div class="input-group meeting_l_fi">
+                                            <input type="text" required class="form-control datepicker ml_up_f_date" data-format="dd/mm/yyyy" value="@f_time">
+
+                                            <div class="input-group-addon">
+                                                <a href="#"><i class="entypo-calendar"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="row row_twenty">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Sənədlər</label>
+
+                                    <div class="col-sm-10">
+                                        <div class="fileinput fileinput-new ml_up_file" data-provides="fileinput">
+                                            <span class="btn btn-info btn-file">
+                                                <span class="fileinput-new">Yüklə</span>
+                                                <span class="fileinput-exists">Dəyiş</span>
+
+                                                <input type="file" name="mlFile" id="ml_edit_file">
+                                            </span>
+                                            <span class="fileinput-filename"></span>
+                                            <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">&times;</a>
+                                        </div>
+                                        @if (!string.IsNullOrEmpty(_attach))
+                                        {
+                                            <div class="remove_file"><div><span>@_attach</span><a href="javascript:void(0)"><i class="fa fa-trash-o"></i></a></div></div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row row_twenty meeting_line_add_submit_row">
+                            <div class="col-md-3">
+                                <a href="javascript:void(0)" class="btn btn-red btn-sm close_button">Bağla</a>
+                            </div>
+
+                            <div class="col-md-3">
+                                <a href="javascript:void(0)" class="btn btn-green btn-sm editMeetingLine">Dəyişdir</a>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

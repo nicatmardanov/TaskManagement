@@ -1,0 +1,220 @@
+﻿@using adyTask2.Models;
+
+@{
+    MeetingLine _meetingLine = Model;
+}
+
+<div class="ml_show">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary" data-collapsed="0">
+
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        İclas sətiri
+                    </div>
+
+                    <div class="panel-options">
+                        <a href="#" data-rel="collapse" class="hidden"><i class="entypo-down-open"></i></a>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">Qeyd növü</label>
+                                <div class="col-sm-7">
+                                    <span>@_meetingLine.MlTypeNavigation.Name</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">Departament</label>
+
+                                <div class="col-sm-7">
+                                    @{
+                                        string departments = "";
+
+                                        using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                        {
+                                            var _mlDep = adyContext.MDepartment.Where(x => x.Type == 2 && x.RefId == _meetingLine.Id).Select(x => x.DepartmentId);
+                                            var _depName = adyContext.Department.Where(x => _mlDep.Contains(x.Id)).Select(x => x.Name);
+
+                                            departments = string.Join(", ", _depName);
+                                        }
+                                        <span>@departments</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">Tag</label>
+
+                                <div class="col-sm-7">
+                                    @{
+                                        string tags = "";
+                                        using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                        {
+                                            tags = string.Join(", ", adyContext.Tags.Where(x => x.Type == 2 && x.RefId == _meetingLine.Id).Select(x => x.Name));
+                                        }
+                                    }
+                                    <span>@tags</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row row_twenty">
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label for="description" class="col-sm-2 control-label">Açıqlama</label>
+
+                                <div class="col-sm-10">
+                                    <span class="showDescrtiption">@_meetingLine.Description</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row row_twenty">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">Məsul şəxs</label>
+
+                                <div class="col-sm-7">
+                                    @{
+                                        using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                        {
+                                            var _ru = adyContext.User.FirstOrDefault(x => x.EmailAddress == _meetingLine.ResponsibleEmail);
+                                            string responsibleUser = _ru.FirstName + " " + _ru.LastName;
+                                            <span>@responsibleUser</span>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">Təsdiq edən</label>
+
+                                <div class="col-sm-7">
+                                    @{
+                                        using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                        {
+                                            var _cu = adyContext.User.FirstOrDefault(x => x.EmailAddress == _meetingLine.IdentifierEmail);
+                                            string confirmerUser = _cu.FirstName + " " + _cu.LastName;
+                                            <span>@confirmerUser</span>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">Təqdib edən</label>
+
+                                <div class="col-sm-7">
+                                    @{
+                                        using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                        {
+                                            var _fu = adyContext.User.FirstOrDefault(x => x.EmailAddress == _meetingLine.FollowerEmail);
+                                            string followerUser = _fu.FirstName + " " + _fu.LastName;
+                                            <span>@followerUser</span>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row row_twenty">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">Məlumat veriləcək</label>
+
+                                <div class="col-sm-7">
+                                        @if (!string.IsNullOrEmpty(_meetingLine.InformedUserEmail))
+                                        {
+                                            using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                            {
+                                                var iuSplit = _meetingLine.InformedUserEmail.Split(';');
+                                                var iuUsers = adyContext.User.Where(x => iuSplit.Contains(x.EmailAddress));
+
+                                                var user = iuUsers.Select(x => new { FullName = x.FirstName + " " + x.LastName });
+
+                                                <span>@string.Join(", ", user.Select(x => x.FullName))</span>
+                                            }
+                                        }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">Başlama Tarixi</label>
+
+                                <div class="col-sm-7">
+                                    <div class="input-group">
+                                        @{
+                                            var startTime = _meetingLine.StartTime.Value;
+                                        }
+                                        <span>@startTime.Day/@startTime.Month/@startTime.Year</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">Bitmə Tarixi</label>
+
+                                <div class="col-sm-7">
+                                    <div class="input-group">
+                                        @{
+                                            var finishTime = _meetingLine.FinishTime.Value;
+                                        }
+                                        <span>@finishTime.Day/@finishTime.Month/@finishTime.Year</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="row row_twenty">
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Sənədlər</label>
+
+                                <div class="col-sm-10">
+                                    @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                    {
+                                        var _attach = adyContext.Attachment.FirstOrDefault(x => x.Type == 2 && x.RefId == _meetingLine.Id);
+
+                                        if (_attach != null)
+                                        {
+                                            <a href="@_attach.Path" class="attachment btn btn-info btn-file">Endir</a>
+                                        }
+
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

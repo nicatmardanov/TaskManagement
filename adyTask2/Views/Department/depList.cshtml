@@ -1,0 +1,10 @@
+﻿@using adyTask2.Models;
+
+@foreach (Department item in Model)
+{
+    <div class="searchResultParts">
+        <div>
+            <a href="javascript:void(0)" data-id="@item.Id">@item.Name</a>
+        </div>
+    </div>
+}

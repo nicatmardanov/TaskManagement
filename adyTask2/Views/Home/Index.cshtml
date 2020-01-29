@@ -1,0 +1,169 @@
+﻿@{
+    ViewData["Title"] = "Ana səhifə";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="taskManagementTable">
+    <div class="tmt_section">
+        <div class="section_header">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="section_header_inner">
+                        <span>İclas İdarəetmə Sistemi</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*@{
+            string notifications = !string.IsNullOrEmpty(Context.Items["Notifications"] as string) ? Context.Items["Notifications"] as string : Context.Request.Cookies["Notifications"];
+            if (notifications == null)
+            {
+                notifications = "";
+            }
+            string[] notifications_array = notifications.Split("-");
+        }*@
+        <div class="tmt_inner section_inner_part">
+            <div class="row">
+                <div class="col-md-4">
+                    <a href="/Task/Notifications/1" class="notifications-col">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span class="home_icon">
+                                    <i class="fa fa-bell-o"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row home_row">
+                            <div class="col-md-9">
+                                <span class="home_text">
+                                    Bildirişlər
+                                </span>
+                            </div>
+                            <div class="col-md-3 tile-stats-custom">
+                                <span class="home_text num" data-start="0" data-end="" data-postfix="" data-duration="1000" data-delay="0">
+                                   
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-4">
+                    <a href="/Task/AllTasks" class="task-col">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span class="home_icon">
+                                    <i class="fa fa-tasks"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row home_row">
+                            <div class="col-md-9">
+                                <span class="home_text">
+                                    Tapşırıqlar
+                                </span>
+                            </div>
+                            <div class="col-md-3 tile-stats-custom">
+                                <span class="home_text num" data-start="0" data-end="" data-postfix="" data-duration="1000" data-delay="0">
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="/Task/Followed" class="pursued-col">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span class="home_icon">
+                                    <i class="fa fa-bookmark"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row home_row">
+                            <div class="col-md-9">
+                                <span class="home_text">
+                                    Təqib etdiklərim
+                                </span>
+                            </div>
+                            <div class="col-md-3 tile-stats-custom">
+                                <span class="home_text num" data-start="0" data-end="" data-postfix="" data-duration="1000" data-delay="0">
+                                    
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="row row_twenty">
+                <div class="col-md-4">
+                    <a href="/Task/AllOffers" class="offer-col">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span class="home_icon">
+                                    <i class="fa fa-flash"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row home_row">
+                            <div class="col-md-9">
+                                <span class="home_text">
+                                    Təkliflərim
+                                </span>
+                            </div>
+                            <div class="col-md-3 tile-stats-custom">
+                                <span class="home_text num" data-start="0" data-end="" data-postfix="" data-duration="1000" data-delay="0">
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="/Task/Confirmation" class="approve-col">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span class="home_icon">
+                                    <i class="entypo-check"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row home_row">
+                            <div class="col-md-9">
+                                <span class="home_text">
+                                    Təsdiqlərim
+                                </span>
+                            </div>
+                            <div class="col-md-3 tile-stats-custom">
+                                <span class="home_text num" data-start="0" data-end="" data-postfix="" data-duration="1000" data-delay="0">
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="/Task/Informed" class="information-col">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span class="home_icon">
+                                    <i class="entypo-info"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row home_row">
+                            <div class="col-md-9">
+                                <span class="home_text">
+                                    Məlumatlandırma
+                                </span>
+                            </div>
+                            <div class="col-md-3 tile-stats-custom">
+                                <span class="home_text num" data-start="0" data-end="" data-postfix="" data-duration="1000" data-delay="0">
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

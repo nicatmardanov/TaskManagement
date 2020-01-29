@@ -1,0 +1,202 @@
+﻿
+@{
+    ViewData["Title"] = "Hesabatlar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using adyTask2.Models
+
+@section Modal{
+    @await Component.InvokeAsync("TrainLoadingModal")
+    @await Component.InvokeAsync("ReportSelectFilterModal")
+    @await Component.InvokeAsync("ReportSaveFilterModal")
+}
+
+<div id="report_page">
+    <div id="ml_report">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-primary" data-collapsed="0">
+
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            İnteraktiv Hesabat
+                        </div>
+
+                        <div class="new_meeting_line_option new_meeting_operation panel-options">
+                            <a href="javascript:void(0)" class="save_filter">
+                                <span>Filtri saxla</span>
+                                <i class="fa fa-save"></i>
+                            </a>
+                        </div>
+                        <div class="new_meeting_line_option new_meeting_operation panel-options">
+                            <a href="javascript:void(0)" class="select_filter">
+                                <span>Filtri seç</span>
+                                <i class="fa fa-copy"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="panel-body">
+
+                        <form role="form" class="form-horizontal form-groups-bordered reportForm" enctype="multipart/form-data">
+
+                            <div class="row">
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="col-sm-5 control-label">İclas növü</label>
+                                        <div class="col-sm-7">
+                                            <select class="form-control js-example-basic-single select2c" required name="meeting_type" id="meeting_type">
+                                                <option></option>
+                                                @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                                {
+                                                    foreach (var item in adyContext.MeetingType)
+                                                    {
+                                                        <option value="@item.Id">@item.Name</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="col-sm-5 control-label">İclas sətirinin növü</label>
+                                        <div class="col-sm-7">
+                                            <select class="js-example-basic-single select2c form-control" required name="ml_type" id="ml_type">
+                                                <option></option>
+                                                @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                                {
+                                                    foreach (MlType item in adyContext.MlType)
+                                                    {
+                                                        <option value="@item.Id">@item.Name</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="col-sm-5 control-label">Departament</label>
+
+                                        <div class="col-sm-7">
+
+                                            <select id="mlDepartment" name="departmentId" class="js-example-basic-single select2c" required multiple>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+
+                            <div class="row row_twenty">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="col-sm-5 control-label">Məsul şəxs</label>
+
+                                        <div class="col-sm-7">
+                                            <select class="js-example-basic-single select2c form-control" required name="responsibleUser" id="responsibleUser">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="col-sm-5 control-label">Təqib edən</label>
+
+                                        <div class="col-sm-7">
+                                            <select class="js-example-basic-single select2c form-control" required name="mlFollowerUser" id="mlFollowerUser">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="col-sm-5 control-label">Təsdiqləyən</label>
+
+                                        <div class="col-sm-7">
+                                            <select class="js-example-basic-single select2c form-control" required name="identifierUser" id="identifierUser">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row row_twenty">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="col-sm-5 control-label">Status</label>
+                                        <div class="col-sm-7">
+                                            <select name="mlStatus" id="mlStatus" class="form-control js-example-basic-single select2c" required>
+                                                <option></option>
+                                                @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                                {
+                                                    foreach (var item in adyContext.Status.Where(x => x.Id > 1))
+                                                    {
+                                                        <option value="@item.Id">@item.StatusName</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="col-sm-5 control-label">Vəziyyət</label>
+                                        <div class="col-sm-7">
+                                            <select class="form-control js-example-basic-single select2c" required name="mlStatusSec" id="mlStatusSec">
+                                                <option></option>
+                                                <option value="1">Tamamlanmış</option>
+                                                <option value="2">Tamamlanmamış</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="row row_twenty report_submit_row">
+                                @*<div class="col-md-3">
+                                        <a href="javascript:void(0)" class="btn btn-red btn-sm close_button">Bağla</a>
+                                    </div>*@
+                                <div class="col-md-3">
+                                    <a href="javascript:void(0)" class="btn btn-green btn-sm report_search">Axtar</a>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section style{
+    <link rel="stylesheet" href="/Content/assets/js/selectboxit/jquery.selectBoxIt.css">
+    <link rel="stylesheet" type="text/css" href="/Content/assets/js/select2/select2-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/Content/assets/js/select2/select2.css">
+    <link rel="stylesheet" href="/Content/assets/js/zurb-responsive-tables/responsive-tables.css">
+}
+
+
+@section script{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
+    <script src="/Content/assets/js/zurb-responsive-tables/responsive-tables.js"></script>
+    <script src="~/Content/assets/js/reports.js"></script>
+}

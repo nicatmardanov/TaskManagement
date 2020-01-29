@@ -1,0 +1,53 @@
+﻿
+@{
+    ViewData["Title"] = ViewBag.Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using adyTask2.Models;
+
+@section Modal{
+    @await Component.InvokeAsync("TrainLoadingModal")
+}
+
+<div id="taskPage" data-type="@ViewBag.Type" data-mtype="@ViewBag.MType" data-page="@ViewBag.PageNumber" data-ml="@ViewBag.MeetingLine" data-nc="@ViewBag.NotCompleted" data-mm="@ViewBag.myMeetingLines" data-dep="@ViewBag.Department">
+    <h1>@ViewBag.Title</h1>
+    <hr />
+    <div id="ml_type_all">
+        @{
+            List<MeetingLine> mLine = Model;
+
+            @await Component.InvokeAsync("MLTable", new { _meetingLine = mLine, type = (byte)ViewBag.Type, page = ViewBag.PageNumber })
+
+            if (ViewBag.MaxPage > 1)
+            {
+                <div class="task_pages">
+                    @await Component.InvokeAsync("Pagination", new { maxPage = ViewBag.MaxPage, pageNumber = ViewBag.PageNumber })
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@section style{
+    <link rel="stylesheet" href="/Content/assets/js/selectboxit/jquery.selectBoxIt.css">
+    <link rel="stylesheet" type="text/css" href="/Content/assets/js/select2/select2-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/Content/assets/js/select2/select2.css">
+}
+
+@section script{
+    <script>
+        $(document).ready(function (e) {
+            $('.inbox_nav_list').click();
+        })
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
+    <script src="~/Content/assets/js/jquery.dataTables.min.js"></script>
+    <script src="~/Content/assets/js/datatables/TableTools.min.js"></script>
+    <script src="~/Content/assets/js/dataTables.bootstrap.js"></script>
+    <script src="~/Content/assets/js/datatables/jquery.dataTables.columnFilter.js"></script>
+    <script src="~/Content/assets/js/datatables/lodash.min.js"></script>
+    <script src="~/Content/assets/js/datatables/responsive/js/datatables.responsive.js"></script>
+    <script src="~/Content/assets/js/custom_switch.js"></script>
+    <script src="~/Content/assets/js/task_script.js"></script>
+}

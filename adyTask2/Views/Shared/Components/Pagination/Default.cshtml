@@ -1,0 +1,139 @@
+﻿@{
+    Layout = null;
+}
+
+<ul class="pagination pagination-lg">
+    @{
+        int iteration = 0;
+
+        if (ViewBag.MaxPage < 4)
+            iteration = ViewBag.MaxPage;
+        else if (ViewBag.MaxPage == 4)
+            iteration = 4;
+        else
+            iteration = 5;
+
+        if (ViewBag.PageNumber > 1)
+        {
+            <li><a href="javascript:void(0)" class="move_back"><i class="entypo-left-open-mini"></i></a></li> // geri
+        }
+        else
+        {
+            <li class="disabled"><a href="javascript:void(0)"><i class="entypo-left-open-mini"></i></a></li>
+        }
+
+
+        bool active = false;
+
+        for (int i = 1; i <= iteration; i++)
+        {
+            if (iteration < 4)
+            {
+                if (i == ViewBag.PageNumber)
+                {
+                    <li class="active"><a href="javascript:void(0)">@i</a></li>
+                }
+                else
+                {
+                    <li><a href="javascript:void(0)" class="move_page" data-page="@i">@i</a></li>
+                }
+            }
+            else if (iteration == 4)
+            {
+                if (i < 3)
+                {
+                    if (i == ViewBag.PageNumber)
+                    {
+                        <li class="active"><a href="javascript:void(0)">@i</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="javascript:void(0)" class="move_page" data-page="@i">@i</a></li>
+                    }
+                }
+                else if (i == 3)
+                {
+                    if (i != ViewBag.PageNumber)
+                    {
+                        <li class="disabled"><a href="javascript:void(0)">...</a></li>
+                    }
+                    else
+                    {
+                        <li class="active"><a href="javascript:void(0)">@ViewBag.PageNumber</a></li>
+
+                    }
+                }
+                else
+                {
+                    if (i == ViewBag.PageNumber)
+                    {
+                        <li class="active"><a href="javascript:void(0)">@ViewBag.MaxPage</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="javascript:void(0)" class="move_page" data-page="@ViewBag.MaxPage">@ViewBag.MaxPage</a></li>
+                    }
+                }
+            }
+            else if (iteration > 4)
+            {
+                if (i < 3)
+                {
+                    if (i == ViewBag.PageNumber)
+                    {
+                        <li class="active"><a href="javascript:void(0)">@i</a></li>
+                        active = true;
+                    }
+                    else
+                    {
+                        <li><a href="javascript:void(0)" class="move_page" data-page="@i">@i</a></li>
+                    }
+                }
+                else if (i == 3)
+                {
+                    if (ViewBag.PageNumber == 3)
+                    {
+                        <li class="active"><a href="javascript:void(0)">@i</a></li>
+                        active = true;
+                    }
+                    <li class="disabled"><a href="javascript:void(0)">...</a></li>
+                }
+                else if (i > 3)
+                {
+                    if (ViewBag.PageNumber == ViewBag.MaxPage)
+                    {
+                        <li class="active"><a href="javascript:void(0)">@ViewBag.MaxPage</a></li>
+                        break;
+                    }
+                    else if (active)
+                    {
+                        <li><a href="javascript:void(0)" class="move_page" data-page="@ViewBag.MaxPage">@ViewBag.MaxPage</a></li>
+                        break;
+                    }
+                    else
+                    {
+                        <li class="active"><a href="javascript:void(0)">@ViewBag.PageNumber</a></li>
+                        if (ViewBag.PageNumber != ViewBag.MaxPage - 1)
+                        {
+                            <li class="disabled"><a href="javascript:void(0)">...</a></li>
+                        }
+                        <li><a href="javascript:void(0)" class="move_page" data-page="@ViewBag.MaxPage">@ViewBag.MaxPage</a></li>
+                        break;
+                    }
+
+                }
+            }
+
+        }
+
+        if (ViewBag.PageNumber < ViewBag.MaxPage)
+        {
+            <li><a href="javascript:void(0)" class="move_next"><i class="entypo-right-open-mini"></i></a></li>
+        }
+        else
+        {
+            <li class="disabled"><a href="javascript:void(0)"><i class="entypo-right-open-mini"></i></a></li>
+        }
+    }
+
+</ul>

@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewData["Title"] = "İclas əməliyyatı əlavə etmək";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Modal{
+    @await Component.InvokeAsync("AjaxModal")
+}
+
+<div class="meeting_operation_add">
+    @{
+        List<adyTask2.Models.MeetingLine> mLine = Model;
+
+        @await Component.InvokeAsync("MLTable", new { _meetingLine = mLine, type = (byte)1, page=1 });
+
+        @await  Component.InvokeAsync("MeetingOperationTable",new {mlId=mLine.FirstOrDefault().Id,type=(byte)1 });
+
+        await Html.RenderPartialAsync("MeetingOperationForm");
+
+        @await Component.InvokeAsync("PublishMeetingL")
+    }
+</div>
+
+<input type="hidden" value="@ViewBag.User" class="us"/>
+
+
+@section script{
+    <script src="~/Content/assets/js/meetingOperation.js"></script>
+}

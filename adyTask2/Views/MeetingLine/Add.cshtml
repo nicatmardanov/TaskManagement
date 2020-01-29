@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewData["Title"] = "İclas sətiri əlavə etmə";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Modal{
+    @await Component.InvokeAsync("AjaxModal")
+}
+
+<div id="mlp" data-id="@ViewBag.MLPermission" data-addml="1" hidden></div>
+
+@{ await Html.RenderPartialAsync("MeetingLineAddForm");
+    @await Component.InvokeAsync("PublishMeetingL")
+}
+
+
+@section style{
+    <link rel="stylesheet" href="/Content/assets/js/selectboxit/jquery.selectBoxIt.css">
+    <link rel="stylesheet" type="text/css" href="/Content/assets/js/select2/select2-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/Content/assets/js/select2/select2.css">
+    <link rel="stylesheet" href="/Content/assets/js/daterangepicker/daterangepicker-bs3.css">
+    <link rel="stylesheet" href="/Content/assets/js/zurb-responsive-tables/responsive-tables.css">
+}
+
+
+@section script{
+    <script>
+        $(document).ready(function (e) {
+            $($('.meeting_line_add_submit_row .col-md-3')[0]).hide();
+            $('.ml_nav_list').click();
+        })
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
+    <script src="/Content/assets/js/bootstrap-datepicker.js"></script>
+    <script src="/Content/assets/js/bootstrap-timepicker.min.js"></script>
+    <script src="/Content/assets/js/bootstrap-tagsinput.min.js"></script>
+    <script src="/Content/assets/js/dropzone/dropzone.js"></script>
+    <script src="/Content/assets/js/zurb-responsive-tables/responsive-tables.js"></script>
+    <script src="~/Content/assets/js/meetingl.js"></script>
+}

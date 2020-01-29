@@ -1,0 +1,87 @@
+﻿@using adyTask2.Models
+@{
+    int pageNumber = ViewBag.PageNumber;
+    int maxPage = ViewBag.MaxPage;
+    IQueryable<MeetingLine> meetingLines = Model;
+}
+
+<div id="report_partial">
+    <div id="report_table">
+        <table class="table table-bordered responsive">
+            <thead>
+                <tr>
+
+                    <th width="5%">#</th>
+                    <th>Növ</th>
+                    <th width="25%">Açıqlama</th>
+                    <th>Məsul şəxs</th>
+                    <th>Təqib edən</th>
+                    <th>Təsdiq edən</th>
+                    <th>Başlama tarixi</th>
+                    <th>Bitmə tarixi</th>
+                    <th width="5%">Tamamlanma faizi</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int i = (pageNumber - 1) * 10 + 1;
+                    foreach (MeetingLine item in meetingLines)
+                    {
+                        <tr>
+                            @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                            {
+                                var attach = adyContext.Attachment.FirstOrDefault(x => x.Type == 2 && x.RefId == item.Id);
+                                if (attach != null)
+                                {
+                                    <th width="5%" class="meeting_line_c" data-id="@item.Id">@i (F)</th>
+                                }
+                                else
+                                {
+                                    <th width="5%" class="meeting_line_c" data-id="@item.Id">@i</th>
+                                }
+
+                                <th class="meeting_line_c" data-id="@item.Id">@item.MlTypeNavigation.Name</th>
+                                <th class="meeting_line_c" data-id="@item.Id" width="20%">@item.Description</th>
+
+
+                                adyTask2.Models.User responsePerson;
+
+                                if (item.Direct.Where(x => x.MlId == item.Id).Count() > 0)
+                                {
+                                    var direct_user = item.Direct.LastOrDefault(x => x.MlId == item.Id).ToUserId;
+                                    responsePerson = adyContext.User.FirstOrDefault(x => x.PersonId == direct_user);
+                                }
+                                else
+                                {
+                                    responsePerson = adyContext.User.FirstOrDefault(x => x.EmailAddress == item.ResponsibleEmail);
+                                }
+
+
+                                var confirmedPerson = adyContext.User.FirstOrDefault(x => x.EmailAddress == item.IdentifierEmail);
+                                var followedPerson = adyContext.User.FirstOrDefault(x => x.EmailAddress == item.FollowerEmail);
+                                string completion = item.StatusId == 7 ? 100 + "%" : 0 + "%";
+
+                                <th class="meeting_line_c" data-id="@item.Id">@responsePerson.FirstName @responsePerson.LastName</th>
+                                <th class="meeting_line_c" data-id="@item.Id">@followedPerson.FirstName @followedPerson.LastName</th>
+                                <th class="meeting_line_c" data-id="@item.Id">@confirmedPerson.FirstName @confirmedPerson.LastName</th>
+                                <th class="meeting_line_c" data-id="@item.Id">@item.StartTime.Value.Day/@item.StartTime.Value.Month/@item.StartTime.Value.Year</th>
+                                <th class="meeting_line_c" data-id="@item.Id">@item.FinishTime.Value.Day/@item.FinishTime.Value.Month/@item.FinishTime.Value.Year</th>
+                                <th class="meeting_line_c" width="5%">@completion</th>
+                                <th class="meeting_line_c" data-id="@item.Id">@item.Status.StatusName</th>
+                            }
+                        </tr>
+                        i++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (ViewBag.MaxPage > 1)
+    {
+        <div class="task_pages">
+            @await Component.InvokeAsync("Pagination", new { maxPage = maxPage, pageNumber = pageNumber })
+        </div>
+    }
+</div>

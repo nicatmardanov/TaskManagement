@@ -1,0 +1,85 @@
+﻿
+@{
+    Layout = null;
+}
+
+@using adyTask2.Models
+
+@{
+    IQueryable<MLog> logs = Model;
+}
+
+
+<div class="meeting_operation_table" data-count="@logs.Count()">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary" data-collapsed="0">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        Bildirişlər
+                    </div>
+                    <div class="new_meeting_line_option new_meeting_operation panel-options">
+                        <a href="javascript:void(0)" class="all_remove_notifications">
+                            <span>Sil</span>
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-bordered responsive">
+                                <thead>
+                                    <tr>
+                                        <th width="1%">
+                                            <input tabindex="5" type="checkbox" class="icheck-11 first-check">
+                                        </th>
+                                        <th width="3%">#</th>
+                                        <th>Tip</th>
+                                        <th>Açıqlama</th>
+                                        <th>Əməliyyat açıqlaması</th>
+                                        <th>Qeyd yazan</th>
+                                        <th>Yaradılma tarixi</th>
+                                        <th width="1%"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int i = (ViewBag.PageNumber - 1) * 10 + 1;
+                                        using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                        {
+                                            foreach (MLog item in logs)
+                                            {
+
+                                                <tr data-id="@item.RefId">
+                                                    <td width="1%" class="meeting_line_c">
+                                                        <input tabindex="5" type="checkbox" data-id="@item.Id" class="ml_check icheck-11">
+                                                    </td>
+                                                    <td class="meeting_line_c">@i</td>
+                                                    <td class="meeting_line_c">@adyContext.MeetingLine.FirstOrDefault(x => x.Id == item.RefId).MlTypeNavigation.Name</td>
+                                                    <td class="meeting_line_c">@item.Description</td>
+                                                    <td class="meeting_line_c">@item.Operation.Operation</td>
+                                                    <td class="meeting_line_c">@item.User.FirstName @item.User.LastName</td>
+                                                    @{
+                                                        var create_date = item.CreateDate.Value;
+                                                        <td class="meeting_line_c">@create_date.Day/@create_date.Month/@create_date.Year</td>
+                                                    }
+                                                    <td width="1%"><a class="remove_notification" href="javascript:void(0)"><i class="fa fa-trash-o"></i></a></td>
+                                                </tr>
+                                                i++;
+                                            }
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

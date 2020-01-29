@@ -1,0 +1,34 @@
+﻿
+@{
+    ViewData["Title"] = "Bildirişlər";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Modal{
+    @await Component.InvokeAsync("TrainLoadingModal")
+}
+
+<div id="notificationPage">
+    <div id="notifications_all" data-page="@ViewBag.PageNumber">
+        @{
+            @await Component.InvokeAsync("Notifications", new { page = ViewBag.PageNumber, user_id = ViewBag.UserId })
+
+
+            if (ViewBag.MaxPage > 1)
+            {
+                <div class="task_pages">
+                    @await Component.InvokeAsync("Pagination", new { maxPage = ViewBag.MaxPage, pageNumber = ViewBag.PageNumber })
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@section script{
+<script>
+    $(document).ready(function (e) {
+        $('.inbox_nav_list').click();
+    })
+</script>
+    <script src="~/Content/assets/js/task_notification.js"></script>
+}

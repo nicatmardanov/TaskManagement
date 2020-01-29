@@ -1,0 +1,232 @@
+﻿@using adyTask2.Models
+
+@{
+    adyTask2.Classes.Permissions permissions = new adyTask2.Classes.Permissions(Context);
+}
+
+
+
+<div class="sidebar-menu">
+    <header class="logo-env">
+
+        <!-- logo -->
+        <div class="logo">
+            <a href="/">
+                <img src="/Content/assets/images/logo@2x.png" width="120" alt="" />
+            </a>
+        </div>
+
+        <!-- logo collapse icon -->
+
+        <div class="sidebar-collapse">
+            <a href="#" class="sidebar-collapse-icon with-animation">
+                <!-- add class "with-animation" if you want sidebar to have animation during expanding/collapsing transition -->
+                <i class="entypo-menu"></i>
+            </a>
+        </div>
+
+
+
+        <!-- open/close menu icon (do not remove if you want to enable menu on mobile devices) -->
+        <div class="sidebar-mobile-menu visible-xs">
+            <a href="#" class="with-animation">
+                <!-- add class "with-animation" to support animation -->
+                <i class="entypo-menu"></i>
+            </a>
+        </div>
+    </header>
+
+
+
+
+
+
+    <ul id="main-menu">
+        <!-- add class "multiple-expanded" to allow multiple submenus to open -->
+        <!-- class "auto-inherit-active-class" will automatically add "active" class for parent elements who are marked already with class "active" -->
+        <!-- Search Bar -->
+        @*<li id="search">
+            <form method="get" action="">
+                <input type="text" name="q" class="search-input" placeholder="Search something..." />
+                <button type="submit">
+                    <i class="entypo-search"></i>
+                </button>
+            </form>
+        </li>*@
+
+        <li>
+            <a href="javascript:void(0)">
+                <i class="fa fa-home"></i>
+                <span>Ana səhifə</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="javascript:void(0)" class="meeting_nav_list">
+                <i class="fa fa-random"></i>
+                <span>Əməliyyatlar</span>
+            </a>
+            <ul>
+                @if (permissions.IsPermitted(1))
+                {
+                    <li>
+                        <a href="/Meeting/Add">
+                            <i class="fa fa-edit"></i>
+                            <span>Əlavə et</span>
+                        </a>
+                    </li>
+                }
+
+                @if (permissions.IsPermitted(2))
+                {
+                    <li>
+                        <a href="/MeetingLine/Add">
+                            <i class="fa fa-edit"></i>
+                            <span>Əlavə et</span>
+                        </a>
+                    </li>
+                }
+
+                @*<li>
+                    <a href="/Meeting/Drafts">
+                        <i class="fa fa-file"></i>
+                        <span>Qaralamalar</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Meeting/AllMeetings">
+                        <i class="fa fa-building-o"></i>
+                        <span>Siyahı</span>
+                    </a>
+                </li>*@
+
+            </ul>
+        </li>
+
+        <li>
+            <a href="javascript:void(0)" class="ml_nav_list">
+                <i class="entypo-gauge"></i>
+                <span>Qaralamalar</span>
+            </a>
+            <ul>
+                <li>
+                    <a href="/Meeting/Drafts">
+                        <i class="fa fa-file"></i>
+                        <span>Qaralamalar</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="javascript:void(0)" class="ml_nav_list">
+                <i class="entypo-gauge"></i>
+                <span>Birbaşa tapşırıqlar</span>
+            </a>
+            <ul>
+                @if (permissions.IsPermitted(2))
+                {
+                    <li>
+                        <a href="/MeetingLine/Add">
+                            <i class="fa fa-edit"></i>
+                            <span>Əlavə et</span>
+                        </a>
+                    </li>
+                }
+                <li>
+                    <a href="/Task/AllTasks">
+                        <i class="fa fa-building-o"></i>
+                        <span>Siyahı</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="javascript:void(0)" class="inbox_nav_list">
+                <i class="fa fa-cogs"></i>
+                <span>Gələnlər</span>
+            </a>
+            <ul class="sidebar_ntfcts">
+                @*@{
+                    string notifications = !string.IsNullOrEmpty(Context.Items["Notifications"] as string) ? Context.Items["Notifications"] as string : Context.Request.Cookies["Notifications"];
+                    if (notifications == null)
+                    {
+                        notifications = "";
+                    }
+                    string[] notifications_array = notifications.Split("-");
+                }*@
+                <li>
+                    <a href="/Task/Notifications/1">
+                        <i class="fa fa-bell"></i>
+                        <span>Bildirişlər</span>
+                        <span class="badge badge-secondary"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Task/AllTasks">
+                        <i class="fa fa-tasks"></i>
+                        <span>Tapşırıqlar</span>
+                        <span class="badge badge-secondary"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Task/Followed">
+                        <i class="fa fa-bookmark"></i>
+                        <span>Təqiblərim</span>
+                        <span class="badge badge-secondary"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Task/AllOffers">
+                        <i class="fa fa-flash"></i>
+                        <span>Təkliflərim</span>
+                        <span class="badge badge-secondary"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Task/Confirmation">
+                        <i class="entypo-check"></i>
+                        <span>Təsdiqlərim</span>
+                        <span class="badge badge-secondary"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Task/Informed">
+                        <i class="entypo-info"></i>
+                        <span>Məlumatlandırmalar</span>
+                        <span class="badge badge-secondary"></span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        @if (permissions.IsPermitted(3))
+        {
+            <li>
+                <a href="/Reports/MeetingLines">
+                    <i class="fa fa-group"></i>
+                    <span>Hesabatlar</span>
+                </a>
+            </li>
+        }
+
+        @if (User.IsInRole("Admin"))
+        {
+            <li>
+                <a href="/Users/Permissions">
+                    <i class="fa fa-briefcase"></i>
+                    <span>Səlahiyyətlər</span>
+                </a>
+            </li>
+        }
+
+
+        <li>
+            <a href="/Help">
+                <i class="fa fa-question"></i>
+                <span>Kömək</span>
+            </a>
+        </li>
+    </ul>
+
+</div>

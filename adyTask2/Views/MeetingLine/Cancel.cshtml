@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewData["Title"] = "İclas sətirinin ləğv edilməsi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using adyTask2.Models
+
+@section Modal{
+    @await Component.InvokeAsync("TrainLoadingModal")
+}
+
+@{
+    List<MeetingLine> meetingLines = (Model as IQueryable<MeetingLine>).ToList();
+}
+
+<div id="meeting_line_cancel" data-id="@ViewBag.MLId">
+    @await Component.InvokeAsync("MLTable", new { _meetingLine = meetingLines, type = (byte)1, page = 1 })
+    @{ await Html.RenderPartialAsync("CancelForm");}
+</div>
+
+
+@section script{
+    <script src="~/Content/assets/js/meeting_cancel.js"></script>
+}

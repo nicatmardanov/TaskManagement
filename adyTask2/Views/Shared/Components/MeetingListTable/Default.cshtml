@@ -1,0 +1,177 @@
+﻿@{
+    Layout = null;
+}
+
+@using adyTask2.Models;
+
+<div class="meeting_operation_line_table">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary" data-collapsed="0">
+
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        İclaslar
+                    </div>
+                </div>
+
+                <div class="panel_heading_s">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div class="s30">
+                                <span>Qeyd növü</span>
+                            </div>
+                            <div class="s70 taskSelect">
+                                <select class="form-control select2c select2" name="meeting_type" id="meeting_type">
+                                    <option></option>
+                                    @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                    {
+                                        foreach (MeetingType item in adyContext.MeetingType.AsQueryable())
+                                        {
+                                            if (item.Id == ViewBag.MeetingType)
+                                            {
+                                                <option selected value="@item.Id">@item.Name</option>
+
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Id">@item.Name</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-4">
+                            <div class="s40">
+                                <span>Mənim yaratdıqlarım</span>
+                            </div>
+                            <div class="s60">
+                                <div class="custom_switch">
+                                    <div class="myMeetings custom_switch_inner">
+                                        @if (!ViewBag.MyMeetings)
+                                        {
+                                            <div class="custom_ap custom_switch_passive"></div>
+                                            <a href="javascript:void(0)" class="custom_switch_button myMeetingsButton"></a>
+                                            <input type="checkbox" id="myTasksCheck" hidden />
+                                        }
+                                        else if (ViewBag.MyMeetings)
+                                        {
+                                            <div class="custom_ap custom_switch_active"></div>
+                                            <a href="javascript:void(0)" class="custom_switch_button myMeetingsButton"></a>
+                                            <input type="checkbox" id="myTasksCheck" checked hidden />
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="s40">
+                                <span>Department</span>
+                            </div>
+
+                            <div class="s60 taskSelect">
+                                <select class="form-control select2c select2" name="meeting_department" id="meeting_department">
+                                    <option></option>
+                                    @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                    {
+                                        if (ViewBag.Department >= 1 && ViewBag.Department <= adyContext.Department.Max(x => x.Id))
+                                        {
+                                            <option selected value="@ViewBag.Department">@ViewBag.DepName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-bordered responsive">
+                                <thead>
+                                    <tr>
+                                        <th width="3%">#</th>
+                                        <th>Əməliyyatlar</th>
+                                        <th>Növü</th>
+                                        <th>Mövzu</th>
+                                        <th>Tarix</th>
+                                        <th>Başlama saatı</th>
+                                        <th>Bitmə saatı</th>
+                                        <th>Açıqlama</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int i = (ViewBag.Page - 1) * 10 + 1;
+                                        foreach (Meeting item in Model)
+                                        {
+                                            string date = item.MeetingDate.Value.Day.ToString() + "/" + item.MeetingDate.Value.Month + "/" + item.MeetingDate.Value.Year;
+                                            string start_hour = item.MeetingDate.Value.Hour.ToString(), start_minute = item.MeetingDate.Value.Minute.ToString(), finish_hour = item.FinishDate.Value.Hour.ToString(), finish_minute = item.FinishDate.Value.Minute.ToString();
+
+                                            if (start_minute.Length == 1)
+                                            {
+                                                start_minute = "0" + start_minute;
+                                            }
+
+                                            if (finish_minute.Length == 1)
+                                            {
+                                                finish_minute = "0" + finish_minute;
+                                            }
+
+
+                                            <tr>
+                                                <th width="3%" class="meeting_c" data-id="@item.Id">@i</th>
+
+                                                <th class="meeting_table_operations">
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                                            Əməliyyatlar
+                                                            <span class="caret"></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu">
+                                                            <li>
+                                                                <a href="javascript:void(0)" data-id="@item.Id" class="show_meeting meeting_c">Görüntülə</a>
+                                                            </li>
+                                                            @if (item.StatusId == 1)
+                                                            {
+                                                                <li>
+                                                                    <a href="/Meeting/Status/@item.Id" class="publish_meeting">Yayınla</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="/Meeting/Edit/@item.Id" class="edit_meeting">Nizamla</a>
+                                                                </li>
+                                                                @*<li>
+                                                                    <a href="/Meeting/Cancel/@item.Id" class="remove_meeting">Ləğv et</a>
+                                                                </li>*@
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                </th>
+
+                                                <th class="meeting_c" data-id="@item.Id">@item.MeetingTypeNavigation.Name</th>
+                                                <th class="meeting_c" data-id="@item.Id">@item.Title</th>
+                                                <th class="meeting_c" data-id="@item.Id">@date</th>
+                                                <th class="meeting_c" data-id="@item.Id">@start_hour:@start_minute</th>
+                                                <th class="meeting_c" data-id="@item.Id">@finish_hour:@finish_minute</th>
+                                                <th class="meeting_c" data-id="@item.Id">@item.Description</th>
+                                                <th class="meeting_c" data-id="@item.Id">@item.Status.StatusName</th>
+                                            </tr>
+                                            i++;
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

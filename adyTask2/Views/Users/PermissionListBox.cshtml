@@ -1,0 +1,106 @@
+﻿@using adyTask2.Models
+
+@{
+    Permission permission = Model;
+    bool isNull = permission == null;
+
+    //double sinc(double x) => x != 0.0 ? Math.Sin(x) / x : 1;
+
+    int[] pages = new int[0], m_type = new int[0], dep = new int[0];
+
+    if (!isNull)
+    {
+        pages = permission.Page != null ? Array.ConvertAll(permission.Page.Split(';'), x => int.Parse(x)) : new int[0];
+        m_type = permission.Mtype != null ? Array.ConvertAll(permission.Mtype.Split(';'), x => int.Parse(x)) : new int[0];
+        dep = permission.Department != null ? Array.ConvertAll(permission.Department.Split(';'), x => int.Parse(x)) : new int[0];
+    }
+}
+
+
+    <div id="all_permissions">
+        @{
+            if (isNull)
+            {
+                <input type="hidden" id="lb_id" value="0" />
+            }
+            else
+            {
+                <input type="hidden" id="lb_id" value="@permission.Id"/>
+
+            }
+
+        }
+        <div class="row permission_row">
+            <div class="col-md-12">
+                <select multiple="multiple" name="permission_pages" class="permission_pages">
+                    @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                    {
+                        foreach (var item in adyContext.PermissionPages)
+                        {
+                            if (pages.Contains(item.Id))
+                            {
+                                <option value="@item.Id" selected="selected">@item.PageName</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Id">@item.PageName</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="row permission_row">
+            <div class="col-md-12">
+                <select multiple="multiple" name="permission_meeting_type" class="permission_meeting_type">
+                    @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                    {
+                        foreach (var item in adyContext.MeetingType)
+                        {
+                            if (m_type.Contains(item.Id))
+                            {
+                                <option value="@item.Id" selected="selected">@item.Name</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="row permission_row">
+            <div class="col-md-12">
+                <select multiple="multiple" name="permission_meeting_dep" class="permission_meeting_dep">
+                    @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                    {
+                        foreach (var item in adyContext.Department.Where(x => x.Active == 1))
+                        {
+                            if (dep.Contains(item.Id))
+                            {
+                                <option value="@item.Id" selected="selected">@item.Name</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="row permission_row permission_submit_row">
+            @*<div class="col-md-3">
+                <a href="javascript:void(0)" class="btn btn-red btn-sm close_button">Bağla</a>
+            </div>*@
+
+            <div class="col-md-3 save_permissions">
+                <a href="javascript:void(0)" class="btn btn-green btn-sm save_permissions_button">Saxla</a>
+            </div>
+        </div>
+
+    </div>

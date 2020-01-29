@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Səlahiyyətlər";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Modal{
+    @await Component.InvokeAsync("TrainLoadingModal")
+}
+<div id="permission_page">
+    <div class="row">
+        <div class="col-md-8">
+            <select class="form-control js-example-basic-single select2c" required name="user" id="user">
+            </select>
+        </div>
+    </div>
+
+</div>
+
+@section style{
+
+    @*<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">*@
+    <link rel="stylesheet" href="/Content/assets/js/selectboxit/jquery.selectBoxIt.css">
+    <link rel="stylesheet" type="text/css" href="/Content/assets/js/select2/select2-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/Content/assets/js/select2/select2.css">
+    <link href="~/Content/assets/css/bootstrap-duallistbox.css" rel="stylesheet" />
+}
+
+@section script{
+    @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
+    <script src="~/Content/assets/js/jquery.bootstrap-duallistbox.js"></script>
+    <script src="~/Content/assets/js/permission.js"></script>
+}

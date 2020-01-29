@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Content\assets\js\aci-tree\php\tree\Item 2\Item 2\" />
+    <Folder Include="Content\assets\js\aci-tree\php\tree\Item 2\Item 4\" />
+    <Folder Include="Content\assets\js\aci-tree\php\tree\Item 2\Item 5\" />
+    <Folder Include="Content\assets\js\aci-tree\php\tree\Item 3\" />
+    <Folder Include="Content\assets\js\aci-tree\php\tree\Item 4\" />
+    <Folder Include="Content\assets\js\aci-tree\php\tree\Item 6\" />
+    <Folder Include="Content\assets\js\aci-tree\php\tree\Item 7\Item 1\" />
+    <Folder Include="Content\assets\js\aci-tree\php\tree\Item 7\Item 3\" />
+    <Folder Include="Content\assets\js\aci-tree\php\tree\Item 7\Item 4\Item 3\" />
+    <Folder Include="Content\assets\js\aci-tree\php\tree\Item 7\Item 4\Item 4\" />
+    <Folder Include="Content\assets\js\selectboxit\css\" />
+    <Folder Include="Content\assets\Attachment\" />
+  </ItemGroup>
+
+</Project>

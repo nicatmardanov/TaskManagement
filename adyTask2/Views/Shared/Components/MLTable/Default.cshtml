@@ -1,0 +1,289 @@
+﻿@{
+    Layout = null;
+}
+
+@using adyTask2.Models;
+
+<div class="meeting_operation_line_table">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary" data-collapsed="0">
+
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        İclas sətiri
+                    </div>
+                    @if (ViewBag.SType == 0)
+                    {
+                        <div class="new_meeting_line_option revision_option panel-options">
+                            <a href="javascript:void(0)">
+                                <span>Revizəyə göndər</span>
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+
+                        <div class="new_meeting_line_option conf_ml_option  panel-options">
+                            <a href="javascript:void(0)">
+                                <span>Təsdiqlə</span>
+                                <i class="fa fa-check"></i>
+                            </a>
+                        </div>
+                    }
+                </div>
+
+                @if (ViewBag.Type == 0)
+                {
+                    <div class="panel_heading_s">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <div class="s30">
+                                    <span>Qeyd növü</span>
+                                </div>
+                                <div class="s70 taskSelect">
+                                    <select class="form-control select2c select2" name="meeting_line_type" id="meeting_line_type">
+                                        <option></option>
+                                        @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                        {
+                                            foreach (MlType item in adyContext.MlType.AsQueryable())
+                                            {
+                                                if (item.Id == ViewBag.MeetingLine)
+                                                {
+                                                    <option selected value="@item.Id">@item.Name</option>
+
+                                                }
+                                                else
+                                                {
+                                                    <option value="@item.Id">@item.Name</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-3">
+                                <div class="s40">
+                                    <span>Açıqda qalanlar</span>
+                                </div>
+                                <div class="s60">
+                                    <div class="notCompletedSection custom_switch">
+                                        <div class="notCompletedInner custom_switch_inner">
+                                            @if (!ViewBag.NotCompleted)
+                                            {
+                                                <div class="custom_ap custom_switch_passive"></div>
+                                                <a href="javascript:void(0)" class="custom_switch_button notCompletedButton"></a>
+                                                <input type="checkbox" id="notCompleted" hidden />
+                                            }
+                                            else if (ViewBag.NotCompleted)
+                                            {
+                                                <div class="custom_ap custom_switch_active"></div>
+                                                <a href="javascript:void(0)" class="custom_switch_button notCompletedButton"></a>
+                                                <input type="checkbox" id="notCompleted" checked hidden />
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-3">
+                                <div class="s40">
+                                    <span>Mənim yaratdıqlarım</span>
+                                </div>
+                                <div class="s60">
+                                    <div class="custom_switch">
+                                        <div class="myMeetingLines custom_switch_inner">
+                                            @if (!ViewBag.MyMeetingLines)
+                                            {
+                                                <div class="custom_ap custom_switch_passive"></div>
+                                                <a href="javascript:void(0)" class="custom_switch_button myMeetingLinesButton"></a>
+                                                <input type="checkbox" id="myTasksCheck" hidden />
+                                            }
+                                            else if (ViewBag.MyMeetingLines)
+                                            {
+                                                <div class="custom_ap custom_switch_active"></div>
+                                                <a href="javascript:void(0)" class="custom_switch_button myMeetingLinesButton"></a>
+                                                <input type="checkbox" id="myTasksCheck" checked hidden />
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-3">
+                                <div class="s40">
+                                    <span>Department</span>
+                                </div>
+
+                                <div class="s60 taskSelect">
+                                    <select class="form-control select2c select2" name="meeting_line_department" id="meeting_line_department">
+                                        <option></option>
+                                        @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                        {
+                                            if (ViewBag.Department >= 1 && ViewBag.Department <= adyContext.Department.Max(x => x.Id))
+                                            {
+                                                <option selected value="@ViewBag.Department">@ViewBag.DepName</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-bordered responsive">
+                                <thead>
+                                    <tr>
+                                        @if (ViewBag.HasCheck != null)
+                                        {
+                                            <th width="1%">
+                                                <input tabindex="5" type="checkbox" class="icheck-11 first-check">
+                                            </th>
+                                        }
+                                        <th width="3%">#</th>
+                                        @if (ViewBag.Type == 0 || ViewBag.Type == 2)
+                                        {
+                                            <th>Əməliyyatlar</th>
+                                        }
+                                        <th>Qeyd növü</th>
+                                        <th>Açıqlama</th>
+                                        <th>Başlama tarixi</th>
+                                        <th>Bitmə tarixi</th>
+                                        <th>Məsul şəxs</th>
+                                        <th>Təsdiq edən</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int i = (ViewBag.Page - 1) * 10 + 1;
+                                        foreach (MeetingLine item in Model)
+                                        {
+                                            <tr>
+                                                @if (ViewBag.HasCheck != null)
+                                                {
+                                                    <th width="1%">
+                                                        <input tabindex="5" type="checkbox" data-id="@item.Id" class="ml_check icheck-11">
+                                                    </th>
+                                                }
+                                                @if (item.IsRevised == 1)
+                                                {
+                                                    <th width="3%" class="meeting_line_c" data-id="@item.Id">@i (R)</th>
+                                                }
+                                                else
+                                                {
+                                                    <th width="3%" class="meeting_line_c" data-id="@item.Id">@i</th>
+                                                }
+
+                                                @if (ViewBag.Type == 0 || ViewBag.Type == 2)
+                                                {
+                                                    <th class="ml_table_operations">
+                                                        <div class="dropdown">
+                                                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                                                Əməliyyatlar
+                                                                <span class="caret"></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu">
+                                                                @if (item.StatusId == 1)
+                                                                {
+                                                                    if (item.MeetingId == null)
+                                                                    {
+                                                                        <li>
+                                                                            <a href="javascript:void(0)" data-id="@item.Id" class="publish_ml_task">Yayınla</a>
+                                                                        </li>
+                                                                    }
+                                                                    else if (item.Meeting.StatusId == 2)
+                                                                    {
+                                                                        <li>
+                                                                            <a href="javascript:void(0)" data-id="@item.Id" class="publish_ml_task">Yayınla</a>
+                                                                        </li>
+                                                                    }
+
+                                                                    <li>
+                                                                        <a href="/MeetingLine/Edit/@item.Id" class="edit_ml_task">Nizamla</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="/MeetingLine/Cancel/@item.Id" class="cancel_ml_task">Ləğv et</a>
+
+                                                                    </li>
+                                                                }
+                                                                <li>
+                                                                    <a href="javascript:void(0)" data-id="@item.Id" class="show_meeting_line_modal meeting_line_c">Görüntülə</a>
+                                                                </li>
+                                                                @{
+                                                                    adyTask2.Models.User _user;
+                                                                    using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                                                    {
+                                                                        _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == User.Identity.Name);
+                                                                    }
+                                                                    bool _directed = item.StatusId == 3 && (item.IsDirected == 0 && item.ResponsibleEmail == User.Identity.Name) || (item.IsDirected == 1 && item.Direct.FirstOrDefault(x => x.ToUserId == _user.Id) != null);
+                                                                    bool _follower = item.StatusId == 5 && item.FollowerEmail == User.Identity.Name;
+                                                                    bool _confirmer = item.StatusId == 6 && item.IdentifierEmail == User.Identity.Name;
+
+                                                                    if (ViewBag.Type == 0 && (_directed || _follower || _confirmer))
+                                                                    {
+                                                                        if (_directed)
+                                                                        {
+                                                                            <li>
+                                                                                <a href="/MeetingOperation/Add/@item.Id">Əməliyyat et</a>
+                                                                            </li>
+                                                                            @*<li>
+                                                                                <a href="/MeetingLine/Redirect/@item.Id">Yönləndir</a>
+                                                                            </li>*@
+                                                                        }
+                                                                        <li>
+                                                                            <a href="/MeetingLine/Status/@item.Id">Statusunu dəyiş</a>
+                                                                        </li>
+                                                                    }
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    </th>
+                                                }
+
+                                                <th class="meeting_line_c" data-id="@item.Id">@item.MlTypeNavigation.Name</th>
+                                                <th class="meeting_line_c" data-id="@item.Id">@item.Description</th>
+                                                <th class="meeting_line_c" data-id="@item.Id">@item.StartTime.Value.Day/@item.StartTime.Value.Month/@item.StartTime.Value.Year</th>
+                                                <th class="meeting_line_c" data-id="@item.Id">@item.FinishTime.Value.Day/@item.FinishTime.Value.Month/@item.FinishTime.Value.Year</th>
+
+                                                @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                                {
+
+                                                    adyTask2.Models.User responsePerson;
+
+                                                    if (item.Direct.Where(x => x.MlId == item.Id).Count() > 0)
+                                                    {
+                                                        var direct_user = item.Direct.OrderByDescending(x=>x.Id).FirstOrDefault(x => x.MlId == item.Id).ToUserId;
+                                                        responsePerson = adyContext.User.FirstOrDefault(x => x.PersonId == direct_user);
+                                                    }
+                                                    else
+                                                    {
+                                                        responsePerson = adyContext.User.FirstOrDefault(x => x.EmailAddress == item.ResponsibleEmail);
+                                                    }
+
+
+                                                    var confirmedPerson = adyContext.User.FirstOrDefault(x => x.EmailAddress == item.IdentifierEmail);
+
+                                                    <th class="meeting_line_c" data-id="@item.Id">@responsePerson.FirstName @responsePerson.LastName</th>
+                                                    <th class="meeting_line_c" data-id="@item.Id">@confirmedPerson.FirstName @confirmedPerson.LastName</th>
+                                                }
+
+                                                <th class="meeting_line_c" data-id="@item.Id">@item.Status.StatusName</th>
+                                            </tr>
+                                            i++;
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

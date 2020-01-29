@@ -1,0 +1,68 @@
+﻿
+@{
+    Layout = null;
+}
+
+@using adyTask2.Models
+
+<div class="meeting_operation_table" data-id="@ViewBag.mlId">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary" data-collapsed="0">
+
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        İclas əməliyyatı
+                    </div>
+                    @if (ViewBag.Type == 1)
+                    {
+                        <div class="new_meeting_operation panel-options">
+                            <a href="javascript:void(0)">
+                                <span>Yeni</span>
+                                <i class="fa fa-plus"></i>
+                            </a>
+                        </div>
+                    }
+                </div>
+
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-bordered responsive">
+                                <thead>
+                                    <tr>
+                                        <th width="3%">#</th>
+                                        <th>Açıqlama</th>
+                                        <th>Tamamlanma faizi</th>
+                                        <th>Qeyd yazan</th>
+                                        <th>Yaradılma tarixi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int i = 1;
+                                        foreach (MlDetails item in Model)
+                                        {
+                                            <tr>
+                                                <td>@i</td>
+                                                <td>@item.Description</td>
+                                                <td>@item.Completion</td>
+                                                <td>@item.User.FirstName @item.User.LastName</td>
+                                                <td>@item.CreateDate.Value.Day/@item.CreateDate.Value.Month/@item.CreateDate.Value.Year</td>
+                                            </tr>
+
+                                            i++;
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

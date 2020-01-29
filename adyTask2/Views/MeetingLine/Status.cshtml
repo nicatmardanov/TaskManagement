@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "İcas sətirinin statusunu dəyiş";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="meeting_status_page" data-id="@ViewBag.Id">
+    @await Component.InvokeAsync("MLTable", new { _meetingLine = Model, type = (byte)1,page=1 })
+    @{ await Html.RenderPartialAsync("MeetingStatusForm");}
+</div>
+
+
+
+@section script{
+    <script src="~/Content/assets/js/meetingStatus.js"></script>
+}

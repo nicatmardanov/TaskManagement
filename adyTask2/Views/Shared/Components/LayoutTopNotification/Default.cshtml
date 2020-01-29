@@ -1,0 +1,86 @@
+﻿<div class="row">
+
+    <!-- Profile Info and Notifications -->
+    <div class="col-md-6 col-sm-8 clearfix">
+
+    </div>
+
+    <!-- Raw Links -->
+    <div class="col-md-6 col-sm-4 clearfix hidden-xs">
+
+        <ul class="list-inline links-list pull-right top_ntfcts">
+
+            <li class="notifications dropdown">
+
+                <a href="/Task/Confirmation">
+                    <i class="entypo-info"></i>
+                    <span class="badge badge-secondary"></span>
+                </a>
+
+            </li>
+
+            <li class="notifications dropdown">
+
+                <a href="/Task/Confirmation">
+                    <i class="entypo-check"></i>
+                    <span class="badge badge-secondary"></span>
+                </a>
+
+            </li>
+            <li class="notifications dropdown">
+                <a href="/Task/AllOffers">
+                    <i class="fa fa-flash"></i>
+                    <span class="badge badge-secondary"></span>
+                </a>
+            </li>
+
+            <li class="notifications dropdown">
+                <a href="/Task/Followed">
+                    <i class="fa fa-bookmark"></i>
+                    <span class="badge badge-secondary"></span>
+                </a>
+            </li>
+
+            <li class="notifications dropdown">
+
+                <a href="/Task/AllTasks">
+                    <i class="fa fa-tasks"></i>
+                    <span class="badge badge-secondary"></span>
+                </a>
+            </li>
+
+            <li class="notifications dropdown">
+                <a href="/Task/Notifications/1">
+                    <i class="fa fa-bell"></i>
+                    <span class="badge badge-secondary"></span>
+                </a>
+            </li>
+
+            <!-- Profile Info -->
+            <li class="profile-info dropdown">
+                <!-- add class "pull-right" if you want to place this from right -->
+
+                <a href="#" class="dropdown-toggle user_name_layout" data-toggle="dropdown">
+                    @User.Claims.FirstOrDefault(x => x.Type == "FullName").Value
+                </a>
+
+                <ul class="dropdown-menu">
+
+                    <!-- Reverse Caret -->
+                    <li class="caret"></li>
+
+                    <li>
+                        <a href="/Login/SignOut">
+                            <i class="entypo-logout right"></i> <span class="left_span_layout">Çıxış</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+
+
+        </ul>
+
+    </div>
+
+</div>

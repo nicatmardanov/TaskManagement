@@ -1,0 +1,79 @@
+﻿<div class="meeting_operation_form">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary" data-collapsed="0">
+
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        İclas əməliyyatı əlavə etmə formu
+                    </div>
+
+                    <div class="panel-options">
+                        <a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+
+                    <form role="form" class="form-horizontal form-groups-bordered" enctype="multipart/form-data">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="title" class="col-sm-2 control-label">Açıqlama</label>
+
+                                    <div class="col-sm-10">
+                                        <textarea required class="form-control m_description" id="description" placeholder="Açıqlama"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="title" class="col-sm-4 control-label">Tamamlanma faizi</label>
+
+                                    <div class="col-sm-8">
+                                        <input type="number" required class="form-control" id="completion" placeholder="Tamamlanma faizi" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row row_twenty">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label">Sənədlər</label>
+
+                                    <div class="col-sm-11">
+                                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                                            <span class="btn btn-info btn-file">
+                                                <span class="fileinput-new">Yüklə</span>
+                                                <span class="fileinput-exists">Dəyiş</span>
+                                                <input type="file" name="meetingOperationFile" id="meetingOperationFile">
+                                            </span>
+                                            <span class="fileinput-filename"></span>
+                                            <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">&times;</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row row_twenty meeting_add_submit_row">
+                            <div class="col-md-3">
+                                <a href="javascript:void(0)" class="btn btn-red btn-sm close_button">Bağla</a>
+                            </div>
+
+                            <div class="col-md-3 updtSave">
+                                <a href="javascript:void(0)" class="btn btn-green btn-sm saveOperation">Saxla</a>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

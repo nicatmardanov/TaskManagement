@@ -1,0 +1,21 @@
+﻿
+@{
+    Layout = null;
+}
+
+@using adyTask2.Models;
+@{
+    MeetingLine _meetingLine = Model;
+}
+
+<div id="ml_show_partial">
+    @await Component.InvokeAsync("MeetingLineShow", _meetingLine)
+
+    @await Component.InvokeAsync("MeetingOperationTable", new {mlId = _meetingLine.Id, type = (byte)0 })
+
+    <div class="row row_twenty show_close_row" id="show_close">
+        <div class="col-md-3">
+            <a href="javascript:void(0)" class="btn btn-red btn-sm close_button">Bağla</a>
+        </div>
+    </div>
+</div>

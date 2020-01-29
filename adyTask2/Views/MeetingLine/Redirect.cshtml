@@ -1,0 +1,21 @@
+﻿
+@{
+    ViewData["Title"] = "İclas sətirini yönləndirmə";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="direct_page" data-id="@ViewBag.Id">
+    @await Component.InvokeAsync("MLTable", new { _meetingLine = Model, type = (byte)1, page = 1 })
+    @{ await Html.RenderPartialAsync("MeetingDirectForm");}
+</div>
+
+
+@section style{
+    <link rel="stylesheet" type="text/css" href="/Content/assets/js/select2/select2-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/Content/assets/js/select2/select2.css">
+}
+
+@section script{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
+    <script src="~/Content/assets/js/meetingDirect.js"></script>
+}

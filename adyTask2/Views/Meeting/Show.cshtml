@@ -1,0 +1,25 @@
+﻿
+@{
+    Layout = null;
+}
+
+@using adyTask2.Models
+@{
+    Meeting _meeting = Model;
+
+    List<MeetingLine> meetingLine = ViewData["MeetingLine"] as List<MeetingLine>;
+}
+
+
+
+<div id="meeting_show_partial">
+    @await Component.InvokeAsync("MeetingShow", _meeting)
+
+    @await Component.InvokeAsync("MLTable", new { _meetingLine = meetingLine, type = (byte)3, page = 1 })
+
+    <div class="row row_twenty show_close_row" id="meeting_show_close">
+        <div class="col-md-3">
+            <a href="javascript:void(0)" class="btn btn-red btn-sm close_button">Bağla</a>
+        </div>
+    </div>
+</div>

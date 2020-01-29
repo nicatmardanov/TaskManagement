@@ -1,0 +1,86 @@
+﻿
+@{
+    Layout = null;
+}
+
+@using adyTask2.Models
+
+@{ 
+    IQueryable<MLog> logs = Model;
+}
+
+
+<div class="meeting_operation_table" data-id="@ViewBag.mlId" data-count="@logs.Count()">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary" data-collapsed="0">
+
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        İclas əməliyyatı
+                    </div>
+                    @if (ViewBag.Type == 1)
+                    {
+                        <div class="new_meeting_operation panel-options">
+                            <a href="javascript:void(0)">
+                                <span>Yeni</span>
+                                <i class="fa fa-plus"></i>
+                            </a>
+                        </div>
+                    }
+                </div>
+
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-bordered responsive">
+                                <thead>
+                                    <tr>
+                                        <th width="3%">#</th>
+                                        <th>Açıqlama</th>
+                                        <th>Tamamlanma faizi</th>
+                                        <th>Qeyd yazan</th>
+                                        <th>Əməliyyat</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int i = 1;
+
+                                        using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                        {
+                                            foreach (MLog item in logs)
+                                            {
+
+                                                <tr>
+                                                    <td>@i</td>
+                                                    <td>@item.Description</td>
+                                                    @{
+                                                        if (item.Type == 3 && adyContext.MlDetails.FirstOrDefault(x => x.Id == item.RefId) != null)
+                                                        {
+                                                            <td>@adyContext.MlDetails.FirstOrDefault(x => x.Id == item.RefId).Completion</td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td>0</td>
+                                                        }
+                                                    }
+                                                    <td>@item.User.FirstName @item.User.LastName</td>
+                                                    <td>@item.Operation.Operation (@item.CreateDate.Value.Day/@item.CreateDate.Value.Month/@item.CreateDate.Value.Year)</td>
+                                                </tr>
+                                                i++;
+                                            }
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,259 @@
+﻿@{
+    string[] cookieValue = (ViewBag.Report as string).Split('-');
+    string[] dep_list = cookieValue[2].Split('+');
+}
+
+@using adyTask2.Models
+
+<div id="ml_report">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary" data-collapsed="0">
+
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        İnteraktiv Hesabat
+                    </div>
+
+                    <div class="new_meeting_line_option new_meeting_operation panel-options">
+                        <a href="javascript:void(0)" class="save_filter">
+                            <span>Filtri saxla</span>
+                            <i class="fa fa-save"></i>
+                        </a>
+                    </div>
+                    <div class="new_meeting_line_option new_meeting_operation panel-options">
+                        <a href="javascript:void(0)" class="select_filter">
+                            <span>Filtri seç</span>
+                            <i class="fa fa-copy"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+
+                    <form role="form" class="form-horizontal form-groups-bordered reportForm" enctype="multipart/form-data">
+
+                        <div class="row">
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">İclas növü</label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control js-example-basic-single select2c" required name="meeting_type" id="meeting_type">
+                                            <option></option>
+                                            @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                            {
+                                                foreach (var item in adyContext.MeetingType)
+                                                {
+                                                    if (!string.IsNullOrEmpty(cookieValue[0]))
+                                                    {
+                                                        if (item.Id == int.Parse(cookieValue[0]))
+                                                        {
+                                                            <option value="@item.Id" selected>@item.Name</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@item.Id">@item.Name</option>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">İclas sətirinin növü</label>
+                                    <div class="col-sm-7">
+                                        <select class="js-example-basic-single select2c form-control" required name="ml_type" id="ml_type">
+                                            <option></option>
+                                            @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                            {
+                                                foreach (MlType item in adyContext.MlType)
+                                                {
+                                                    if (!string.IsNullOrEmpty(cookieValue[1]))
+                                                    {
+                                                        if (item.Id == int.Parse(cookieValue[1]))
+                                                        {
+                                                            <option value="@item.Id" selected>@item.Name</option>
+
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@item.Id">@item.Name</option>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Departament</label>
+
+                                    <div class="col-sm-7">
+
+                                        <select id="mlDepartment" name="departmentId" class="js-example-basic-single select2c" required multiple>
+                                            @if (dep_list != null && dep_list.Length > 0)
+                                            {
+                                                <option></option>
+                                                using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                                {
+                                                    foreach (var item in dep_list)
+                                                    {
+                                                        if (!string.IsNullOrEmpty(item))
+                                                        {
+                                                            <option value="@item" selected>@adyContext.Department.FirstOrDefault(x => x.Id == int.Parse(item)).Name</option>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+
+                        <div class="row row_twenty">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Məsul şəxs</label>
+
+                                    <div class="col-sm-7">
+                                        <select class="js-example-basic-single select2c form-control" required name="responsibleUser" id="responsibleUser">
+                                            <option></option>
+                                            @if (!string.IsNullOrEmpty(cookieValue[3]))
+                                            {
+                                                using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                                {
+                                                    var _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == cookieValue[3]);
+                                                    <option value="@cookieValue[3]" selected>@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Təqib edən</label>
+
+                                    <div class="col-sm-7">
+                                        <select class="js-example-basic-single select2c form-control" required name="mlFollowerUser" id="mlFollowerUser">
+                                            @if (!string.IsNullOrEmpty(cookieValue[4]))
+                                            {
+                                                using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                                {
+                                                    var _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == cookieValue[4]);
+                                                    <option value="@cookieValue[4]" selected>@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Təsdiqləyən</label>
+
+                                    <div class="col-sm-7">
+                                        <select class="js-example-basic-single select2c form-control" required name="identifierUser" id="identifierUser">
+                                            @if (!string.IsNullOrEmpty(cookieValue[5]))
+                                            {
+                                                using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                                {
+                                                    var _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == cookieValue[5]);
+                                                    <option value="@cookieValue[5]" selected>@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row row_twenty">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Status</label>
+                                    <div class="col-sm-7">
+                                        <select name="mlStatus" id="mlStatus" class="form-control js-example-basic-single select2c" required>
+                                            <option></option>
+                                            @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                            {
+                                                foreach (var item in adyContext.Status.Where(x => x.Id > 1))
+                                                {
+                                                    if (!string.IsNullOrEmpty(cookieValue[6]))
+                                                    {
+                                                        if (item.Id == int.Parse(cookieValue[6]))
+                                                        {
+                                                            <option value="@item.Id" selected>@item.StatusName</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@item.Id">@item.StatusName</option>
+
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Vəziyyət</label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control js-example-basic-single select2c" required name="mlStatusSec" id="mlStatusSec">
+                                            <option></option>
+                                            @if (!string.IsNullOrEmpty(cookieValue[7]))
+                                            {
+                                                if (int.Parse(cookieValue[7]) == 1)
+                                                {
+                                                    <option value="1" selected>Tamamlanmış</option>
+                                                    <option value="2">Tamamlanmamış</option>
+                                                }
+                                                else if (int.Parse(cookieValue[7]) == 2)
+                                                {
+                                                    <option value="1">Tamamlanmış</option>
+                                                    <option value="2" selected>Tamamlanmamış</option>
+                                                }
+                                            }
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="row row_twenty report_submit_row">
+                            <div class="col-md-3">
+                                <a href="javascript:void(0)" class="btn btn-green btn-sm report_search">Axtar</a>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
