@@ -65,7 +65,7 @@ var neonLogin = neonLogin || {};
 						method: 'POST',
 						dataType: 'json',
 						data: {
-							email: $("input#username").val(),
+							username: $("input#username").val(),
 							password: $("input#password").val(),
 						},
 						error: function()

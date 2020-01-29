@@ -1,10 +1,10 @@
 ﻿$(document).ready(function (e) {
     var userObject = new Object({
-        minimumInputLength: 3,
+        minimumInputLength: 1,
         allowClear: true,
         language: {
             inputTooShort: function () {
-                return 'Minimum 3 simvol daxil edin';
+                return 'Sorğunu daxil edin';
             },
             noResults: function () {
                 return "Bu sorğuya uyğun nəticə tapılmadı";

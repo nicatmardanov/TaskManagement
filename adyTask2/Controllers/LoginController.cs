@@ -60,11 +60,14 @@ namespace adyTask2.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> Login(string email, string password)
+        public async Task<JsonResult> Login(string username, string password)
         {
             using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
             {
                 //var _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == email && x.Password == password);
+
+                var email = username.Contains("@ady.az") ? username : username + "@ady.az";
+
                 Models.User _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == email);
                 bool isAD = _user.IsActiveDirectory.HasValue && _user.IsActiveDirectory.Value;
 

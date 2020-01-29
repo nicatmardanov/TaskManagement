@@ -38,10 +38,10 @@
         }
     });
     var userObject = new Object({
-        minimumInputLength: 3,
+        minimumInputLength: 1,
         language: {
             inputTooShort: function () {
-                return 'Minimum 3 simvol daxil edin';
+                return 'Sorğunu daxil edin';
             },
             noResults: function () {
                 return "Bu sorğuya uyğun nəticə tapılmadı";

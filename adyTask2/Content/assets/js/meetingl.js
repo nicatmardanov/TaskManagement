@@ -610,10 +610,10 @@
     });
 
     var userObject = new Object({
-        minimumInputLength: 3,
+        minimumInputLength: 1,
         language: {
             inputTooShort: function () {
-                return 'Minimum 3 simvol daxil edin';
+                return 'Sorğunu daxil edin';
             },
             noResults: function () {
                 return "Bu sorğuya uyğun nəticə tapılmadı";
@@ -647,10 +647,10 @@
     });
 
     var otherParticipantsObject = new Object({
-        minimumInputLength: 3,
+        minimumInputLength: 1,
         language: {
             inputTooShort: function () {
-                return 'Minimum 3 simvol daxil edin';
+                return 'Sorğunu daxil edin';
             },
             noResults: function () {
                 return "Bu sorğuya uyğun nəticə tapılmadı";
@@ -684,11 +684,11 @@
     });
 
     var countryObject = new Object({
-        minimumInputLength: 3,
+        minimumInputLength: 1,
         tags: [],
         language: {
             inputTooShort: function () {
-                return 'Minimum 3 simvol daxil edin';
+                return 'Sorğunu daxil edin';
             },
             noResults: function () {
                 return "Bu sorğuya uyğun nəticə tapılmadı";
@@ -722,11 +722,11 @@
     });
 
     var places = new Object({
-        minimumInputLength: 3,
+        minimumInputLength: 1,
         tags: [],
         language: {
             inputTooShort: function () {
-                return 'Minimum 3 simvol daxil edin';
+                return 'Sorğunu daxil edin';
             },
             noResults: function () {
                 return "Bu sorğuya uyğun nəticə tapılmadı";
