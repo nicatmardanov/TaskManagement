@@ -293,7 +293,7 @@
                                                         OtherParticipiants _user;
                                                         foreach (var item in _meeting.OtherParticipiants.Split(';'))
                                                         {
-                                                            _user = adyContext.OtherParticipiants.FirstOrDefault(x => x.Email == item);
+                                                            _user = adyContext.OtherParticipiants.FirstOrDefault(x => x.Id == int.Parse(item));
                                                             string company = !string.IsNullOrEmpty(_user.Company) ? $"({_user.Company})" : "";
                                                             <option selected value="@item">@_user.Name @_user.Surname @company</option>
                                                         }

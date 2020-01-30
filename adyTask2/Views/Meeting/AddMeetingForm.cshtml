@@ -125,6 +125,11 @@
 
                         </div>
 
+                        @{ 
+                            var now = DateTime.UtcNow.AddHours(4);
+                            var later = DateTime.UtcNow.AddHours(6);
+                        }
+
                         <div class="row row_twenty">
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -132,7 +137,7 @@
 
                                     <div class="col-sm-7">
                                         <div class="input-group">
-                                            <input type="text" required class="form-control datepicker" id="meeting_start_date" data-format="dd/mm/yyyy" value="27/11/2019">
+                                            <input type="text" required class="form-control datepicker" id="meeting_start_date" data-format="dd/mm/yyyy" value="@now.Day/@now.Month/@now.Year">
 
                                             <div class="input-group-addon">
                                                 <a href="#"><i class="entypo-calendar"></i></a>
@@ -147,7 +152,7 @@
                                     <label class="col-sm-5 control-label">Başlama saatı</label>
 
                                     <div class="col-sm-7">
-                                        <input type="text" required class="form-control timepicker" id="meeting_start_time" data-template="dropdown" data-show-seconds="false" data-default-time="16:00" data-show-meridian="false" data-minute-step="5" name="start_date" />
+                                        <input type="text" required class="form-control timepicker" id="meeting_start_time" data-template="dropdown" data-show-seconds="false" data-default-time="@now.Hour:@now.Minute" data-show-meridian="false" data-minute-step="5" name="start_date" />
                                     </div>
                                 </div>
                             </div>
@@ -156,7 +161,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-5 control-label">Bitmə saatı</label>
                                     <div class="col-sm-7">
-                                        <input type="text" required id="meeting_finish_time" class="form-control timepicker" data-template="dropdown" data-show-seconds="false" data-default-time="18:00" data-show-meridian="false" data-minute-step="5" name="finish_date" />
+                                        <input type="text" required id="meeting_finish_time" class="form-control timepicker" data-template="dropdown" data-show-seconds="false" data-default-time="@later.Hour:@later.Minute" data-show-meridian="false" data-minute-step="5" name="finish_date" />
                                     </div>
                                 </div>
                             </div>
@@ -258,7 +263,7 @@
                             </div>
 
                             <div class="col-md-3 updtSave">
-                                <a href="javascript:void(0)" class="btn btn-green btn-sm saveMeeting">Saxla</a>
+                                <a href="javascript:void(0)" class="btn btn-green btn-sm saveMeeting">Yadda saxla</a>
                             </div>
                         </div>
                     </form>

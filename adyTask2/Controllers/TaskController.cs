@@ -45,6 +45,8 @@ namespace adyTask2.Controllers
                     _meetingLine = adyContext.MeetingLine.Where(x => x.FollowerEmail == User.Identity.Name && x.StatusId == 5);
                 else if (mtype == 4)
                     _meetingLine = adyContext.MeetingLine.Where(x => x.InformedUserEmail.Contains(User.Identity.Name) && x.StatusId > 1 && x.StatusId != 8);
+                else if (mtype == 5)
+                    _meetingLine = adyContext.MeetingLine.Where(x => x.StatusId == 1 && x.CreatorId == user_id);
                 else
                     _meetingLine = Enumerable.Empty<MeetingLine>().AsQueryable();
 
@@ -235,7 +237,7 @@ namespace adyTask2.Controllers
                 ViewBag.NotCompleted = false;
                 ViewBag.MyMeetingLines = false;
                 ViewBag.Department = 0;
-                ViewBag.Type = 2;
+                ViewBag.Type = 1;
                 ViewBag.MType = (byte)4;
                 ViewBag.Title = "Məlumatlandırılmalar";
 
@@ -264,6 +266,39 @@ namespace adyTask2.Controllers
 
             return View();
         }
+
+
+        public IActionResult MeetingLineDraft()
+        {
+            using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+            {
+                var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
+
+                var _meetingLine = adyContext.MeetingLine.Where(x => x.StatusId == 1 && x.CreatorId == user_id);
+
+                double page_count = _meetingLine.Count() / 10.0;
+
+                if (page_count % 1 > 0)
+                    page_count++;
+
+
+                ViewBag.MaxPage = (int)page_count;
+                ViewBag.PageNumber = 1;
+
+                ViewBag.MeetingLine = 0;
+                ViewBag.NotCompleted = false;
+                ViewBag.MyMeetingLines = false;
+                ViewBag.Department = 0;
+                ViewBag.Type = (byte)0;
+                ViewBag.Title = "Qaralama iclas sətirləri";
+                ViewBag.SType = 1;
+                ViewBag.MType = (byte)5;
+
+                return View("MyTasks", _meetingLine.OrderByDescending(x => x.Id).Include(x => x.Meeting).Include(x => x.MlTypeNavigation).Include(x => x.Status).Take(10).ToList());
+            }
+
+        }
+
 
         public async Task<string> NotificationsCount()
         {

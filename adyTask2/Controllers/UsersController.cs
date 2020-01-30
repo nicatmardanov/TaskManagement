@@ -134,7 +134,7 @@ namespace adyTask2.Controllers
                 if (searched_items.Length == 2)
                     _users = _users.Where(x => x.Name.ToLower().StartsWith(searched_items[1].ToLower()) || x.Surname.ToLower().StartsWith(searched_items[1].ToLower()));
 
-                var user_info = _users.Select(x => new { email = x.Email, full_name = $"{x.Name} {x.Surname} ({x.Company})" });
+                var user_info = _users.Select(x => new { id = x.Id, full_name = $"{x.Name} {x.Surname} ({x.Company})" });
 
                 return Json(user_info);
             }

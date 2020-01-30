@@ -185,6 +185,27 @@
         addedDepartment[addedDepartment.length] = parseInt(e.params.data.id);
     });
 
+    function compareDate(selector1, selector2, type) {
+        if (type == 0) {
+            var date1_string = $("#" + selector1).val().split("/");
+            var date2_string = $("#" + selector2).val().split("/");
+        }
+        else {
+            var date1_string = $("." + selector1).val().split("/");
+            var date2_string = $("." + selector2).val().split("/");
+        }
+
+        var date1 = new Date(date1_string[1] + "/" + date1_string[0] + "/" + date1_string[2]);
+        var date2 = new Date(date2_string[1] + "/" + date2_string[0] + "/" + date2_string[2]);
+
+        if (date2 > date1)
+            return true;
+
+        return false;
+    }
+
+
+
     $(document).on('click', '.editMeetingLine', function () {
         var fd = new FormData();
 
@@ -217,8 +238,9 @@
         fd.append("Id", $('#ml_update').data('id'));
 
         var checkVal = checkValid('ml_add');
+        var isValiDate = compareDate($('.ml_up_s_date').val(), $('.ml_up_f_date').val(), 1);
 
-        if (checkVal) {
+        if (checkVal && isValiDate) {
             fd.append('MlType', $('.ml_up_type').val());
             fd.append('Description', $('.ml_up_description').val());
             fd.append('ResponsibleEmail', $('.ml_up_resp_user').val());

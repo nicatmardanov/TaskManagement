@@ -185,8 +185,12 @@
         for (var i = 0; i < $('.' + className + ' input:required').length; i++) {
             if (!$('.' + className + ' input:required')[i].checkValidity()) {
                 checkVal = false;
-                if ($($($($($('.' + className + ' input:required')[i]).parent().parent())).find('.invalid-feedback')).length == 0)
-                    $($($($('.' + className + ' input:required')[i]).parent())).append('<div class="invalid-feedback">Zəhmət olmazsa bu sahəni doldurun.</div>');
+                if ($($($($($('.' + className + ' input:required')[i]).parent().parent())).find('.invalid-feedback')).length == 0) {
+                    if ($($('.' + className + ' input:required')[i]).hasClass('ml_up_f_date') || $($('.' + className + ' input:required')[i]).attr('id') == 'meeting_l_finish_date')
+                        $($($($('.' + className + ' input:required')[i]).parent()).parent()).append('<div class="invalid-feedback">Zəhmət olmazsa bu sahəni doldurun.</div>');
+                    else
+                        $($($($('.' + className + ' input:required')[i]).parent())).append('<div class="invalid-feedback">Zəhmət olmazsa bu sahəni doldurun.</div>');
+                }
             }
         }
 
@@ -207,6 +211,101 @@
 
         return checkVal;
     }
+
+
+    function compareMeetingTime() {
+        var start_time = $('#meeting_start_time').val();
+
+        var end_time = $('#meeting_finish_time').val();
+
+        var stt = new Date("November 13, 2013 " + start_time);
+        stt = stt.getTime();
+
+        var endt = new Date("November 13, 2013 " + end_time);
+        endt = endt.getTime();
+
+        if (stt < endt) {
+            return false;
+        }
+
+        return true;
+    }
+
+    function compareDate(selector1, selector2, type) {
+        if (type == 0) {
+            var date1_string = $("#" + selector1).val().split("/");
+            var date2_string = $("#" + selector2).val().split("/");
+        }
+        else {
+            var date1_string = $("." + selector1).val().split("/");
+            var date2_string = $("." + selector2).val().split("/");
+        }
+
+        var date1 = new Date(date1_string[1] + "/" + date1_string[0] + "/" + date1_string[2]);
+        var date2 = new Date(date2_string[1] + "/" + date2_string[0] + "/" + date2_string[2]);
+
+        if (date2 > date1)
+            return true;
+
+        return false;
+    }
+
+    $(document).on('change', '#meeting_start_time', function (e) {
+        $($($('#meeting_start_time').parent()).find('.invalid-feedback')).remove();
+        $($($('#meeting_finish_time').parent()).find('.invalid-feedback')).remove();
+        if (compareMeetingTime()) {
+            $($('#meeting_start_time').parent()).append('<div class="invalid-feedback">Bitmə saatı başlama saatından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
+        }
+    })
+
+    $(document).on('change', '#meeting_finish_time', function (e) {
+        $($($('#meeting_start_time').parent()).find('.invalid-feedback')).remove();
+        $($($('#meeting_finish_time').parent()).find('.invalid-feedback')).remove();
+        if (compareMeetingTime()) {
+            $($('#meeting_finish_time').parent()).append('<div class="invalid-feedback">Bitmə saatı başlama saatından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
+        }
+    })
+
+    $(document).on('change', '.ml_up_s_date', function (e) {
+        $($($($('.ml_up_s_date').parent().parent())).find('.invalid-feedback')).remove();
+        $($($($('.ml_up_f_date').parent()).parent()).find('.invalid-feedback')).remove();
+
+        var isValidDate = compareDate('ml_up_s_date', 'ml_up_f_date', 1) && $('.ml_up_f_date').val().length > 0;
+        if (!isValidDate) {
+            $($($($('.ml_up_s_date').parent()).parent()).parent()).append('<div class="invalid-feedback">Bitmə vaxtı başlama vaxtından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
+        }
+    })
+
+    $(document).on('change', '.ml_up_f_date', function (e) {
+        $($($($($('.ml_up_s_date').parent()).parent()).parent()).find('.invalid-feedback')).remove();
+        $($($($($('.ml_up_f_date').parent()).parent()).parent()).find('.invalid-feedback')).remove();
+        var isValidDate = compareDate('ml_up_s_date', 'ml_up_f_date', 1);
+
+        if (!isValidDate) {
+            $($($($('.ml_up_f_date').parent()).parent()).parent()).append('<div class="invalid-feedback">Bitmə vaxtı başlama vaxtından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
+        }
+    })
+
+    $(document).on('change', '#meeting_l_start_date', function (e) {
+        $($($($($('#meeting_l_start_date').parent()).parent().parent())).find('.invalid-feedback')).remove();
+        $($($($($('#meeting_l_finish_date').parent()).parent().parent())).find('.invalid-feedback')).remove();
+        var isValidDate = compareDate('meeting_l_start_date', 'meeting_l_finish_date', 0);
+
+        if (!isValidDate && $('#meeting_l_finish_date').val().length > 0) {
+            $($($($('#meeting_l_start_date').parent()).parent().parent())).append('<div class="invalid-feedback">Bitmə vaxtı başlama vaxtından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
+        }
+    })
+
+    $(document).on('change', '#meeting_l_finish_date', function (e) {
+        $($($($($('#meeting_l_start_date').parent()).parent().parent())).find('.invalid-feedback')).remove();
+        $($($($($('#meeting_l_finish_date').parent()).parent().parent())).find('.invalid-feedback')).remove();
+        var isValidDate = compareDate('meeting_l_start_date', 'meeting_l_finish_date', 0);
+        if (!isValidDate) {
+            $($($($('#meeting_l_finish_date').parent()).parent().parent())).append('<div class="invalid-feedback">Bitmə vaxtı başlama vaxtından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
+        }
+    })
+
+
 
     $(document).on('click', '#save_others', function (e) {
         var checkVal = checkValid('others_modal');
@@ -260,7 +359,7 @@
 
         var checkVal = checkValid('meeting_add');
 
-        if (checkVal) {
+        if (checkVal && !compareMeetingTime()) {
             $('.meeting_add .panel-options a').click();
             $('.meeting_add .invalid-feedback').remove();
 
@@ -277,7 +376,7 @@
 
         var checkVal = checkValid('meeting_add');
 
-        if (checkVal) {
+        if (checkVal && !compareMeetingTime()) {
             $('.meeting_add .panel-options a').click();
             $('.meeting_add .invalid-feedback').remove();
             var meeting_id = $('.meeting_add').data('id');
@@ -307,8 +406,9 @@
 
     $(document).on('click', '.saveMeetingLine', function (e) {
         var checkVal = checkValid('ml_add');
+        var isValidDate = compareDate('meeting_l_start_date', 'meeting_l_finish_date', 0);
 
-        if (checkVal) {
+        if (checkVal && isValidDate) {
             var form_data = new FormData();
             form_data.append("MeetingId", $('.meeting_add').data('id'));
             form_data.append("MlType", $('#ml_type').val());
@@ -671,7 +771,7 @@
                 var myResults = [];
                 $.each(data, function (index, item) {
                     myResults.push({
-                        'id': item.email,
+                        'id': item.id,
                         'text': item.full_name
                     });
                 });
@@ -954,7 +1054,9 @@
 
             var checkVal = checkValid('ml_add');
 
-            if (checkVal) {
+            var isValiDate = compareDate('.ml_up_s_date', '.ml_up_f_date', 1);
+
+            if (checkVal && isValiDate) {
                 fd.append('MlType', $('.ml_up_type').val());
                 fd.append('Description', $('.ml_up_description').val());
                 fd.append('ResponsibleEmail', $('.ml_up_resp_user').val());

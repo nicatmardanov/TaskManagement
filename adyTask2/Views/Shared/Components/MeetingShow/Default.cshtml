@@ -11,7 +11,7 @@
 
                 <div class="panel-heading">
                     <div class="panel-title" id="meeting-title-section">
-                        İclas
+                        İclas - @meeting.Id
                     </div>
                 </div>
 
@@ -195,7 +195,7 @@
                                         @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
                                         {
                                             var oSplit = meeting.OtherParticipiants.Split(';');
-                                            var oUsers = adyContext.OtherParticipiants.Where(x => oSplit.Contains(x.Email));
+                                            var oUsers = adyContext.OtherParticipiants.Where(x => oSplit.Contains(x.Id.ToString()));
                                             var user = oUsers.Select(x => new { FullName = x.Name + " " + x.Surname });
 
                                             <span>@string.Join(", ", user.Select(x => x.FullName))</span>

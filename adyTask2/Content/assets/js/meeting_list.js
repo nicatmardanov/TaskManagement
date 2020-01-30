@@ -168,5 +168,23 @@
     });
 
 
+    $(document).on('click', '.meeting_line_c', function () {
+        var val = $(this).data('id');
+        $('.meeting_operation_table').remove();
+
+        $.ajax({
+            type: 'get',
+            url: '/MeetingLine/Show/' + val,
+            contentType: "application/json",
+            success: function (result) {
+                $($(result).find('.meeting_operation_table')).insertBefore('#meeting_show_partial>.row');
+                //window.scrollTo(0, $('#ml_show_partial').position().top);
+                var body = $("html, body");
+                body.stop().animate({ scrollTop: $('#ml_show_partial').position().top }, 500, 'swing');
+            }
+        });
+    });
+
+
     ////
 });
