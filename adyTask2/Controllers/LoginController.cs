@@ -62,43 +62,51 @@ namespace adyTask2.Controllers
         [HttpPost]
         public async Task<JsonResult> Login(string username, string password)
         {
-            using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+
+            try
             {
-                //var _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == email && x.Password == password);
-
-                var email_address = username.Contains("@ady.az") ? username : username + "@ady.az";
-
-                Models.User _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == email_address);
-                bool isAD = _user.IsActiveDirectory.HasValue && _user.IsActiveDirectory.Value;
-
-                if ((_user.Password == password && !isAD))
+                using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
                 {
-                    ClaimsIdentity claimsIdentity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-                    claimsIdentity.AddClaim(new Claim(ClaimTypes.Name, email_address));
-                    claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, _user.PersonId.ToString()));
-                    claimsIdentity.AddClaim(new Claim("FullName", _user.FirstName + " " + _user.LastName));
+                    //var _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == email && x.Password == password);
 
+                    var email = username.Contains("@ady.az") ? username : username + "@ady.az";
 
-                    foreach (var item in _user.UserRole)
+                    Models.User _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == email);
+                    bool isAD = _user.IsActiveDirectory.HasValue && _user.IsActiveDirectory.Value;
+
+                    if (ADLogin(email, password) || (_user.Password == password && !isAD))
                     {
-                        claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, item.Role.RoleName));
+                        ClaimsIdentity claimsIdentity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+                        claimsIdentity.AddClaim(new Claim(ClaimTypes.Name, email));
+                        claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, _user.PersonId.ToString()));
+                        claimsIdentity.AddClaim(new Claim("FullName", _user.FirstName + " " + _user.LastName));
+
+
+                        foreach (var item in _user.UserRole)
+                        {
+                            claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, item.Role.RoleName));
+                        }
+
+                        AuthenticationProperties authProperty = new AuthenticationProperties
+                        {
+                            AllowRefresh = true,
+                            IsPersistent = true,
+                            ExpiresUtc = DateTime.UtcNow.AddYears(1),
+                            IssuedUtc = DateTime.UtcNow
+                        };
+
+                        var principial = new ClaimsPrincipal(claimsIdentity);
+
+                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principial, authProperty);
+                        return Json(new { res = "1" });
                     }
-
-                    AuthenticationProperties authProperty = new AuthenticationProperties
-                    {
-                        AllowRefresh = true,
-                        IsPersistent = true,
-                        ExpiresUtc = DateTime.UtcNow.AddYears(1),
-                        IssuedUtc = DateTime.UtcNow
-                    };
-
-                    var principial = new ClaimsPrincipal(claimsIdentity);
-
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principial, authProperty);
-                    return Json(new { res = "1" });
                 }
+                return Json(new { res = "0" });
             }
-            return Json(new { res = "0" });
+            catch (Exception e)
+            {
+                return Json(new { res = e.Message+"-----------"+e.StackTrace});
+            }
         }
 
 
