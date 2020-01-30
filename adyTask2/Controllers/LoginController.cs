@@ -66,15 +66,15 @@ namespace adyTask2.Controllers
             {
                 //var _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == email && x.Password == password);
 
-                var email = username.Contains("@ady.az") ? username : username + "@ady.az";
+                var email_address = username.Contains("@ady.az") ? username : username + "@ady.az";
 
-                Models.User _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == email);
+                Models.User _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == email_address);
                 bool isAD = _user.IsActiveDirectory.HasValue && _user.IsActiveDirectory.Value;
 
-                if (ADLogin(email, password) || (_user.Password == password && !isAD))
+                if ((_user.Password == password && !isAD))
                 {
                     ClaimsIdentity claimsIdentity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-                    claimsIdentity.AddClaim(new Claim(ClaimTypes.Name, email));
+                    claimsIdentity.AddClaim(new Claim(ClaimTypes.Name, email_address));
                     claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, _user.PersonId.ToString()));
                     claimsIdentity.AddClaim(new Claim("FullName", _user.FirstName + " " + _user.LastName));
 
