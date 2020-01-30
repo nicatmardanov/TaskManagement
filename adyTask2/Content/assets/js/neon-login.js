@@ -74,6 +74,7 @@ var neonLogin = neonLogin || {};
 						},
 						success: function(response)
 						{
+							console.log(response);
 							// Form is fully completed, we update the percentage
 							neonLogin.setPercentage(100);
 							
