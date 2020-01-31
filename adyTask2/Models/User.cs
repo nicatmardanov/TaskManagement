@@ -10,6 +10,7 @@ namespace adyTask2.Models
             DirectFromUser = new HashSet<Direct>();
             DirectToUser = new HashSet<Direct>();
             MLog = new HashSet<MLog>();
+            Meeting = new HashSet<Meeting>();
             MeetingLine = new HashSet<MeetingLine>();
             MlDetails = new HashSet<MlDetails>();
             Permission = new HashSet<Permission>();
@@ -46,6 +47,7 @@ namespace adyTask2.Models
         public virtual ICollection<Direct> DirectFromUser { get; set; }
         public virtual ICollection<Direct> DirectToUser { get; set; }
         public virtual ICollection<MLog> MLog { get; set; }
+        public virtual ICollection<Meeting> Meeting { get; set; }
         public virtual ICollection<MeetingLine> MeetingLine { get; set; }
         public virtual ICollection<MlDetails> MlDetails { get; set; }
         public virtual ICollection<Permission> Permission { get; set; }

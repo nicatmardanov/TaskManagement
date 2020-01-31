@@ -1,4 +1,9 @@
-﻿@{
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
     ViewData["Title"] = ViewBag.Title;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -14,9 +19,9 @@
     <hr />
     <div id="ml_type_all">
         @{
-            List<MeetingLine> mLine = Model;
+            IQueryable<adyTask2.Classes.Meeting_Line> M_Line = Model;
+            @await Component.InvokeAsync("MLTableAlt", new { MLine = M_Line })
 
-            @await Component.InvokeAsync("MLTable", new { _meetingLine = mLine, type = (byte)ViewBag.Type, page = ViewBag.PageNumber })
 
             if (ViewBag.MaxPage > 1)
             {

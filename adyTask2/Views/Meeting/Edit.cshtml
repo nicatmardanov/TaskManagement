@@ -14,7 +14,10 @@
     @await Component.InvokeAsync("AjaxModal")
 }
 
+
 <div class="meeting_add" data-type="1" data-id="@id" data-edit="1">
+    <div id="mlp" data-id="@ViewBag.MLPermission" hidden></div>
+
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-primary" data-collapsed="0">
@@ -24,8 +27,15 @@
                         @_meeting.Title
                     </div>
 
+                    <div class="new_meeting_option add_ml_option panel-options">
+                        <a href="javascript:void(0)">
+                            <span>Sətir əlavə et</span>
+                            <i class="fa fa-plus"></i>
+                        </a>
+                    </div>
+
                     <div class="panel-options">
-                        <a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
+                        <a href="#" class="minimize_meeting" data-rel="collapse"><i class="entypo-down-open"></i></a>
                     </div>
                 </div>
 
@@ -94,25 +104,35 @@
                                         <input type="text" required class="form-control" id="title" placeholder="Mövzu" value="@_meeting.Title">
                                     </div>
                                 </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="col-sm-5 control-label">Yer</label>
+
+                                        <div class="col-sm-7">
+                                            <select name="place" id="meeting_place" class="js-example-basic-single select2c" required>
+                                                @if (_meeting.Place > 0)
+                                                {
+                                                    using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                                    {
+                                                        <option></option>
+                                                        <option value="@_meeting.Place" selected>@adyContext.Place.FirstOrDefault(x => x.Id == _meeting.Place).Name</option>
+                                                    }
+
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
+
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="col-sm-5 control-label">Departament</label>
+                                    <label class="col-sm-5 control-label">Tag</label>
 
                                     <div class="col-sm-7">
-
-                                        <select id="meetingDepartment" name="departmentId" class="js-example-basic-single select2c" required multiple>
-                                            <option></option>
-                                            @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
-                                            {
-                                                foreach (int item in _dep)
-                                                {
-                                                    <option selected value="@item">@adyContext.Department.FirstOrDefault(x => x.Id == item).Name</option>
-                                                }
-                                            }
-                                        </select>
-
+                                        <input type="text" value="@_tags" class="form-control tagsinput" id="meetingTags" />
                                     </div>
                                 </div>
                             </div>
@@ -160,30 +180,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">Məlumat veriləcək</label>
 
-                                    <div class="col-sm-7">
-                                        <select name="informedUser" id="informedUser" class="js-example-basic-single select2c" multiple>
-                                            <option></option>
-                                            @{
-                                                if (_meeting.InformedUser != null)
-                                                    using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
-                                                    {
-                                                        User _user;
-                                                        foreach (var item in _meeting.InformedUser.Split(';'))
-                                                        {
-                                                            _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == item);
-                                                            <option selected value="@item">@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
-                                                        }
-                                                    }
-                                            }
-                                        </select>
-
-                                    </div>
-                                </div>
-                            </div>
 
                         </div>
 
@@ -232,31 +229,108 @@
                         </div>
 
                         <div class="row row_twenty">
-                            <div class="col-md-4">
+                            <div class="col-md-10">
                                 <div class="form-group">
-                                    <label class="col-sm-5 control-label">Yer</label>
+                                    <label for="description" class="col-sm-2 control-label">Açıqlama</label>
 
-                                    <div class="col-sm-7">
-                                        <select name="place" id="meeting_place" class="js-example-basic-single select2c" required>
-                                            @if (_meeting.Place > 0)
-                                            {
-                                                using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
-                                                {
-                                                    <option></option>
-                                                    <option value="@_meeting.Place" selected>@adyContext.Place.FirstOrDefault(x => x.Id == _meeting.Place).Name</option>
-                                                }
-
-                                            }
-                                        </select>
+                                    <div class="col-sm-10">
+                                        <textarea class="form-control m_description" id="description" required placeholder="Açıqlama" name="description">@_meeting.Description</textarea>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="col-md-4">
+                        <div class="row row_twenty">
+                            <div class="col-md-10">
                                 <div class="form-group">
-                                    <label class="col-sm-5 control-label">İştirak edənlər</label>
+                                    <label class="col-sm-2 control-label">Departament</label>
 
-                                    <div class="col-sm-7">
+                                    <div class="col-sm-10">
+
+                                        <select id="meetingDepartment" name="departmentId" class="js-example-basic-single select2c" required multiple>
+                                            <option></option>
+                                            @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                            {
+                                                foreach (int item in _dep)
+                                                {
+                                                    <option selected value="@item">@adyContext.Department.FirstOrDefault(x => x.Id == item).Name</option>
+                                                }
+                                            }
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row row_twenty">
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Məlumat veriləcək</label>
+
+                                    <div class="col-sm-10">
+                                        <select name="informedUser" id="informedUser" class="js-example-basic-single select2c" multiple>
+                                            <option></option>
+                                            @{
+                                                if (_meeting.InformedUser != null)
+                                                    using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                                    {
+                                                        User _user;
+                                                        foreach (var item in _meeting.InformedUser.Split(';'))
+                                                        {
+                                                            _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == item);
+                                                            <option selected value="@item">@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
+                                                        }
+                                                    }
+                                            }
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row row_twenty">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">ADY xarici iştirakçılar</label>
+
+                                    <div class="col-sm-9">
+
+                                        <select name="other_participants" id="other_participants" class="js-example-basic-single select2c" multiple>
+                                            <option></option>
+                                            @{
+                                                if (_meeting.OtherParticipiants != null)
+                                                    using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                                    {
+                                                        OtherParticipiants _user;
+                                                        foreach (var item in _meeting.OtherParticipiants.Split(';'))
+                                                        {
+                                                            _user = adyContext.OtherParticipiants.FirstOrDefault(x => x.Id == int.Parse(item));
+                                                            string company = !string.IsNullOrEmpty(_user.Company) ? $"({_user.Company})" : "";
+                                                            <option selected value="@item">@_user.Name @_user.Surname @company</option>
+                                                        }
+                                                    }
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-1">
+                                        <a href="javascript:void(0)" class="add_others_btn" data-toggle="modal" data-target="#modal-6">
+                                            <i class="fa fa-plus"></i>
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row row_twenty">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">İştirak edənlər</label>
+
+                                    <div class="col-sm-10">
 
                                         <select name="participants" id="participants" required class="js-example-basic-single select2c" multiple>
                                             <option></option>
@@ -277,64 +351,10 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">ADY xarici iştirakçılar</label>
-
-                                    <div class="col-sm-5">
-
-                                        <select name="other_participants" id="other_participants" class="js-example-basic-single select2c" multiple>
-                                            <option></option>
-                                            @{
-                                                if (_meeting.OtherParticipiants != null)
-                                                    using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
-                                                    {
-                                                        OtherParticipiants _user;
-                                                        foreach (var item in _meeting.OtherParticipiants.Split(';'))
-                                                        {
-                                                            _user = adyContext.OtherParticipiants.FirstOrDefault(x => x.Id == int.Parse(item));
-                                                            string company = !string.IsNullOrEmpty(_user.Company) ? $"({_user.Company})" : "";
-                                                            <option selected value="@item">@_user.Name @_user.Surname @company</option>
-                                                        }
-                                                    }
-                                            }
-                                        </select>
-                                    </div>
-
-                                    <div class="col-sm-2">
-                                        <a href="javascript:void(0)" class="add_others_btn" data-toggle="modal" data-target="#modal-6">
-                                            <i class="fa fa-plus"></i>
-                                        </a>
-                                    </div>
-
-                                </div>
-                            </div>
-
                         </div>
 
                         <div class="row row_twenty">
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <label for="description" class="col-sm-2 control-label">Açıqlama</label>
 
-                                    <div class="col-sm-10">
-                                        <textarea class="form-control m_description" id="description" required placeholder="Açıqlama" name="description">@_meeting.Description</textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row row_twenty">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">Tag</label>
-
-                                    <div class="col-sm-7">
-                                        <input type="text" value="@_tags" class="form-control tagsinput" id="meetingTags" />
-                                    </div>
-                                </div>
-                            </div>
 
                             <div class="col-md-8">
                                 <div class="form-group">

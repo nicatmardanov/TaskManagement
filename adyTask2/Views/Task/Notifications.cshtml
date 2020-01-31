@@ -11,7 +11,7 @@
 <div id="notificationPage">
     <div id="notifications_all" data-page="@ViewBag.PageNumber">
         @{
-            @await Component.InvokeAsync("Notifications", new { page = ViewBag.PageNumber, user_id = ViewBag.UserId })
+            @await Component.InvokeAsync("Notifications", new { logs = Model, page = ViewBag.PageNumber, user_id = ViewBag.UserId })
 
 
             if (ViewBag.MaxPage > 1)
@@ -24,11 +24,18 @@
     </div>
 </div>
 
+@section style{
+    <link rel="stylesheet" href="/Content/assets/js/selectboxit/jquery.selectBoxIt.css">
+    <link rel="stylesheet" type="text/css" href="/Content/assets/js/select2/select2-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/Content/assets/js/select2/select2.css">
+}
+
 @section script{
-<script>
-    $(document).ready(function (e) {
-        $('.inbox_nav_list').click();
-    })
-</script>
+    <script>
+        $(document).ready(function (e) {
+            $('.inbox_nav_list').click();
+        })
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
     <script src="~/Content/assets/js/task_notification.js"></script>
 }

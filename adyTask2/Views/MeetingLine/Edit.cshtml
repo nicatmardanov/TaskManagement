@@ -4,7 +4,7 @@
 @{
     ViewData["Title"] = "Nizamla";
     Layout = "~/Views/Shared/_Layout.cshtml";
-       
+
     MeetingLine _meetingLine = Model;
     int[] _dep = ViewData["Department"] as int[];
     string _attach = ViewData["Attachment"] as string;
@@ -60,26 +60,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">Departament</label>
 
-                                    <div class="col-sm-7">
-
-                                        <select name="departmentId" class="js-example-basic-single select2c ml_up_department" required multiple>
-                                            <option></option>
-                                            @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
-                                            {
-                                                foreach (int item in _dep)
-                                                {
-                                                    <option selected value="@item">@adyContext.Department.FirstOrDefault(x => x.Id == item).Name</option>
-                                                }
-                                            }
-                                        </select>
-
-                                    </div>
-                                </div>
-                            </div>
 
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -91,20 +72,6 @@
                                 </div>
                             </div>
 
-                        </div>
-
-                        <div class="row row_twenty">
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <label for="description" class="col-sm-2 control-label">Açıqlama</label>
-                                    <div class="col-sm-10">
-                                        <textarea class="form-control m_description ml_up_description" required placeholder="Açıqlama" name="description">@_meetingLine.Description</textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row row_twenty">
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="col-sm-5 control-label">Məsul şəxs</label>
@@ -127,6 +94,13 @@
                                     </div>
                                 </div>
                             </div>
+
+                        </div>
+
+
+
+                        <div class="row row_twenty">
+
 
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -174,37 +148,6 @@
                                 </div>
                             </div>
 
-                        </div>
-
-                        <div class="row row_twenty">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">Məlumat veriləcək</label>
-
-                                    <div class="col-sm-7">
-
-                                        <select name="informedUser" class="js-example-basic-single select2c ml_up_inf_user" multiple>
-                                            <option></option>
-
-
-                                            @{
-                                                if (_meetingLine.InformedUserEmail != null)
-                                                    using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
-                                                    {
-                                                        User _user;
-                                                        foreach (var item in _meetingLine.InformedUserEmail.Split(';'))
-                                                        {
-                                                            _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == item);
-                                                            <option selected value="@item">@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
-                                                        }
-                                                    }
-                                            }
-                                        </select>
-
-                                    </div>
-                                </div>
-                            </div>
-
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="col-sm-5 control-label">Başlama Tarixi</label>
@@ -223,6 +166,10 @@
                                     </div>
                                 </div>
                             </div>
+
+                        </div>
+
+                        <div class="row row_twenty">
 
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -246,7 +193,69 @@
 
                         </div>
 
+                        <div class="row row_twenty">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <label for="description" class="col-sm-2 control-label">Açıqlama</label>
+                                    <div class="col-sm-10">
+                                        <textarea class="form-control m_description ml_up_description" required placeholder="Açıqlama" name="description">@_meetingLine.Description</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
+                        <div class="row row_twenty">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Məlumat veriləcək</label>
+
+                                    <div class="col-sm-10">
+
+                                        <select name="informedUser" class="js-example-basic-single select2c ml_up_inf_user" multiple>
+                                            <option></option>
+
+
+                                            @{
+                                                if (_meetingLine.InformedUserEmail != null)
+                                                    using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                                    {
+                                                        User _user;
+                                                        foreach (var item in _meetingLine.InformedUserEmail.Split(';'))
+                                                        {
+                                                            _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == item);
+                                                            <option selected value="@item">@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
+                                                        }
+                                                    }
+                                            }
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row row_twenty">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Departament</label>
+
+                                    <div class="col-sm-10">
+
+                                        <select name="departmentId" class="js-example-basic-single select2c ml_up_department" required multiple>
+                                            <option></option>
+                                            @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                            {
+                                                foreach (int item in _dep)
+                                                {
+                                                    <option selected value="@item">@adyContext.Department.FirstOrDefault(x => x.Id == item).Name</option>
+                                                }
+                                            }
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="row row_twenty">
                             <div class="col-md-10">
@@ -276,8 +285,8 @@
 
                         <div class="row row_twenty meeting_line_add_submit_row">
                             @*<div class="col-md-3">
-                                <a href="javascript:void(0)" class="btn btn-red btn-sm close_button">Bağla</a>
-                            </div>*@
+                <a href="javascript:void(0)" class="btn btn-red btn-sm close_button">Bağla</a>
+            </div>*@
 
                             <div class="col-md-3">
                                 <a href="javascript:void(0)" class="btn btn-green btn-sm editMeetingLine">Nizamla</a>

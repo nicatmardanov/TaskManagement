@@ -29,6 +29,7 @@ namespace adyTask2.Models
         public byte? StatusId { get; set; }
         public byte? IsPublished { get; set; }
 
+        public virtual User Creator { get; set; }
         public virtual MeetingType MeetingTypeNavigation { get; set; }
         public virtual Place PlaceNavigation { get; set; }
         public virtual Status Status { get; set; }

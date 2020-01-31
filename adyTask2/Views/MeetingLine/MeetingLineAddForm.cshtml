@@ -39,18 +39,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">Departament</label>
 
-                                    <div class="col-sm-7">
-
-                                        <select id="mlDepartment" name="departmentId" class="js-example-basic-single select2c" required multiple>
-                                        </select>
-
-                                    </div>
-                                </div>
-                            </div>
 
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -62,21 +51,6 @@
                                 </div>
                             </div>
 
-                        </div>
-
-                        <div class="row row_twenty">
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <label for="description" class="col-sm-2 control-label">Açıqlama</label>
-
-                                    <div class="col-sm-10">
-                                        <textarea class="form-control m_description" required id="ml_description" placeholder="Açıqlama" name="description"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row row_twenty">
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="col-sm-5 control-label">Məsul şəxs</label>
@@ -88,64 +62,62 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">Təqib edən</label>
-
-                                    <div class="col-sm-7">
-                                        <select class="js-example-basic-single select2c form-control" required name="mlFollowerUser" id="mlFollowerUser">
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">Təsdiqləyən</label>
-
-                                    <div class="col-sm-7">
-                                        <select class="js-example-basic-single select2c form-control" required name="identifierUser" id="identifierUser">
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
                         </div>
 
-                        <div class="row row_twenty">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">Məlumat veriləcək</label>
+                        @{
+                            var now = DateTime.UtcNow.AddHours(4);
+                        }
 
-                                    <div class="col-sm-7">
+                    <div class="row row_twenty">
 
-                                        <select name="informedUser" id="informedUserMl" class="js-example-basic-single select2c" multiple>
-                                        </select>
 
-                                    </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">Təqib edən</label>
+
+                                <div class="col-sm-7">
+                                    <select class="js-example-basic-single select2c form-control" required name="mlFollowerUser" id="mlFollowerUser">
+                                    </select>
                                 </div>
                             </div>
+                        </div>
 
-                            @{
-                                var now = DateTime.UtcNow.AddHours(4);
-                            }
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">Təsdiqləyən</label>
 
+                                <div class="col-sm-7">
+                                    <select class="js-example-basic-single select2c form-control" required name="identifierUser" id="identifierUser">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">Başlama Tarixi</label>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">Başlama Tarixi</label>
 
-                                    <div class="col-sm-7">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control datepicker" required id="meeting_l_start_date" data-format="dd/mm/yyyy" value="@now.Day/@now.Month/@now.Year">
+                                <div class="col-sm-7">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control datepicker" required id="meeting_l_start_date" data-format="dd/mm/yyyy" value="@now.Day/@now.Month/@now.Year">
 
-                                            <div class="input-group-addon meeting_l_si">
-                                                <a href="javascript:void(0)"><i class="entypo-calendar"></i></a>
-                                            </div>
+                                        <div class="input-group-addon meeting_l_si">
+                                            <a href="javascript:void(0)"><i class="entypo-calendar"></i></a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                    </div>
+
+                        <div class="row row_twenty">
+
+
+
+
+
+                            
 
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -162,10 +134,50 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
 
 
+                        <div class="row row_twenty">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <label for="description" class="col-sm-2 control-label">Açıqlama</label>
+
+                                    <div class="col-sm-10">
+                                        <textarea class="form-control m_description" required id="ml_description" placeholder="Açıqlama" name="description"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row row_twenty">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Məlumat veriləcək</label>
+
+                                    <div class="col-sm-10">
+
+                                        <select name="informedUser" id="informedUserMl" class="js-example-basic-single select2c" multiple>
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row row_twenty">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Departament</label>
+
+                                    <div class="col-sm-10">
+
+                                        <select id="mlDepartment" name="departmentId" class="js-example-basic-single select2c" required multiple>
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="row row_twenty">
                             <div class="col-md-10">

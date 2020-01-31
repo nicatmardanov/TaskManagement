@@ -14,9 +14,17 @@
                         İclas əlavə etmə formu
                     </div>
 
-                    <div class="panel-options">
-                        <a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
+                    <div class="new_meeting_option add_ml_option panel-options">
+                        <a href="javascript:void(0)">
+                            <span>Sətir əlavə et</span>
+                            <i class="fa fa-plus"></i>
+                        </a>
                     </div>
+
+                    <div class="panel-options">
+                        <a href="#" class="minimize_meeting" data-rel="collapse"><i class="entypo-down-open"></i></a>
+                    </div>
+
                 </div>
 
                 <div class="panel-body">
@@ -42,7 +50,7 @@
                                                 {
                                                     bool isNullMTypePermission = string.IsNullOrEmpty(permissions.Mtype);
                                                     int[] MeetingTypesArray = !isNullMTypePermission ? Array.ConvertAll(permissions.Mtype.Split(';'), x => int.Parse(x)) : new int[0];
-                                                    
+
                                                     var MTypes = adyContext.MeetingType.Where(x => MeetingTypesArray.Contains(x.Id));
 
                                                     foreach (var item in MTypes)
@@ -75,13 +83,11 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="col-sm-5 control-label">Departament</label>
+                                    <label class="col-sm-5 control-label">Yer</label>
 
                                     <div class="col-sm-7">
-
-                                        <select id="meetingDepartment" name="departmentId" class="js-example-basic-single select2c" required multiple>
+                                        <select name="place" id="meeting_place" class="js-example-basic-single select2c" required>
                                         </select>
-
                                     </div>
                                 </div>
                             </div>
@@ -113,19 +119,18 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="col-sm-5 control-label">Məlumat veriləcək</label>
+                                    <label class="col-sm-5 control-label">Tag</label>
 
                                     <div class="col-sm-7">
-                                        <select name="informedUser" id="informedUser" class="js-example-basic-single select2c" multiple>
-                                        </select>
-
+                                        <input type="text" value="" class="form-control tagsinput" id="meetingTags" />
                                     </div>
                                 </div>
                             </div>
 
+
                         </div>
 
-                        @{ 
+                        @{
                             var now = DateTime.UtcNow.AddHours(4);
                             var later = DateTime.UtcNow.AddHours(6);
                         }
@@ -169,52 +174,6 @@
                         </div>
 
                         <div class="row row_twenty">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">Yer</label>
-
-                                    <div class="col-sm-7">
-                                        <select name="place" id="meeting_place" class="js-example-basic-single select2c" required>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">İştirak edənlər</label>
-
-                                    <div class="col-sm-7">
-
-                                        <select name="participants" id="participants" required class="js-example-basic-single select2c" multiple>
-                                        </select>
-
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">ADY xarici iştirakçılar</label>
-
-                                    <div class="col-sm-5">
-
-                                        <select name="other_participants" id="other_participants" class="js-example-basic-single select2c" multiple>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-sm-2">
-                                        <a href="javascript:void(0)" class="add_others_btn" data-toggle="modal" data-target="#modal-6">
-                                        <i class="fa fa-plus"></i>
-                                        </a>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="row row_twenty">
                             <div class="col-md-10">
                                 <div class="form-group">
                                     <label for="description" class="col-sm-2 control-label">Açıqlama</label>
@@ -227,16 +186,71 @@
                         </div>
 
                         <div class="row row_twenty">
-                            <div class="col-md-4">
+                            <div class="col-md-10">
                                 <div class="form-group">
-                                    <label class="col-sm-5 control-label">Tag</label>
+                                    <label class="col-sm-2 control-label">Departament</label>
 
-                                    <div class="col-sm-7">
-                                        <input type="text" value="" class="form-control tagsinput" id="meetingTags" />
+                                    <div class="col-sm-10">
+                                        <select id="meetingDepartment" name="departmentId" class="js-example-basic-single select2c" required multiple>
+                                        </select>
+
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
+
+                        <div class="row row_twenty">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Məlumat veriləcək</label>
+
+                                    <div class="col-sm-10">
+                                        <select name="informedUser" id="informedUser" class="js-example-basic-single select2c" multiple>
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row row_twenty">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">ADY xarici iştirakçılar</label>
+
+                                    <div class="col-sm-9">
+
+                                        <select name="other_participants" id="other_participants" class="js-example-basic-single select2c" multiple>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-1">
+                                        <a href="javascript:void(0)" class="add_others_btn" data-toggle="modal" data-target="#modal-6">
+                                            <i class="fa fa-plus"></i>
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row row_twenty">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">İştirak edənlər</label>
+
+                                    <div class="col-sm-10">
+
+                                        <select name="participants" id="participants" required class="js-example-basic-single select2c" multiple>
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row row_twenty">
                             <div class="col-md-8">
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Sənədlər</label>

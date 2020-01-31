@@ -85,7 +85,7 @@ namespace adyTask2.Controllers
 
                     Classes.Log _log = new Classes.Log();
 
-                    await _log.LogAdd(3, moDescp[i], _meetingOperation.Id, 6, user_id, IpAdress, AInformation);
+                    await _log.LogAdd(3, moDescp[i], _meetingOperation.Id, 18, user_id, IpAdress, AInformation);
 
 
                 }

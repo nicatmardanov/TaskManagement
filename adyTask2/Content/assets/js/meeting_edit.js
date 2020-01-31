@@ -278,7 +278,11 @@
                         return xhr;
                     },
                     success: function () {
-                        window.location.href = "/Task/AllTasks";
+                        deletedTags = [];
+                        addedTags = [];
+
+                        deletedDepartment = [];
+                        addedDepartment = [];
                     }
                 });
             }, 500);
@@ -286,6 +290,23 @@
         }
 
 
+    });
+
+
+    $(document).on('click', '.add_ml_option>a', function (e) {
+        var checkVal = checkValid('meeting_add');
+        $('.meeting_add .invalid-feedback').remove();
+
+        if (checkVal && !compareMeetingTime() && $('.meeting_line_add_table').length == 0 && !$('.meeting_add .updtSave>a').hasClass('saveMeeting')) {
+            meeting_line_add_ajax(e);
+        }
+        else {
+            alert('İclas sətri daxil etmək üçün əvvəlcə iclas yaratmağınız tələb olunur!');
+        }
+
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        return false;
     })
 
 

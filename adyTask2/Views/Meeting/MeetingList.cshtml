@@ -8,7 +8,7 @@
     @await Component.InvokeAsync("TrainLoadingModal")
 }
 
-<div class="meeting_list_page">
+<div class="meeting_list_page" data-type="@ViewBag.Type">
     <h1>@ViewBag.Title</h1>
     <hr />
     <div id="meeting_all_lists">

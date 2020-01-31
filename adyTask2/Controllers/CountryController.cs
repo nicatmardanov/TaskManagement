@@ -11,12 +11,16 @@ namespace adyTask2.Controllers
     {
         public JsonResult Countries(string term)
         {
+            if (!string.IsNullOrEmpty(term))
+            {
                 adyTaskManagementContext adyContext = new adyTaskManagementContext();
 
                 IQueryable<Country> countries_result = adyContext.Country.Where(x => x.Name.ToLower().Contains(term.ToLower()));
                 var country_info = countries_result.Select(x => new { id = x.Id, name = x.Name});
 
                 return Json(country_info);
+            }
+            return Json(string.Empty);
         }
     }
 }

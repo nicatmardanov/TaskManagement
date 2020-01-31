@@ -55,12 +55,12 @@ namespace adyTask2.Controllers
                 int user_id = _permission.UserId ?? default;
 
                 Classes.Log _log = new Classes.Log();
-                await _log.LogAdd(4, "", _permission.Id, 16, user_id, IpAdress,AInformation);
+                await _log.LogAdd(4, "", _permission.Id, 16, user_id, IpAdress, AInformation);
             }
         }
 
         [HttpPost]
-        public async Task<string> AddOthers(OtherParticipiants Other_Participiants, string CountryName)
+        public async Task<string> AddOthers(OtherParticipiants Other_Participiants, string CountryName, string PositionName)
         {
             using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
             {
@@ -71,6 +71,15 @@ namespace adyTask2.Controllers
                     await adyContext.SaveChangesAsync();
 
                     Other_Participiants.CountryId = NewCountry.Id;
+                }
+
+                if (!string.IsNullOrEmpty(PositionName))
+                {
+                    PositionOthers Position = new PositionOthers { Name = PositionName };
+                    adyContext.PositionOthers.Add(Position);
+                    await adyContext.SaveChangesAsync();
+
+                    Other_Participiants.PositionId = Position.Id;
                 }
 
                 adyContext.OtherParticipiants.Add(Other_Participiants);
@@ -84,59 +93,67 @@ namespace adyTask2.Controllers
         //Json
         public JsonResult GetUsers(string term)
         {
-
-            string[] searched_items = term.Split(' ');
-            if (searched_items.Length > 0 && searched_items.Length < 3)
+            if (!string.IsNullOrEmpty(term))
             {
-                adyTaskManagementContext adyContext = new adyTaskManagementContext();
+                string[] searched_items = term.Split(' ');
+                if (searched_items.Length > 0 && searched_items.Length < 3)
+                {
+                    adyTaskManagementContext adyContext = new adyTaskManagementContext();
 
-                IQueryable<User> _users = adyContext.User.Where(x => x.Active == 1 && (x.FirstName.ToLower().StartsWith(searched_items[0].ToLower()) || x.LastName.ToLower().StartsWith(searched_items[0].ToLower())));
+                    IQueryable<User> _users = adyContext.User.Where(x => x.Active == 1 && (x.FirstName.ToLower().StartsWith(searched_items[0].ToLower()) || x.LastName.ToLower().StartsWith(searched_items[0].ToLower())));
 
-                if (searched_items.Length == 2)
-                    _users = _users.Where(x => x.FirstName.ToLower().StartsWith(searched_items[1].ToLower()) || x.LastName.ToLower().StartsWith(searched_items[1].ToLower()));
+                    if (searched_items.Length == 2)
+                        _users = _users.Where(x => x.FirstName.ToLower().StartsWith(searched_items[1].ToLower()) || x.LastName.ToLower().StartsWith(searched_items[1].ToLower()));
 
-                var user_info = _users.Select(x => new { id = x.PersonId, email = x.EmailAddress, full_name = $"{x.FirstName} {x.LastName} ({x.OrganizationFullName})" });
+                    var user_info = _users.Select(x => new { id = x.PersonId, email = x.EmailAddress, full_name = $"{x.FirstName} {x.LastName} ({x.OrganizationFullName})" });
 
-                return Json(user_info);
+                    return Json(user_info);
+                }
             }
             return Json(String.Empty);
         }
 
         public JsonResult GetNonAdmins(string term)
         {
-
-            string[] searched_items = term.Split(' ');
-            if (searched_items.Length > 0 && searched_items.Length < 3)
+            if (!string.IsNullOrEmpty(term))
             {
-                adyTaskManagementContext adyContext = new adyTaskManagementContext();
+                string[] searched_items = term.Split(' ');
+                if (searched_items.Length > 0 && searched_items.Length < 3)
+                {
+                    adyTaskManagementContext adyContext = new adyTaskManagementContext();
 
-                IQueryable<User> _users = adyContext.User.Where(x => x.Active == 1 && x.UserRole.FirstOrDefault(x => x.RoleId == 2) == null && (x.FirstName.ToLower().StartsWith(searched_items[0].ToLower()) || x.LastName.ToLower().StartsWith(searched_items[0].ToLower())));
+                    IQueryable<User> _users = adyContext.User.Where(x => x.Active == 1 && x.UserRole.FirstOrDefault(x => x.RoleId == 2) == null && (x.FirstName.ToLower().StartsWith(searched_items[0].ToLower()) || x.LastName.ToLower().StartsWith(searched_items[0].ToLower())));
 
-                if (searched_items.Length == 2)
-                    _users = _users.Where(x => x.FirstName.ToLower().StartsWith(searched_items[1].ToLower()) || x.LastName.ToLower().StartsWith(searched_items[1].ToLower()));
+                    if (searched_items.Length == 2)
+                        _users = _users.Where(x => x.FirstName.ToLower().StartsWith(searched_items[1].ToLower()) || x.LastName.ToLower().StartsWith(searched_items[1].ToLower()));
 
-                var user_info = _users.Select(x => new { id = x.PersonId, email = x.EmailAddress, full_name = $"{x.FirstName} {x.LastName} ({x.OrganizationFullName})" });
+                    var user_info = _users.Select(x => new { id = x.PersonId, email = x.EmailAddress, full_name = $"{x.FirstName} {x.LastName} ({x.OrganizationFullName})" });
 
-                return Json(user_info);
+                    return Json(user_info);
+                }
             }
+
             return Json(String.Empty);
         }
 
         public JsonResult GetOtherParticipants(string term)
         {
-            string[] searched_items = term.Split(' ');
-            if (searched_items.Length > 0 && searched_items.Length < 3)
+            if (!string.IsNullOrEmpty(term))
             {
-                adyTaskManagementContext adyContext = new adyTaskManagementContext();
+                string[] searched_items = term.Split(' ');
+                if (searched_items.Length > 0 && searched_items.Length < 3)
+                {
+                    adyTaskManagementContext adyContext = new adyTaskManagementContext();
 
-                IQueryable<OtherParticipiants> _users = adyContext.OtherParticipiants.Where(x => x.Name.ToLower().StartsWith(searched_items[0].ToLower()) || x.Surname.ToLower().StartsWith(searched_items[0].ToLower()));
+                    IQueryable<OtherParticipiants> _users = adyContext.OtherParticipiants.Where(x => x.Name.ToLower().StartsWith(searched_items[0].ToLower()) || x.Surname.ToLower().StartsWith(searched_items[0].ToLower()));
 
-                if (searched_items.Length == 2)
-                    _users = _users.Where(x => x.Name.ToLower().StartsWith(searched_items[1].ToLower()) || x.Surname.ToLower().StartsWith(searched_items[1].ToLower()));
+                    if (searched_items.Length == 2)
+                        _users = _users.Where(x => x.Name.ToLower().StartsWith(searched_items[1].ToLower()) || x.Surname.ToLower().StartsWith(searched_items[1].ToLower()));
 
-                var user_info = _users.Select(x => new { id = x.Id, full_name = $"{x.Name} {x.Surname} ({x.Company})" });
+                    var user_info = _users.Select(x => new { id = x.Id, full_name = $"{x.Name} {x.Surname} ({x.Company})" });
 
-                return Json(user_info);
+                    return Json(user_info);
+                }
             }
             return Json(String.Empty);
         }

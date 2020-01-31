@@ -44,17 +44,34 @@
         allowClear: true
     });
 
+    $ncElement = $('#notCompletedButton').select2({
+        placeholder: "Açıqda qalanlar",
+        allowClear: true
+    });
+
+    $myElement = $('#myMeetingLinesButton').select2({
+        placeholder: "Mənim yaratdıqlarım",
+        allowClear: true
+    });
 
 
-    var page = 1, dep = 0, mltype = 0, not_completed = false, myML = false;
+
+    var page = 1, dep = 0, mltype = 0, not_completed = 0, myML = 0;
 
     function ajax_mlTable() {
         var fullUrl = 'page=' + page + '&ml=' + mltype + '&nc=' + not_completed + '&mm=' + myML + '&dep=' + dep + '&type=' + $('#taskPage').data('type') + '&mtype=' + $('#taskPage').data('mtype');
+
+        if ($('#taskPage').data('mtype') == 3)
+            fullUrl = '/Task/MyTasks2?' + fullUrl;
+        else
+            fullUrl = '/Task/MyTasks?' + fullUrl;
+
+
         $('#modal-1').modal('show', { backdrop: 'static' });
         setTimeout(function () {
             $.ajax({
                 type: 'get',
-                url: '/Task/MyTasks?' + fullUrl,
+                url: fullUrl,
                 contentType: "application/json",
                 success: function (result) {
                     $('#ml_type_all .meeting_operation_line_table .panel-body').html($($(result).find('.meeting_operation_line_table .panel-body')).html());
@@ -81,7 +98,7 @@
 
     function Pagination(parameter_page) {
         page = parameter_page
-        $('#ml_show_partial').remove();
+        $('#ml_show_partial').remove(); $('#meeting_show_partial').remove();
         ajax_mlTable();
     }
 
@@ -110,27 +127,22 @@
         return false;
     });
 
-    $(document).on('click', '.notCompletedButton', function (e) {
+    $(document).on('change', '#notCompletedButton', function (e) {
+        if ($(this).val() != "")
+            not_completed = $(this).val();
 
-        if ($($($(this).parent()).find('input')).prop('checked'))
-            not_completed = true;
-        else {
-            not_completed = false;
-        }
 
         page = 1;
         ajax_mlTable();
 
-        //e.preventDefault();
-        //e.stopImmediatePropagation();
-        //return false;
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        return false;
     });
 
-    $(document).on('click', '.myMeetingLinesButton', function (e) {
-        if ($($($(this).parent()).find('input')).prop('checked'))
-            myML = true;
-        else
-            myML = false;
+    $(document).on('change', '#myMeetingLinesButton', function (e) {
+        if ($(this).val() != "")
+            myML = $(this).val();
 
         page = 1;
         ajax_mlTable();
@@ -146,17 +158,30 @@
         ajax_mlTable();
     });
 
+
+
     $('#meeting_line_department').on('select2:unselecting', function (e) {
         dep = 0;
         page = 1;
         ajax_mlTable();
     });
 
+    $('#notCompletedButton').on('select2:unselecting', function (e) {
+        not_completed = 0;
+        page = 1;
+        ajax_mlTable();
+    });
 
+    $('#myMeetingLinesButton').on('select2:unselecting', function (e) {
+        myML = 0;
+        page = 1;
+        ajax_mlTable();
+    });
 
     $(document).on('click', '.meeting_line_c', function () {
         var val = $(this).data('id');
         $('#ml_show_partial').remove();
+        $('#meeting_show_partial').remove();
 
         $.ajax({
             type: 'get',
@@ -171,6 +196,28 @@
         });
     });
 
+    $(document).on('click', '.meeting_c', function () {
+        var val = $(this).data('id');
+        $('#ml_show_partial').remove();
+        $('#meeting_show_partial').remove();
+
+        $.ajax({
+            type: 'get',
+            url: '/Meeting/Show/' + val,
+            contentType: "application/json",
+            success: function (result) {
+                $('#taskPage').append(result);
+                //window.scrollTo(0, $('#ml_show_partial').position().top);
+                var body = $("html, body");
+                body.stop().animate({ scrollTop: $('#meeting_show_partial').position().top }, 500, 'swing');
+            }
+        });
+    });
+
+    $(document).on('click', '#meeting_show_close a', function () {
+        $('#meeting_show_partial').remove();
+    })
+
     $(document).on('change', '.first-check', function () {
         if ($(this).prop('checked'))
             $('.icheck-11').prop('checked', true);
@@ -184,17 +231,19 @@
     });
 
     $(document).on('click', '.move_back', function (e) {
-        page = parseInt($(this).data('page')) - 1;
+        //page = parseInt($(this).data('page')) - 1;
+        page--;
         Pagination(page);
     })
 
     $(document).on('click', '.move_next', function (e) {
-        page = parseInt($(this).data('page')) + 1;
+        //page = parseInt($(this).data('page')) + 1;
+        page++;
         Pagination(page);
     });
 
     $(document).on('click', '#show_close a', function (e) {
-        $('#ml_show_partial').remove();
+        $('#ml_show_partial').remove(); $('#meeting_show_partial').remove();
         var body = $("html, body");
         body.stop().animate({ scrollTop: $('#ml_type_all').position().top }, 500, 'swing');
     });

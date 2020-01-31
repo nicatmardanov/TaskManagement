@@ -173,12 +173,12 @@
     });
 
     $(document).on('click', '.move_back', function (e) {
-        page = parseInt($(this).data('page')) - 1;
+        page--;
         Pagination(page);
     })
 
     $(document).on('click', '.move_next', function (e) {
-        page = parseInt($(this).data('page')) + 1;
+        page++;
         Pagination(page);
     });
 

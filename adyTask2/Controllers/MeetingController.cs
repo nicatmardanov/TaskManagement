@@ -50,13 +50,69 @@ namespace adyTask2.Controllers
 
         }
 
-        public IActionResult MeetingList(int page, byte mt, bool mm, int dep)
+        public IActionResult InMeetings()
+        {
+            using adyTaskManagementContext adyContext = new adyTaskManagementContext();
+            IQueryable<Meeting> _meeting = adyContext.Meeting.Where(x => x.IsPublished==1 && (x.FollowerUser.Contains(User.Identity.Name) || x.OwnerUser == User.Identity.Name || x.InformedUser.Contains(User.Identity.Name) || x.Participiants.Contains(User.Identity.Name)));    ////////////////////////////
+
+
+            double page_count = _meeting.Count() / 10.0;
+
+            if (page_count % 1 > 0)
+                page_count++;
+
+
+            ViewBag.MaxPage = (int)page_count;
+            ViewBag.PageNumber = 1;
+
+            ViewBag.MeetingType = 0;
+            ViewBag.MyMeetings = false;
+            ViewBag.Department = 0;
+            ViewBag.Type = 0;
+            ViewBag.Title = "Gələn iclaslar";
+
+            return View("MeetingList", _meeting.OrderByDescending(x => x.Id).Include(x => x.MeetingTypeNavigation).Include(x => x.Status).Take(10).ToList());
+        }
+
+        public IActionResult OutMeetings()
+        {
+            using adyTaskManagementContext adyContext = new adyTaskManagementContext();
+            var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
+            IQueryable<Meeting> _meeting = adyContext.Meeting.Where(x => x.IsPublished==1 && x.CreatorId == user_id);    ////////////////////////////
+
+            double page_count = _meeting.Count() / 10.0;
+
+            if (page_count % 1 > 0)
+                page_count++;
+
+
+            ViewBag.MaxPage = (int)page_count;
+            ViewBag.PageNumber = 1;
+
+            ViewBag.MeetingType = 0;
+            ViewBag.MyMeetings = false;
+            ViewBag.Department = 0;
+            ViewBag.Type = 1;
+            ViewBag.Title = "Göndərilən iclaslar";
+
+            return View("MeetingList", _meeting.OrderByDescending(x => x.Id).Include(x => x.MeetingTypeNavigation).Include(x => x.Status).Take(10).ToList());
+        }
+
+        public IActionResult MeetingList(int page, byte mt, bool mm, int dep, byte type)
         {
             using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
             {
 
-                var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value);
-                IQueryable<Meeting> _meeting = adyContext.Meeting.Where(x => x.CreatorId == user_id || x.FollowerUser.Contains(User.Identity.Name) || x.OwnerUser == User.Identity.Name || x.InformedUser.Contains(User.Identity.Name) || x.Participiants.Contains(User.Identity.Name));    ////////////////////////////
+                var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
+                IQueryable<Meeting> _meeting = adyContext.Meeting.AsQueryable();    ////////////////////////////
+
+                if (type == 0)
+                    _meeting = adyContext.Meeting.Where(x => x.IsPublished == 1 && (x.FollowerUser.Contains(User.Identity.Name) || x.OwnerUser == User.Identity.Name || x.InformedUser.Contains(User.Identity.Name) || x.Participiants.Contains(User.Identity.Name)));    ////////////////////////////
+                else if (type == 1)
+                    _meeting = _meeting.Where(x => x.IsPublished==1 && x.CreatorId == user_id);
+
+
+
 
                 if (mt > 0)
                     _meeting = _meeting.Where(x => x.MeetingType == mt);
@@ -156,7 +212,7 @@ namespace adyTask2.Controllers
             using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
             {
                 var meeting = adyContext.Meeting.FirstOrDefault(x => x.Id == id);
-                var user_id = int.Parse(User.Claims.FirstOrDefault(x=>x.Type==ClaimTypes.NameIdentifier).Value);
+                var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
                 meeting.StatusId = 2;
                 meeting.IsPublished = 1;
 
@@ -185,6 +241,8 @@ namespace adyTask2.Controllers
                     string tags = string.Join(',', adyContext.Tags.Where(x => x.Type == 1 && x.RefId == id).Select(x => x.Name));
                     ViewData["Name"] = tags;
                     ViewBag.Id = id;
+                    Classes.Permissions permission = new Classes.Permissions(HttpContext);
+                    ViewBag.MLPermission = permission.IsPermitted(2) ? 1 : 0;
 
                     return View(adyContext.Meeting.FirstOrDefault(x => x.Id == id));
                 }

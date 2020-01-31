@@ -49,7 +49,7 @@
     var page = 1, dep = 0, meetingType = 0, myMeeting = false;
 
     function ajax_mTable() {
-        var fullUrl = 'page=' + page + '&mt=' + meetingType + '&mm=' + myMeeting + '&dep=' + dep;
+        var fullUrl = 'page=' + page + '&mt=' + meetingType + '&mm=' + myMeeting + '&dep=' + dep + '&type=' + $('.meeting_list_page').data('type');
         $('#modal-1').modal('show', { backdrop: 'static' });
         setTimeout(function () {
             $.ajax({
@@ -154,12 +154,12 @@
     });
 
     $(document).on('click', '.move_back', function (e) {
-        page = parseInt($(this).data('page')) - 1;
+        page--;
         Pagination(page);
     })
 
     $(document).on('click', '.move_next', function (e) {
-        page = parseInt($(this).data('page')) + 1;
+        page++;
         Pagination(page);
     });
 
@@ -180,7 +180,7 @@
                 $($(result).find('.meeting_operation_table')).insertBefore('#meeting_show_partial>.row');
                 //window.scrollTo(0, $('#ml_show_partial').position().top);
                 var body = $("html, body");
-                body.stop().animate({ scrollTop: $('#ml_show_partial').position().top }, 500, 'swing');
+                body.stop().animate({ scrollTop: $('.meeting_operation_table').position().top }, 500, 'swing');
             }
         });
     });

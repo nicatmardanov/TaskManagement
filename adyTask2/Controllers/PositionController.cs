@@ -7,23 +7,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace adyTask2.Controllers
 {
-    [Microsoft.AspNetCore.Authorization.Authorize]
-    public class PlaceController : Controller
+    public class PositionController : Controller
     {
-        //Json
-        public JsonResult GetPlaces(string term)
+        public JsonResult Positions(string term)
         {
             if (!string.IsNullOrEmpty(term))
             {
                 adyTaskManagementContext adyContext = new adyTaskManagementContext();
 
-                IQueryable<Place> _places = adyContext.Place.Where(x => x.Name.ToLower().Contains(term.ToLower()));
+                var positions = adyContext.PositionOthers.Where(x => x.Name.ToLower().Contains(term.ToLower()));
+                var positions_info = positions.Select(x => new { id = x.Id, name = x.Name });
 
-                var place_info = _places.Select(x => new { id= x.Id, full_name = $"{x.Name}"});
-
-                return Json(place_info);
-
+                return Json(positions_info);
             }
+
 
             return Json(string.Empty);
         }

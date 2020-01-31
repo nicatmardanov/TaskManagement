@@ -32,6 +32,7 @@ namespace adyTask2.Models
         public virtual DbSet<Permission> Permission { get; set; }
         public virtual DbSet<PermissionPages> PermissionPages { get; set; }
         public virtual DbSet<Place> Place { get; set; }
+        public virtual DbSet<PositionOthers> PositionOthers { get; set; }
         public virtual DbSet<Reports> Reports { get; set; }
         public virtual DbSet<Revision> Revision { get; set; }
         public virtual DbSet<Role> Role { get; set; }
@@ -46,11 +47,9 @@ namespace adyTask2.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-
-
                 //optionsBuilder.UseSqlServer("Server=DESKTOP-UTUBGGC\\SQLEXPRESS;Database=adyTaskManagement;Trusted_Connection=True;");
-                optionsBuilder.UseSqlServer(@"Data Source=192.168.5.17;Initial Catalog=adyTaskManagement;User ID=meeting;Password=12345@ady;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False;");
 
+                optionsBuilder.UseSqlServer(@"Data Source=192.168.5.17;Initial Catalog=adyTaskManagement;User ID=meeting;Password=12345@ady;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False;");
 
                 optionsBuilder.UseLazyLoadingProxies();
                 optionsBuilder.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.CoreEventId.LazyLoadOnDisposedContextWarning));
@@ -296,6 +295,12 @@ namespace adyTask2.Models
 
                 entity.Property(e => e.Title).HasColumnName("title");
 
+                entity.HasOne(d => d.Creator)
+                    .WithMany(p => p.Meeting)
+                    .HasPrincipalKey(p => p.PersonId)
+                    .HasForeignKey(d => d.CreatorId)
+                    .HasConstraintName("FK_meeting_user");
+
                 entity.HasOne(d => d.MeetingTypeNavigation)
                     .WithMany(p => p.Meeting)
                     .HasForeignKey(d => d.MeetingType)
@@ -483,9 +488,7 @@ namespace adyTask2.Models
                     .HasColumnName("name")
                     .HasMaxLength(100);
 
-                entity.Property(e => e.Position)
-                    .HasColumnName("position")
-                    .HasMaxLength(200);
+                entity.Property(e => e.PositionId).HasColumnName("position_id");
 
                 entity.Property(e => e.Profession)
                     .HasColumnName("profession")
@@ -499,6 +502,11 @@ namespace adyTask2.Models
                     .WithMany(p => p.OtherParticipiants)
                     .HasForeignKey(d => d.CountryId)
                     .HasConstraintName("FK_other_participiants_country");
+
+                entity.HasOne(d => d.Position)
+                    .WithMany(p => p.OtherParticipiants)
+                    .HasForeignKey(d => d.PositionId)
+                    .HasConstraintName("FK_other_participiants_position_others");
             });
 
             modelBuilder.Entity<Permission>(entity =>
@@ -548,6 +556,17 @@ namespace adyTask2.Models
                 entity.Property(e => e.Name)
                     .HasColumnName("name")
                     .HasMaxLength(500);
+            });
+
+            modelBuilder.Entity<PositionOthers>(entity =>
+            {
+                entity.ToTable("position_others");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Name)
+                    .HasColumnName("name")
+                    .HasMaxLength(1000);
             });
 
             modelBuilder.Entity<Reports>(entity =>

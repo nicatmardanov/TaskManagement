@@ -71,13 +71,42 @@ namespace adyTask2.Controllers
 
                     var email = username.Contains("@ady.az") ? username : username + "@ady.az";
 
-                    Models.User _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == email);
+                    User _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == email);
 
                     if (_user != null)
                     {
                         bool isAD = _user.IsActiveDirectory.HasValue && _user.IsActiveDirectory.Value;
 
-                        if (ADLogin(email, password) || (_user.Password == password && !isAD))
+                        if (isAD)
+                        {
+                            if (ADLogin(email, password))
+                            {
+                                ClaimsIdentity claimsIdentity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+                                claimsIdentity.AddClaim(new Claim(ClaimTypes.Name, email));
+                                claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, _user.PersonId.ToString()));
+                                claimsIdentity.AddClaim(new Claim("FullName", _user.FirstName + " " + _user.LastName));
+
+
+                                foreach (var item in _user.UserRole)
+                                {
+                                    claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, item.Role.RoleName));
+                                }
+
+                                AuthenticationProperties authProperty = new AuthenticationProperties
+                                {
+                                    AllowRefresh = true,
+                                    IsPersistent = true,
+                                    ExpiresUtc = DateTime.UtcNow.AddYears(1),
+                                    IssuedUtc = DateTime.UtcNow
+                                };
+
+                                var principial = new ClaimsPrincipal(claimsIdentity);
+
+                                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principial, authProperty);
+                                return Json(new { res = "1" });
+                            }
+                        }
+                        else if (_user.Password == password)
                         {
                             ClaimsIdentity claimsIdentity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
                             claimsIdentity.AddClaim(new Claim(ClaimTypes.Name, email));

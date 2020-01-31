@@ -139,18 +139,18 @@
                     }
                     else {
 
-                        if ($('.meeting_add').data('edit') == 1) {
-                            window.location.href = "/Meeting/AllMeetings";
-                        }
-                        else {
-                            deletedTags = [];
-                            addedTags = [];
+                        //if ($('.meeting_add').data('edit') == 1) {
+                        //    window.location.href = "/Meeting/AllMeetings";
+                        //}
+                        //else {
+                        deletedTags = [];
+                        addedTags = [];
 
-                            deletedDepartment = [];
-                            addedDepartment = [];
+                        deletedDepartment = [];
+                        addedDepartment = [];
 
-                            fileChange = true;
-                        }
+                        fileChange = true;
+                        //}
                     }
 
 
@@ -159,9 +159,7 @@
 
 
 
-                    if ($('.meeting_line_add_table').length == 0) {
-                        meeting_line_add_ajax(e);
-                    }
+
 
                     setTimeout(function () {
                         $('#modal-7').modal('hide');
@@ -178,6 +176,22 @@
         e.stopImmediatePropagation();
         return false;
     }
+
+    $(document).on('click', '.add_ml_option>a', function (e) {
+        var checkVal = checkValid('meeting_add');
+        $('.meeting_add .invalid-feedback').remove();
+
+        if (checkVal && !compareMeetingTime() && $('.meeting_line_add_table').length == 0 && !$('.meeting_add .updtSave>a').hasClass('saveMeeting')) {
+            meeting_line_add_ajax(e);
+        }
+        else {
+            alert('İclas sətri daxil etmək üçün əvvəlcə iclas yaratmağınız tələb olunur!');
+        }
+
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        return false;
+    })
 
     function checkValid(className) {
         var checkVal = true;
@@ -322,7 +336,15 @@
                 fd.append('CountryName', countryname); /////////////
             }
 
-            fd.append('Position', $('#other_position').val());
+            if ($.isNumeric($('#other_position').val()))
+                fd.append('PositionId', parseInt($('#other_position').val())); /////////////
+            else {
+                var positionname = $('#other_position').val() != null ? $('#other_position').val() : "";
+                fd.append('PositionName', positionname); /////////////
+            }
+            //fd.append('Position', $('#other_position').val());
+
+
             fd.append('Company', $('#other_company').val());
 
             $.ajax({
@@ -360,7 +382,7 @@
         var checkVal = checkValid('meeting_add');
 
         if (checkVal && !compareMeetingTime()) {
-            $('.meeting_add .panel-options a').click();
+            $('.meeting_add .panel-options .minimize_meeting').click();
             $('.meeting_add .invalid-feedback').remove();
 
             meetingSend(e, 0, 0);
@@ -377,7 +399,7 @@
         var checkVal = checkValid('meeting_add');
 
         if (checkVal && !compareMeetingTime()) {
-            $('.meeting_add .panel-options a').click();
+            $('.meeting_add .panel-options .minimize_meeting').click();
             $('.meeting_add .invalid-feedback').remove();
             var meeting_id = $('.meeting_add').data('id');
             meetingSend(e, 1, meeting_id);
@@ -496,7 +518,14 @@
                 success: function (result) {
                     if ($('#ml_add').length < 1) {
 
-                        $(result).insertBefore('.publish_meeting');
+                        if ($('.meeting_add').data('edit') == 1) {
+                            $('.meeting_add').append(result);
+                            var body = $("html, body");
+                            body.stop().animate({ scrollTop: $('#ml_add').position().top }, 500, 'swing');
+                        }
+                        else
+                            $(result).insertBefore('.publish_meeting');
+
 
                         $('#ml_add .select2c').select2();
 
@@ -784,7 +813,7 @@
     });
 
     var countryObject = new Object({
-        minimumInputLength: 1,
+        minimumInputLength: 2,
         tags: [],
         language: {
             inputTooShort: function () {
@@ -821,8 +850,46 @@
         }
     });
 
+    var positionObject = new Object({
+        minimumInputLength: 2,
+        tags: [],
+        language: {
+            inputTooShort: function () {
+                return 'Sorğunu daxil edin';
+            },
+            noResults: function () {
+                return "Bu sorğuya uyğun nəticə tapılmadı";
+            },
+            searching: function () {
+                return "Axtarış gedir..."
+            }
+        },
+        placeholder: "Daxil edin",
+        ajax: {
+            url: '/Position/Positions',
+            dataType: 'json',
+            type: "GET",
+            data: function (term) {
+                return term;
+            },
+            processResults: function (data) {
+                var myResults = [];
+                $.each(data, function (index, item) {
+                    myResults.push({
+                        'id': item.id,
+                        'text': item.name
+                    });
+                });
+                return {
+                    results: myResults
+                };
+            }
+
+        }
+    });
+
     var places = new Object({
-        minimumInputLength: 1,
+        minimumInputLength: 2,
         tags: [],
         language: {
             inputTooShort: function () {
@@ -954,6 +1021,8 @@
     });
 
     $('#other_country').select2(countryObject);
+    $('#other_position').select2(positionObject);
+    
 
 
 

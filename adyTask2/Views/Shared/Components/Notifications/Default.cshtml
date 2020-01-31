@@ -25,6 +25,109 @@
                         </a>
                     </div>
                 </div>
+                <div class="panel_heading_s">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div class="s30">
+                                <span>Növü</span>
+                            </div>
+                            <div class="s70 taskSelect">
+                                <select class="form-control select2c select2" name="meeting_line_type" id="meeting_line_type">
+                                    <option></option>
+                                    @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                    {
+                                        if (ViewBag.MeetingLine == 1)
+                                        {
+                                            <option value="1" selected>Birbaşa tapşırıqlar</option>
+                                            <option value="2">İcas tapşırıqları</option>
+                                        }
+                                        else if (ViewBag.MeetingLine == 2)
+                                        {
+                                            <option value="1">Birbaşa tapşırıqlar</option>
+                                            <option value="2" selected>İcas tapşırıqları</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="1">Birbaşa tapşırıqlar</option>
+                                            <option value="2">İcas tapşırıqları</option>
+                                        }
+                                        <option value="3">Hamısı</option>
+
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-4">
+                            <div class="s40">
+                                <span>Açıqda qalanlar</span>
+                            </div>
+
+                            <div class="s60 taskSelect">
+                                <select class="form-control select2c select2" name="notCompletedButton" id="notCompletedButton">
+                                    <option></option>
+                                    @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                    {
+                                        if (ViewBag.NotCompleted == 1)
+                                        {
+                                            <option value="1" selected>Açıqda qalanlar</option>
+                                            <option value="2">Tamamlananlar</option>
+                                        }
+                                        else if (ViewBag.NotCompleted == 2)
+                                        {
+                                            <option value="1">Açıqda qalanlar</option>
+                                            <option value="2" selected>Tamamlananlar</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="1">Açıqda qalanlar</option>
+                                            <option value="2">Tamamlananlar</option>
+                                        }
+                                        <option value="3">Hamısı</option>
+
+                                    }
+                                </select>
+                            </div>
+
+
+
+                        </div>
+
+                        <div class="col-xs-4">
+                            <div class="s30">
+                                <span>Mənim yaratdıqlarım</span>
+                            </div>
+
+                            <div class="s70 taskSelect">
+                                <select class="form-control select2c select2" name="myMeetingLinesButton" id="myMeetingLinesButton">
+                                    <option></option>
+                                    @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                    {
+                                        if (ViewBag.MyMeetingLines == 1)
+                                        {
+                                            <option value="1" selected>Mənim yaratdıqlarım</option>
+                                            <option value="2">Digərlərinin yaratdıqları</option>
+                                        }
+                                        else if (ViewBag.MyMeetingLines == 2)
+                                        {
+                                            <option value="1">Mənim yaratdıqlarım</option>
+                                            <option value="2" selected>Digərlərinin yaratdıqları</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="1">Mənim yaratdıqlarım</option>
+                                            <option value="2">Digərlərinin yaratdıqları</option>
+                                        }
+                                        <option value="3">Hamısı</option>
+
+                                    }
+                                </select>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
 
                 <div class="panel-body">
                     <div class="row">
@@ -36,11 +139,12 @@
                                             <input tabindex="5" type="checkbox" class="icheck-11 first-check">
                                         </th>
                                         <th width="3%">#</th>
-                                        <th>Tip</th>
+                                        <th>Növü</th>
                                         <th>Açıqlama</th>
                                         <th>Əməliyyat açıqlaması</th>
                                         <th>İstifadəçi</th>
                                         <th>Yaradılma tarixi</th>
+                                        <th>Status</th>
                                         <th width="1%"></th>
                                     </tr>
                                 </thead>
@@ -51,22 +155,42 @@
                                         {
                                             foreach (MLog item in logs)
                                             {
-
-                                                <tr data-id="@item.RefId">
-                                                    <td width="1%" class="meeting_line_c">
-                                                        <input tabindex="5" type="checkbox" data-id="@item.Id" class="ml_check icheck-11">
-                                                    </td>
-                                                    <td class="meeting_line_c">@i</td>
-                                                    <td class="meeting_line_c">@adyContext.MeetingLine.FirstOrDefault(x => x.Id == item.RefId).MlTypeNavigation.Name</td>
-                                                    <td class="meeting_line_c">@item.Description</td>
-                                                    <td class="meeting_line_c">@item.Operation.Operation</td>
-                                                    <td class="meeting_line_c">@item.User.FirstName @item.User.LastName</td>
-                                                    @{
-                                                        var create_date = item.CreateDate.Value;
-                                                        <td class="meeting_line_c">@create_date.Day/@create_date.Month/@create_date.Year</td>
-                                                    }
-                                                    <td width="1%"><a class="remove_notification" href="javascript:void(0)"><i class="fa fa-trash-o"></i></a></td>
-                                                </tr>
+                                                if (item.Type == 1)
+                                                {
+                                                    var meeting = adyContext.Meeting.FirstOrDefault(x => x.Id == item.RefId);
+                                                    <tr data-id="@item.RefId">
+                                                        <td width="1%">
+                                                            <input tabindex="5" type="checkbox" data-id="@item.Id" class="ml_check icheck-11">
+                                                        </td>
+                                                        <td class="meeting_c">@i</td>
+                                                        <th class="meeting_c" data-id="@item.Id">İclas</th>
+                                                        <th class="meeting_c" data-id="@item.Id">@item.Description</th>
+                                                        <td class="meeting_c">@item.Operation.Operation</td>
+                                                        <th class="meeting_c" data-id="@item.Id">@item.User.FirstName @item.User.LastName</th>
+                                                        <th class="meeting_c" data-id="@item.Id">@item.CreateDate.Value.Day/@item.CreateDate.Value.Month/@item.CreateDate.Value.Year</th>
+                                                        <th class="meeting_c" data-id="@item.Id">@meeting.Status.StatusName</th>
+                                                        <td width="1%"><a class="remove_notification" href="javascript:void(0)"><i class="fa fa-trash-o"></i></a></td>
+                                                    </tr>
+                                                }
+                                                else if (item.Type == 2)
+                                                {
+                                                    <tr data-id="@item.RefId">
+                                                        <td width="1%">
+                                                            <input tabindex="5" type="checkbox" data-id="@item.Id" class="ml_check icheck-11">
+                                                        </td>
+                                                        <td class="meeting_line_c">@i</td>
+                                                        <td class="meeting_line_c">@adyContext.MeetingLine.FirstOrDefault(x => x.Id == item.RefId).MlTypeNavigation.Name</td>
+                                                        <td class="meeting_line_c">@item.Description</td>
+                                                        <td class="meeting_line_c">@item.Operation.Operation</td>
+                                                        <td class="meeting_line_c">@item.User.FirstName @item.User.LastName</td>
+                                                        @{
+                                                            var create_date = item.CreateDate.Value;
+                                                            <td class="meeting_line_c">@create_date.Day/@create_date.Month/@create_date.Year</td>
+                                                        }
+                                                        <td>@adyContext.MeetingLine.FirstOrDefault(x => x.Id == item.RefId).Status.StatusName</td>
+                                                        <td width="1%"><a class="remove_notification" href="javascript:void(0)"><i class="fa fa-trash-o"></i></a></td>
+                                                    </tr>
+                                                }
                                                 i++;
                                             }
                                         }
