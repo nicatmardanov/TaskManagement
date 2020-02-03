@@ -1,6 +1,15 @@
 ﻿@{
-    string[] cookieValue = (ViewBag.Report as string).Split('-');
-    string[] dep_list = cookieValue[2].Split('+');
+    string[] value = (ViewBag.Report as string).Split('-');
+
+    string[] mtype = value[0].Split('+');
+    string[] mltype = value[1].Split('+');
+    string[] dep_list = value[2].Split('+');
+    string[] responsible = value[3].Split('+');
+    string[] follower = value[4].Split('+');
+    string[] confirmed = value[5].Split('+');
+    string[] status = value[6].Split('+');
+    DateTime stime = Convert.ToDateTime(value[7]);
+    DateTime ftime = !string.IsNullOrEmpty(value[8]) ? Convert.ToDateTime(value[8]) : new DateTime();
 }
 
 @using adyTask2.Models
@@ -12,7 +21,7 @@
 
                 <div class="panel-heading">
                     <div class="panel-title">
-                        İnteraktiv Hesabat
+                        İnteraktiv Tapşırıq Hesabatı
                     </div>
 
                     <div class="new_meeting_line_option new_meeting_operation panel-options">
@@ -39,23 +48,27 @@
                                 <div class="form-group">
                                     <label class="col-sm-5 control-label">İclas növü</label>
                                     <div class="col-sm-7">
-                                        <select class="form-control js-example-basic-single select2c" required name="meeting_type" id="meeting_type">
+                                        <select class="form-control js-example-basic-single select2c" required name="meeting_type" id="meeting_type" multiple>
                                             <option></option>
                                             @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
                                             {
                                                 foreach (var item in adyContext.MeetingType)
                                                 {
-                                                    if (!string.IsNullOrEmpty(cookieValue[0]))
+                                                    if (mtype != null && mtype.Length > 0)
                                                     {
-                                                        if (item.Id == int.Parse(cookieValue[0]))
+                                                        if (mtype.Contains(item.Id.ToString()))
                                                         {
                                                             <option value="@item.Id" selected>@item.Name</option>
                                                         }
-                                                        else
+                                                        @*else
+                                                            {
+                                                                <option value="@item.Id">@item.Name</option>
+                                                            }*@
+                                                    }
+                                                    @*else
                                                         {
                                                             <option value="@item.Id">@item.Name</option>
-                                                        }
-                                                    }
+                                                        }*@
                                                 }
                                             }
                                         </select>
@@ -67,22 +80,17 @@
                                 <div class="form-group">
                                     <label class="col-sm-5 control-label">İclas sətirinin növü</label>
                                     <div class="col-sm-7">
-                                        <select class="js-example-basic-single select2c form-control" required name="ml_type" id="ml_type">
+                                        <select class="js-example-basic-single select2c form-control" required name="ml_type" id="ml_type" multiple>
                                             <option></option>
                                             @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
                                             {
                                                 foreach (MlType item in adyContext.MlType)
                                                 {
-                                                    if (!string.IsNullOrEmpty(cookieValue[1]))
+                                                    if (mltype != null && mltype.Length > 0)
                                                     {
-                                                        if (item.Id == int.Parse(cookieValue[1]))
+                                                        if (mltype.Contains(item.Id.ToString()))
                                                         {
                                                             <option value="@item.Id" selected>@item.Name</option>
-
-                                                        }
-                                                        else
-                                                        {
-                                                            <option value="@item.Id">@item.Name</option>
                                                         }
                                                     }
                                                 }
@@ -129,14 +137,17 @@
                                     <label class="col-sm-5 control-label">Məsul şəxs</label>
 
                                     <div class="col-sm-7">
-                                        <select class="js-example-basic-single select2c form-control" required name="responsibleUser" id="responsibleUser">
+                                        <select class="js-example-basic-single select2c form-control" required name="responsibleUser" id="responsibleUser" multiple>
                                             <option></option>
-                                            @if (!string.IsNullOrEmpty(cookieValue[3]))
+                                            @if (responsible != null && responsible.Length > 0)
                                             {
                                                 using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
                                                 {
-                                                    var _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == cookieValue[3]);
-                                                    <option value="@cookieValue[3]" selected>@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
+                                                    var _user = adyContext.User.Where(x => responsible.Contains(x.EmailAddress));
+                                                    foreach (var item in _user)
+                                                    {
+                                                        <option value="@item.EmailAddress" selected>@item.FirstName @item.LastName (@item.OrganizationFullName)</option>
+                                                    }
                                                 }
                                             }
                                         </select>
@@ -149,13 +160,16 @@
                                     <label class="col-sm-5 control-label">Təqib edən</label>
 
                                     <div class="col-sm-7">
-                                        <select class="js-example-basic-single select2c form-control" required name="mlFollowerUser" id="mlFollowerUser">
-                                            @if (!string.IsNullOrEmpty(cookieValue[4]))
+                                        <select class="js-example-basic-single select2c form-control" required name="mlFollowerUser" id="mlFollowerUser" multiple>
+                                            @if (follower != null && follower.Length > 0)
                                             {
                                                 using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
                                                 {
-                                                    var _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == cookieValue[4]);
-                                                    <option value="@cookieValue[4]" selected>@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
+                                                    var _user = adyContext.User.Where(x => follower.Contains(x.EmailAddress));
+                                                    foreach (var item in _user)
+                                                    {
+                                                        <option value="@item.EmailAddress" selected>@item.FirstName @item.LastName (@item.OrganizationFullName)</option>
+                                                    }
                                                 }
                                             }
                                         </select>
@@ -168,13 +182,16 @@
                                     <label class="col-sm-5 control-label">Təsdiqləyən</label>
 
                                     <div class="col-sm-7">
-                                        <select class="js-example-basic-single select2c form-control" required name="identifierUser" id="identifierUser">
-                                            @if (!string.IsNullOrEmpty(cookieValue[5]))
+                                        <select class="js-example-basic-single select2c form-control" required name="identifierUser" id="identifierUser" multiple>
+                                            @if (confirmed != null && confirmed.Length > 0)
                                             {
                                                 using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
                                                 {
-                                                    var _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == cookieValue[5]);
-                                                    <option value="@cookieValue[5]" selected>@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
+                                                    var _user = adyContext.User.Where(x => confirmed.Contains(x.EmailAddress));
+                                                    foreach (var item in _user)
+                                                    {
+                                                        <option value="@item.EmailAddress" selected>@item.FirstName @item.LastName (@item.OrganizationFullName)</option>
+                                                    }
                                                 }
                                             }
                                         </select>
@@ -185,26 +202,63 @@
                         </div>
 
                         <div class="row row_twenty">
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Başlama tarixi</label>
+                                    <div class="col-sm-7">
+                                        <div class="input-group">
+                                            <input type="text" required class="form-control datepicker" id="ml_start_date" data-format="dd/mm/yyyy" value="@stime.Day/@stime.Month/@stime.Year">
+                                            <div class="input-group-addon">
+                                                <a href="javascript:void(0)"><i class="entypo-calendar"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Bitmə tarixi</label>
+                                    <div class="col-sm-7">
+                                        <div class="input-group">
+                                            @{ 
+                                                string ftime_string;
+                                                if (!string.IsNullOrEmpty(value[8]))
+                                                {
+                                                    ftime_string = $"{ftime.Day}/{ftime.Month}/{ftime.Year}";
+                                                }
+                                                else
+                                                {
+                                                    ftime_string = "";
+                                                }
+                                            }
+                                            <input type="text" required class="form-control datepicker" id="ml_finish_date" data-format="dd/mm/yyyy" value="@ftime_string">
+                                            <div class="input-group-addon">
+                                                <a href="javascript:void(0)"><i class="entypo-calendar"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="col-sm-5 control-label">Status</label>
                                     <div class="col-sm-7">
-                                        <select name="mlStatus" id="mlStatus" class="form-control js-example-basic-single select2c" required>
+                                        <select name="mlStatus" id="mlStatus" class="form-control js-example-basic-single select2c" required multiple>
                                             <option></option>
                                             @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
                                             {
                                                 foreach (var item in adyContext.Status.Where(x => x.Id > 1))
                                                 {
-                                                    if (!string.IsNullOrEmpty(cookieValue[6]))
+                                                    if (status != null && status.Length > 0)
                                                     {
-                                                        if (item.Id == int.Parse(cookieValue[6]))
+                                                        if (status.Contains(item.Id.ToString()))
                                                         {
                                                             <option value="@item.Id" selected>@item.StatusName</option>
-                                                        }
-                                                        else
-                                                        {
-                                                            <option value="@item.Id">@item.StatusName</option>
-
                                                         }
                                                     }
                                                 }
@@ -214,30 +268,8 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">Vəziyyət</label>
-                                    <div class="col-sm-7">
-                                        <select class="form-control js-example-basic-single select2c" required name="mlStatusSec" id="mlStatusSec">
-                                            <option></option>
-                                            @if (!string.IsNullOrEmpty(cookieValue[7]))
-                                            {
-                                                if (int.Parse(cookieValue[7]) == 1)
-                                                {
-                                                    <option value="1" selected>Tamamlanmış</option>
-                                                    <option value="2">Tamamlanmamış</option>
-                                                }
-                                                else if (int.Parse(cookieValue[7]) == 2)
-                                                {
-                                                    <option value="1">Tamamlanmış</option>
-                                                    <option value="2" selected>Tamamlanmamış</option>
-                                                }
-                                            }
 
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+
 
                         </div>
 
@@ -256,4 +288,4 @@
 
         </div>
     </div>
-</div>
+</div>      

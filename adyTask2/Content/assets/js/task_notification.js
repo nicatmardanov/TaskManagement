@@ -4,17 +4,14 @@
 
     $mltElement = $('#meeting_line_type').select2({
         placeholder: "İclas sətirinin növü",
-        allowClear: true
     });
 
     $ncElement = $('#notCompletedButton').select2({
         placeholder: "Açıqda qalanlar",
-        allowClear: true
     });
 
     $myElement = $('#myMeetingLinesButton').select2({
         placeholder: "Mənim yaratdıqlarım",
-        allowClear: true
     });
 
 
@@ -25,7 +22,7 @@
             var fd = new FormData();
 
             $.each(ids, function (index, item) {
-                fd.append('ids', item);
+                fd.append('ids', parseInt(item));
             });
 
             $('#modal-1').modal('show', { backdrop: 'static' });
@@ -64,17 +61,14 @@
                     $('#notificationPage').html($($(result).find('#notificationPage')).html());
                     $mltElement = $('#meeting_line_type').select2({
                         placeholder: "İclas sətirinin növü",
-                        allowClear: true
                     });
 
                     $ncElement = $('#notCompletedButton').select2({
                         placeholder: "Açıqda qalanlar",
-                        allowClear: true
                     });
 
                     $myElement = $('#myMeetingLinesButton').select2({
                         placeholder: "Mənim yaratdıqlarım",
-                        allowClear: true
                     });
 
                     if ($('#notificationPage .task_pages').length > 0 && $($(result).find('.task_pages')).length > 0)

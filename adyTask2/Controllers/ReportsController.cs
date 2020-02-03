@@ -14,15 +14,9 @@ namespace adyTask2.Controllers
     public class ReportsController : Controller
     {
         //get
-        public IActionResult Meetings()
-        {
-            return View();
-        }
+        public IActionResult Meetings() => View();
 
-        public IActionResult MeetingLines()
-        {
-            return View();
-        }
+        public IActionResult MeetingLines() => View();
 
         public IActionResult MeetingLineFull(int id)
         {
@@ -33,6 +27,13 @@ namespace adyTask2.Controllers
             }
         }
 
+
+
+
+
+        //post
+
+        [HttpPost]
         public async Task ReportSave(string name, string info)
         {
             using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
@@ -53,40 +54,37 @@ namespace adyTask2.Controllers
         }
 
 
-
-
-
-
-        //post
         [HttpPost]
-        public PartialViewResult MLReport(int page,
-                                          byte meetingType,
-                                          byte mlType,
+        public PartialViewResult MLReport(int[] meetingType,
+                                          int[] mlType,
                                           int[] department,
-                                          string responsibleEmail,
-                                          string followerEmail,
-                                          string confirmedEmail,
-                                          byte status,
-                                          byte cStatus)
+                                          int[] status,
+                                          string[] responsibleEmail,
+                                          string[] followerEmail,
+                                          string[] confirmedEmail,
+                                          int page,
+                                          string STime,
+                                          string FTime)
         {
 
             adyTaskManagementContext adyContext = new adyTaskManagementContext();
-            bool meetingCheck = meetingType > 0, mlTypeCheck = mlType > 0, depCheck = department != null && department.Length > 0,
-                responsibleCheck = !string.IsNullOrEmpty(responsibleEmail), followerCheck = !string.IsNullOrEmpty(followerEmail),
-                confirmedCheck = !string.IsNullOrEmpty(confirmedEmail), statusCheck = status > 1, cStatusCheck = cStatus > 0;
+            bool meetingCheck = meetingType != null && meetingType.Length > 0, mlTypeCheck = mlType != null && mlType.Length > 0,
+                depCheck = department != null && department.Length > 0, responsibleCheck = responsibleEmail != null && responsibleEmail.Length > 0,
+                followerCheck = followerEmail != null && followerEmail.Length > 0, confirmedCheck = confirmedEmail != null && confirmedEmail.Length > 0,
+                statusCheck = status != null && status.Length > 0, STimeCheck = !string.IsNullOrEmpty(STime), FTimeCheck = !string.IsNullOrEmpty(FTime);
 
             var meetingLine = adyContext.MeetingLine.AsQueryable();
 
-            if (meetingCheck || mlTypeCheck || depCheck || responsibleCheck || followerCheck || confirmedCheck || statusCheck || cStatusCheck)
+            if (meetingCheck || mlTypeCheck || depCheck || responsibleCheck || followerCheck || confirmedCheck || statusCheck || STimeCheck || FTimeCheck)
             {
 
                 if (meetingCheck && meetingLine != null)
                 {
-                    meetingLine = meetingLine.Where(x => x.Meeting != null ? x.Meeting.MeetingType == meetingType : x == null); //////////////////
+                    meetingLine = meetingLine.Where(x => x.Meeting != null ? meetingType.Contains(x.Meeting.MeetingType.Value) : x == null); //////////////////
                 }
 
                 if (mlTypeCheck && meetingLine != null)
-                    meetingLine = meetingLine.Where(x => x.MlType == mlType);
+                    meetingLine = meetingLine.Where(x => mlType.Contains(x.MlType.Value));
 
                 if (depCheck && meetingLine != null)
                 {
@@ -96,29 +94,43 @@ namespace adyTask2.Controllers
                 }
 
                 if (responsibleCheck && meetingLine != null)
-                    meetingLine = meetingLine.Where(x => x.ResponsibleEmail == responsibleEmail);
+                    meetingLine = meetingLine.Where(x => responsibleEmail.Contains(x.ResponsibleEmail));
 
                 if (followerCheck && meetingLine != null)
-                    meetingLine = meetingLine.Where(x => x.FollowerEmail == followerEmail || x.Direct.FirstOrDefault(y => y.ToUser.EmailAddress == User.Identity.Name && y.IsActive == 1) != null);
+                    meetingLine = meetingLine.Where(x => followerEmail.Contains(x.FollowerEmail));
 
                 if (confirmedCheck && meetingLine != null)
-                    meetingLine = meetingLine.Where(x => x.IdentifierEmail == confirmedEmail);
+                    meetingLine = meetingLine.Where(x => confirmedEmail.Contains(x.IdentifierEmail));
 
-                if (cStatusCheck && statusCheck && meetingLine != null)
-                {
-                    if (cStatus == 1)
-                        status = 7;
-                }
-                else if (cStatusCheck && !statusCheck && meetingLine != null)
-                {
-                    if (cStatus == 1)
-                        meetingLine = meetingLine.Where(x => x.StatusId == 7);
-                    else if (cStatus == 2)
-                        meetingLine = meetingLine.Where(x => x.StatusId > 1 && x.StatusId != 7 && x.IsPublished == 1);
-                }
+                //if (cStatusCheck && statusCheck && meetingLine != null)
+                //{
+                //    if (cStatus == 1)
+                //        status = 7;
+                //}
+                //else if (cStatusCheck && !statusCheck && meetingLine != null)
+                //{
+                //    if (cStatus == 1)
+                //        meetingLine = meetingLine.Where(x => x.StatusId == 7);
+                //    else if (cStatus == 2)
+                //        meetingLine = meetingLine.Where(x => x.StatusId > 1 && x.StatusId != 7 && x.IsPublished == 1);
+                //}
 
                 if (statusCheck && meetingLine != null)
-                    meetingLine = meetingLine.Where(x => x.StatusId == status && x.IsPublished == 1);
+                    meetingLine = meetingLine.Where(x => status.Contains(x.StatusId.Value) && x.IsPublished == 1);
+
+                if (STimeCheck && meetingLine != null)
+                {
+                    var start_string = STime.Split('/');
+                    var start = new DateTime(int.Parse(start_string[2]),int.Parse(start_string[1]),int.Parse(start_string[0]));
+                    meetingLine = meetingLine.Where(x => x.StartTime >= start);
+                }
+
+                if(FTimeCheck && meetingLine != null)
+                {
+                    var finish_string = FTime.Split('/');
+                    var finish = new DateTime(int.Parse(finish_string[2]), int.Parse(finish_string[1]), int.Parse(finish_string[0]));
+                    meetingLine = meetingLine.Where(x => x.FinishTime <= finish);
+                }
 
 
             }

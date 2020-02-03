@@ -41,17 +41,14 @@
 
     $mltElement = $('#meeting_line_type').select2({
         placeholder: "İclas sətirinin növü",
-        allowClear: true
     });
 
     $ncElement = $('#notCompletedButton').select2({
         placeholder: "Açıqda qalanlar",
-        allowClear: true
     });
 
     $myElement = $('#myMeetingLinesButton').select2({
         placeholder: "Mənim yaratdıqlarım",
-        allowClear: true
     });
 
 

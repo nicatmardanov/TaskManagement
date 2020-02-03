@@ -24,29 +24,37 @@ namespace adyTask2.Classes.Attributes
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+            if (!context.HttpContext.User.Identity.IsAuthenticated)
+                context.Result = new RedirectToRouteResult(
+                new RouteValueDictionary {{ "Controller", "Login" },
+                                              { "Action", "Index" } });
+            else
             {
-                var user_id = int.Parse(context.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
-                var permissions = adyContext.Permission.FirstOrDefault(x => x.UserId == user_id);
-                if (permissions != null)
+                using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
                 {
-                    string[] pages = permissions.Page.Split(';');
-                    if (!(pages.Contains(PageId.ToString()) || context.HttpContext.User.IsInRole("Admin")))
+                    var user_id = int.Parse(context.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
+                    var permissions = adyContext.Permission.FirstOrDefault(x => x.UserId == user_id);
+                    if (permissions != null)
+                    {
+                        string[] pages = permissions.Page.Split(';');
+                        if (!(pages.Contains(PageId.ToString()) || context.HttpContext.User.IsInRole("Admin")))
+                        {
+                            context.Result = new RedirectToRouteResult(
+                            new RouteValueDictionary {{ "Controller", "Home" },
+                                              { "Action", "Index" } });
+                        }
+                    }
+                    else if (!context.HttpContext.User.IsInRole("Admin"))
                     {
                         context.Result = new RedirectToRouteResult(
                         new RouteValueDictionary {{ "Controller", "Home" },
                                               { "Action", "Index" } });
                     }
-                }
-                else if(!context.HttpContext.User.IsInRole("Admin"))
-                {
-                    context.Result = new RedirectToRouteResult(
-                    new RouteValueDictionary {{ "Controller", "Home" },
-                                              { "Action", "Index" } });
-                }
 
 
+                }
             }
+
         }
 
         //////////////////////////////

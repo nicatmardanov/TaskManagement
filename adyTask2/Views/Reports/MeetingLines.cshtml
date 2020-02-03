@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "Hesabatlar";
+    ViewData["Title"] = "Tapşırıq hesabatı";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -20,7 +20,7 @@
 
                     <div class="panel-heading">
                         <div class="panel-title">
-                            İnteraktiv Hesabat
+                            İnteraktiv Tapşırıq Hesabatı
                         </div>
 
                         <div class="new_meeting_line_option new_meeting_operation panel-options">
@@ -47,7 +47,7 @@
                                     <div class="form-group">
                                         <label class="col-sm-5 control-label">İclas növü</label>
                                         <div class="col-sm-7">
-                                            <select class="form-control js-example-basic-single select2c" required name="meeting_type" id="meeting_type">
+                                            <select class="form-control js-example-basic-single select2c" required name="meeting_type" id="meeting_type" multiple>
                                                 <option></option>
                                                 @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
                                                 {
@@ -65,7 +65,7 @@
                                     <div class="form-group">
                                         <label class="col-sm-5 control-label">İclas sətirinin növü</label>
                                         <div class="col-sm-7">
-                                            <select class="js-example-basic-single select2c form-control" required name="ml_type" id="ml_type">
+                                            <select class="js-example-basic-single select2c form-control" required name="ml_type" id="ml_type" multiple>
                                                 <option></option>
                                                 @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
                                                 {
@@ -102,7 +102,7 @@
                                         <label class="col-sm-5 control-label">Məsul şəxs</label>
 
                                         <div class="col-sm-7">
-                                            <select class="js-example-basic-single select2c form-control" required name="responsibleUser" id="responsibleUser">
+                                            <select class="js-example-basic-single select2c form-control" required name="responsibleUser" id="responsibleUser" multiple>
                                             </select>
                                         </div>
                                     </div>
@@ -113,7 +113,7 @@
                                         <label class="col-sm-5 control-label">Təqib edən</label>
 
                                         <div class="col-sm-7">
-                                            <select class="js-example-basic-single select2c form-control" required name="mlFollowerUser" id="mlFollowerUser">
+                                            <select class="js-example-basic-single select2c form-control" required name="mlFollowerUser" id="mlFollowerUser" multiple>
                                             </select>
                                         </div>
                                     </div>
@@ -124,7 +124,7 @@
                                         <label class="col-sm-5 control-label">Təsdiqləyən</label>
 
                                         <div class="col-sm-7">
-                                            <select class="js-example-basic-single select2c form-control" required name="identifierUser" id="identifierUser">
+                                            <select class="js-example-basic-single select2c form-control" required name="identifierUser" id="identifierUser" multiple>
                                             </select>
                                         </div>
                                     </div>
@@ -132,39 +132,73 @@
 
                             </div>
 
-                            <div class="row row_twenty">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label class="col-sm-5 control-label">Status</label>
-                                        <div class="col-sm-7">
-                                            <select name="mlStatus" id="mlStatus" class="form-control js-example-basic-single select2c" required>
-                                                <option></option>
-                                                @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+
+                            @{ 
+                                var now = DateTime.UtcNow.AddHours(4);
+                            }
+
+                        <div class="row row_twenty">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Başlama tarixi</label>
+                                    <div class="col-sm-7">
+                                        <div class="input-group">
+                                            <input type="text" required class="form-control datepicker" id="ml_start_date" data-format="dd/mm/yyyy" value="@now.Day/@now.Month/@now.Year">
+                                            <div class="input-group-addon">
+                                                <a href="javascript:void(0)"><i class="entypo-calendar"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Bitmə tarixi</label>
+                                    <div class="col-sm-7">
+                                        <div class="input-group">
+                                            <input type="text" required class="form-control datepicker" id="ml_finish_date" data-format="dd/mm/yyyy" value="">
+                                            <div class="input-group-addon">
+                                                <a href="javascript:void(0)"><i class="entypo-calendar"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Status</label>
+                                    <div class="col-sm-7">
+                                        <select name="mlStatus" id="mlStatus" class="form-control js-example-basic-single select2c" required multiple>
+                                            <option></option>
+                                            @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                            {
+                                                foreach (var item in adyContext.Status.Where(x => x.Id > 1))
                                                 {
-                                                    foreach (var item in adyContext.Status.Where(x => x.Id > 1))
-                                                    {
-                                                        <option value="@item.Id">@item.StatusName</option>
-                                                    }
+                                                    <option value="@item.Id">@item.StatusName</option>
                                                 }
-                                            </select>
-                                        </div>
+                                            }
+                                        </select>
                                     </div>
                                 </div>
-
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label class="col-sm-5 control-label">Vəziyyət</label>
-                                        <div class="col-sm-7">
-                                            <select class="form-control js-example-basic-single select2c" required name="mlStatusSec" id="mlStatusSec">
-                                                <option></option>
-                                                <option value="1">Tamamlanmış</option>
-                                                <option value="2">Tamamlanmamış</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
                             </div>
+
+
+                            @*<div class="col-md-4">
+            <div class="form-group">
+                <label class="col-sm-5 control-label">Vəziyyət</label>
+                <div class="col-sm-7">
+                    <select class="form-control js-example-basic-single select2c" required name="mlStatusSec" id="mlStatusSec" multiple>
+                        <option></option>
+                        <option value="1">Tamamlanmış</option>
+                        <option value="2">Tamamlanmamış</option>
+                    </select>
+                </div>
+            </div>
+        </div>*@
+
+                        </div>
 
 
 
@@ -198,5 +232,6 @@
 @section script{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
     <script src="/Content/assets/js/zurb-responsive-tables/responsive-tables.js"></script>
+    <script src="/Content/assets/js/bootstrap-datepicker.js"></script>
     <script src="~/Content/assets/js/reports.js"></script>
 }

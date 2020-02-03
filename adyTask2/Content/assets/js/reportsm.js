@@ -241,7 +241,7 @@
                 fd.append('responsibleEmail', parseInt(item));
             });
         }
-       
+
 
         if ($('#mlFollowerUser').val() != null) {
             $.each($('#mlFollowerUser').val(), function (index, item) {
@@ -340,7 +340,7 @@
         val += $('#mlFollowerUser').val() != null ? $('#mlFollowerUser').val().join('+') + "-" : "-";
         val += $('#identifierUser').val() != null ? $('#identifierUser').val().join('+') + "-" : "-";
         val += $('#mlStatus').val().join('+') + "-";
-        val += $('#ml_start_date').val()+"-";
+        val += $('#ml_start_date').val() + "-";
         val += $('#ml_finish_date').val().length > 0 ? $('#ml_finish_date').val() : "-";
 
         $('#modal-1').modal('show', { backdrop: 'static' });

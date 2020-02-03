@@ -231,7 +231,7 @@ namespace adyTask2.Controllers
                 ViewBag.MType = (byte)0;
                 ViewBag.Title = "Tapşırıqlarım";
 
-                return View("MyTasks", _meetingLine.Include(x => x.Direct).OrderByDescending(x => x.Id).Include(x => x.Meeting).Include(x => x.MlTypeNavigation).Include(x => x.Status).Take(10).ToList());
+                return View("MyTasks", _meetingLine.OrderByDescending(x => x.Id).Include(x => x.Direct).Include(x => x.Meeting).Include(x => x.MlTypeNavigation).Include(x => x.Status).Take(10).ToList());
             }
 
         }
@@ -264,7 +264,7 @@ namespace adyTask2.Controllers
                 ViewBag.MType = (byte)1;
                 ViewBag.Title = "Təkliflərim";
 
-                return View("MyTasks", _meetingLine.Include(x => x.Direct).OrderByDescending(x => x.Id).Include(x => x.Meeting).Include(x => x.MlTypeNavigation).Include(x => x.Status).Take(10).ToList());
+                return View("MyTasks", _meetingLine.OrderByDescending(x => x.Id).Include(x => x.Direct).Include(x => x.Meeting).Include(x => x.MlTypeNavigation).Include(x => x.Status).Take(10).ToList());
             }
         }
 
@@ -532,12 +532,12 @@ namespace adyTask2.Controllers
 
             var ml_logs = adyContext.MLog.Where(x => x.ReadDate == null && x.Type == 2 /*&& x.OperationId != 6 */ && m_lines.Contains(x.RefId));
             var m_logs = adyContext.MLog.Where(x => x.ReadDate == null && x.Type == 1 && mtngs.Contains(x.RefId));
-            IQueryable<MLog> logs= Enumerable.Empty<MLog>().AsQueryable();
+            IQueryable<MLog> logs = ml_logs;
 
 
-            if ((ml_logs != null || m_logs != null))
+            if ((m_logs != null || ml_logs != null) && !((mtype >= 1 && mtype <= 2) || (nc >= 1 && nc <= 2)))
                 logs = ml_logs.Union(m_logs);
-           
+
 
             double page_count = logs.Count() / 10.0;
 
@@ -647,7 +647,7 @@ namespace adyTask2.Controllers
             {
                 foreach (var item in ids)
                 {
-                    adyContext.MLog.FirstOrDefault(x => x.Id == item && x.Type == 2).ReadDate = DateTime.UtcNow.AddHours(4);
+                    adyContext.MLog.FirstOrDefault(x => x.Id == item).ReadDate = DateTime.UtcNow.AddHours(4);
                     await adyContext.SaveChangesAsync();
                 }
             }

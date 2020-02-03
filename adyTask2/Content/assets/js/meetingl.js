@@ -597,8 +597,67 @@
                         window.location.href = "/Task/AllTasks";
                     }
                 })
-
             }
+
+            else {
+                var checkVal = checkValid('ml_add');
+                var isValidDate = compareDate('meeting_l_start_date', 'meeting_l_finish_date', 0);
+                if (checkVal && isValidDate) {
+                    var form_data = new FormData();
+                    form_data.append("MeetingId", $('.meeting_add').data('id'));
+                    form_data.append("MlType", $('#ml_type').val());
+                    form_data.append("Description", $('#ml_description').val());
+                    form_data.append("StartTime", $('#meeting_l_start_date').val());
+                    form_data.append("FinishTime", $('#meeting_l_finish_date').val());
+                    form_data.append("ResponsibleEmail", $('#responsibleUser').val());
+                    form_data.append("FollowerEmail", $('#mlFollowerUser').val());
+                    form_data.append("IdentifierEmail", $('#identifierUser').val());
+                    if ($('#informedUserMl').val() != null)
+                        form_data.append("InformedUserEmail", $('#informedUserMl').val().join(';'));
+                    else
+                        form_data.append("InformedUserEmail", "");
+
+                    form_data.append("MLFile", $("#mlFile")[0].files[0]);
+
+                    form_data.append('Tags', $('#mlTags').val());
+
+                    $.each($('#mlDepartment').val(), function (index, item) {
+                        form_data.append('Departments', parseInt(item));
+                    });
+
+                    //var meeting_line_id = 0;
+
+                    $.ajax({
+                        url: '/MeetingLine/AddMeetingLine',
+                        method: 'post',
+                        contentType: false,
+                        processData: false,
+                        data: form_data,
+                        cache: false,
+                        async: false,
+                        success: function (result) {
+                            //meeting_line_id = result;
+
+                            var form_data = new FormData();
+                            form_data.append('ids', result);
+
+                            $.ajax({
+                                url: '/MeetingLine/StatusMulti',
+                                method: 'post',
+                                contentType: false,
+                                processData: false,
+                                data: form_data,
+                                cache: false,
+                                success: function () {
+                                    window.location.href = "/Task/AllTasks";
+                                }
+                            })
+
+                        }
+                    });
+                }
+            }
+            ///
         }, 500);
 
 
@@ -1022,7 +1081,7 @@
 
     $('#other_country').select2(countryObject);
     $('#other_position').select2(positionObject);
-    
+
 
 
 
