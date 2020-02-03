@@ -22,7 +22,16 @@ namespace adyTask2.Controllers
         {
             using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
             {
-                ViewBag.Report = adyContext.Reports.FirstOrDefault(x => x.Id == id).ReportString;
+                ViewBag.Report = adyContext.Reports.FirstOrDefault(x => x.Id == id && x.Type==2).ReportString;
+                return View();
+            }
+        }
+
+        public IActionResult MeetingFull(int id)
+        {
+            using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+            {
+                ViewBag.Report = adyContext.Reports.FirstOrDefault(x => x.Id == id && x.Type==1).ReportString;
                 return View();
             }
         }
@@ -44,7 +53,29 @@ namespace adyTask2.Controllers
                     ReportName = name,
                     ReportString = info,
                     UserId = user_id,
-                    CreateDate = DateTime.UtcNow.AddHours(4)
+                    CreateDate = DateTime.UtcNow.AddHours(4),
+                    Type = 2
+                };
+
+                await adyContext.AddAsync(_report);
+                await adyContext.SaveChangesAsync();
+
+            }
+        }
+
+        [HttpPost]
+        public async Task ReportMSave(string name, string info)
+        {
+            using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+            {
+                int user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+                Reports _report = new Reports
+                {
+                    ReportName = name,
+                    ReportString = info,
+                    UserId = user_id,
+                    CreateDate = DateTime.UtcNow.AddHours(4),
+                    Type = 1
                 };
 
                 await adyContext.AddAsync(_report);
@@ -121,11 +152,11 @@ namespace adyTask2.Controllers
                 if (STimeCheck && meetingLine != null)
                 {
                     var start_string = STime.Split('/');
-                    var start = new DateTime(int.Parse(start_string[2]),int.Parse(start_string[1]),int.Parse(start_string[0]));
+                    var start = new DateTime(int.Parse(start_string[2]), int.Parse(start_string[1]), int.Parse(start_string[0]));
                     meetingLine = meetingLine.Where(x => x.StartTime >= start);
                 }
 
-                if(FTimeCheck && meetingLine != null)
+                if (FTimeCheck && meetingLine != null)
                 {
                     var finish_string = FTime.Split('/');
                     var finish = new DateTime(int.Parse(finish_string[2]), int.Parse(finish_string[1]), int.Parse(finish_string[0]));
@@ -151,6 +182,93 @@ namespace adyTask2.Controllers
 
 
 
+        [HttpPost]
+        public PartialViewResult MReport(int[] meetingType,
+                                         int[] department,
+                                         int[] place,
+                                         string[] ownerUser,
+                                         string[] followerUser,
+                                         int page,
+                                         string title,
+                                         string tags,
+                                         string STime,
+                                         string FTime)
+        {
+
+
+
+            adyTaskManagementContext adyContext = new adyTaskManagementContext();
+            bool meetingCheck = meetingType != null && meetingType.Length > 0, placeCheck = place != null && place.Length > 0,
+                depCheck = department != null && department.Length > 0, ownerCheck = ownerUser != null && ownerUser.Length > 0,
+                followerCheck = followerUser != null && followerUser.Length > 0, titleCheck = !string.IsNullOrEmpty(title),
+                tagsCheck = !string.IsNullOrEmpty(tags), STimeCheck = !string.IsNullOrEmpty(STime), FTimeCheck = !string.IsNullOrEmpty(FTime);
+
+
+
+            var meeting = adyContext.Meeting.AsQueryable();
+
+            if (meetingCheck || placeCheck || depCheck || ownerCheck || followerCheck || titleCheck || tagsCheck || STimeCheck || FTimeCheck)
+            {
+                if (meetingCheck && meeting != null)
+                    meeting = meeting.Where(x => meetingType.Contains(x.MeetingType.Value));
+
+                if (placeCheck && meeting != null)
+                    meeting = meeting.Where(x => place.Contains(x.Place.Value));
+
+                if (depCheck && meeting != null)
+                {
+                    var mDeps = adyContext.MDepartment.Where(x => x.Type == 1 && department.Contains(x.DepartmentId)).Select(x => x.RefId);
+                    if (mDeps != null)
+                        meeting = meeting.Where(x => mDeps.Contains(x.Id));
+                }
+
+                if (ownerCheck && meeting != null)
+                    meeting = meeting.Where(x => ownerUser.Contains(x.OwnerUser));
+
+                if (followerCheck && meeting != null)
+                    meeting = meeting.Where(x => followerUser.Contains(x.FollowerUser));
+
+                if (titleCheck && meeting != null)
+                    meeting = meeting.Where(x => x.Description.Contains(title));
+
+                if (tagsCheck && meeting != null)
+                {
+                    var tags_array = tags.Split(',');
+                    var tags_ref = adyContext.Tags.Where(x => x.Type == 1 && tags.Equals(x.Name)).Select(x => x.RefId);
+                    if (tags_ref != null)
+                        meeting = meeting.Where(x => tags_ref.Contains(x.Id));
+                }
+
+                if (STimeCheck && meeting != null)
+                {
+                    var start_string = STime.Split('/');
+                    var start = new DateTime(int.Parse(start_string[2]), int.Parse(start_string[1]), int.Parse(start_string[0]));
+                    meeting = meeting.Where(x => x.MeetingDate >= start);
+                }
+
+                if (FTimeCheck && meeting != null)
+                {
+                    var finish_string = FTime.Split('/');
+                    var finish = new DateTime(int.Parse(finish_string[2]), int.Parse(finish_string[1]), int.Parse(finish_string[0]));
+                    meeting = meeting.Where(x => x.MeetingDate <= finish);
+                }
+            }
+
+            double page_count = meeting.Count() / 10.0;
+
+            if (page_count % 1 > 0)
+                page_count++;
+
+
+            ViewBag.MaxPage = (int)page_count;
+            ViewBag.Page = page;
+
+
+
+            return PartialView(meeting.OrderByDescending(x => x.Id).Include(x => x.MeetingTypeNavigation).Include(x => x.Status).Skip((page - 1) * 10).Take(10));
+
+        }
+
 
 
 
@@ -161,7 +279,21 @@ namespace adyTask2.Controllers
             if (await adyContext.Reports.CountAsync() > 0)
             {
                 var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value);
-                var reports = adyContext.Reports.Where(x => x.ReportName.Contains(term) && x.UserId == user_id);
+                var reports = adyContext.Reports.Where(x => x.Type == 2 && x.ReportName.Contains(term) && x.UserId == user_id);
+                var reports_info = reports.Select(x => new { id = x.Id, name = x.ReportName, info = x.ReportString });
+                return Json(reports_info);
+            }
+
+            return Json(string.Empty);
+        }
+
+        public async Task<JsonResult> GetMReports(string term)
+        {
+            adyTaskManagementContext adyContext = new adyTaskManagementContext();
+            if (await adyContext.Reports.CountAsync() > 0)
+            {
+                var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+                var reports = adyContext.Reports.Where(x => x.Type == 1 && x.ReportName.Contains(term) && x.UserId == user_id);
                 var reports_info = reports.Select(x => new { id = x.Id, name = x.ReportName, info = x.ReportString });
                 return Json(reports_info);
             }

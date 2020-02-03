@@ -1,0 +1,73 @@
+﻿@using adyTask2.Models
+@{
+    int pageNumber = ViewBag.Page;
+    int maxPage = ViewBag.MaxPage;
+    IQueryable<Meeting> meeting = Model;
+}
+
+
+<div class="meeting_operation_line_table">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary" data-collapsed="0">
+
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        İclaslar
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-bordered responsive">
+                                <thead>
+                                    <tr>
+                                        <th width="3%">#</th>
+                                        <th>Növü</th>
+                                        <th>Mövzu</th>
+                                        <th>Başlama tarixi</th>
+                                        <th>İclas rəhbəri</th>
+                                        <th>Təqib edən</th>
+                                        <th>Açıqlama</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int i = (ViewBag.Page - 1) * 10 + 1;
+                                        foreach (Meeting item in meeting)
+                                        {
+                                            string date = item.MeetingDate.Value.Day.ToString() + "/" + item.MeetingDate.Value.Month + "/" + item.MeetingDate.Value.Year;
+
+
+
+                                            <tr>
+                                                <th width="3%" class="meeting_c" data-id="@item.Id">@i</th>
+
+                                                <th class="meeting_c" data-id="@item.Id">@item.MeetingTypeNavigation.Name</th>
+                                                <th class="meeting_c" data-id="@item.Id">@item.Title</th>
+                                                <th class="meeting_c" data-id="@item.Id">@date</th>
+                                                @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                                {
+                                                    <th class="meeting_c" data-id="@item.Id">@adyContext.User.FirstOrDefault(x => x.EmailAddress == item.OwnerUser).FirstName @adyContext.User.FirstOrDefault(x => x.EmailAddress == item.OwnerUser).LastName</th>
+                                                    <th class="meeting_c" data-id="@item.Id">@adyContext.User.FirstOrDefault(x => x.EmailAddress == item.FollowerUser).FirstName @adyContext.User.FirstOrDefault(x => x.EmailAddress == item.FollowerUser).LastName</th>
+                                                }
+                                                <th class="meeting_c" data-id="@item.Id">@item.Description</th>
+                                                <th class="meeting_c" data-id="@item.Id">@item.Status.StatusName</th>
+                                            </tr>
+                                            i++;
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -60,7 +60,7 @@
 
                                 var confirmedPerson = adyContext.User.FirstOrDefault(x => x.EmailAddress == item.IdentifierEmail);
                                 var followedPerson = adyContext.User.FirstOrDefault(x => x.EmailAddress == item.FollowerEmail);
-                                string completion = item.StatusId == 7 ? 100 + "%" : 0 + "%";
+                                string completion = item.StatusId == 7 ? 100 + "%" : "";
 
                                 <th class="meeting_line_c" data-id="@item.Id">@responsePerson.FirstName @responsePerson.LastName</th>
                                 <th class="meeting_line_c" data-id="@item.Id">@followedPerson.FirstName @followedPerson.LastName</th>

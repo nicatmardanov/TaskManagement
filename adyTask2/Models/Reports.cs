@@ -6,6 +6,7 @@ namespace adyTask2.Models
     public partial class Reports
     {
         public int Id { get; set; }
+        public byte? Type { get; set; }
         public string ReportName { get; set; }
         public string ReportString { get; set; }
         public int? UserId { get; set; }

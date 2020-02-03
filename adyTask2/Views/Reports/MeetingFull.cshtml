@@ -1,0 +1,241 @@
+﻿@{
+    string[] value = (ViewBag.Report as string).Split('-');
+
+    string[] mtype = value[0].Split('+');
+    string[] place = value[2].Split('+');
+    string[] owner = value[3].Split('+');
+    string[] follower = value[4].Split('+');
+    string[] dep_list = value[8].Split('+');
+    string[] status = value[6].Split('+');
+    string title = value[1];
+    string tags = value[5].Replace('+', ',');
+    DateTime stime = Convert.ToDateTime(value[6]);
+    DateTime ftime = !string.IsNullOrEmpty(value[7]) ? Convert.ToDateTime(value[7]) : new DateTime();
+
+
+    Layout = null;
+}
+
+@using adyTask2.Models
+
+<div id="m_report">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary" data-collapsed="0">
+
+                <div class="panel-heading">
+                    <div class="panel-title" id="meeting-title-section">
+                        İnteraktiv İclas Hesabatı
+                    </div>
+
+                    <div class="new_meeting_line_option new_meeting_operation panel-options">
+                        <a href="javascript:void(0)" class="save_filter">
+                            <span>Filtri saxla</span>
+                            <i class="fa fa-save"></i>
+                        </a>
+                    </div>
+                    <div class="new_meeting_line_option new_meeting_operation panel-options">
+                        <a href="javascript:void(0)" class="select_filter">
+                            <span>Filtri seç</span>
+                            <i class="fa fa-copy"></i>
+                        </a>
+                    </div>
+
+                </div>
+
+                <div class="panel-body">
+
+                    <form role="form" class="form-horizontal form-groups-bordered" enctype="multipart/form-data">
+
+                        <div class="row">
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">İclas növü</label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control js-example-basic-single select2c" required name="meeting_type" id="meeting_type" multiple>
+                                            @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                            {
+                                                foreach (var item in adyContext.MeetingType)
+                                                {
+                                                    if (mtype != null && mtype.Length > 0)
+                                                    {
+                                                        if (mtype.Contains(item.Id.ToString()))
+                                                        {
+                                                            <option value="@item.Id" selected>@item.Name</option>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="title" class="col-sm-5 control-label">Mövzu</label>
+
+                                    <div class="col-sm-7">
+                                        <input type="text" required class="form-control" id="title" placeholder="Mövzu" value="@title">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Yer</label>
+
+                                    <div class="col-sm-7">
+                                        <select name="place" id="meeting_place" class="js-example-basic-single select2c" required multiple>
+                                            @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                            {
+                                                <option></option>
+                                                @foreach (var item in place)
+                                                {
+                                                    if (!string.IsNullOrEmpty(item))
+                                                    {
+                                                        <option value="@item" selected>@adyContext.Place.FirstOrDefault(x => item == x.Id.ToString()).Name</option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row row_twenty">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">İclas rəhbəri</label>
+
+                                    <div class="col-sm-7">
+                                        <select class="form-control js-example-basic-single select2c" required name="ownerUser" id="ownerUser" multiple>
+                                            @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                            {
+                                                <option></option>
+                                                @foreach (var item in owner)
+                                                {
+                                                    if (!string.IsNullOrEmpty(item))
+                                                    {
+                                                        <option value="@item" selected>@adyContext.User.FirstOrDefault(x => item == x.EmailAddress).FirstName @adyContext.User.FirstOrDefault(x => item == x.EmailAddress).LastName</option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Təqib edən</label>
+
+                                    <div class="col-sm-7">
+                                        <select class="form-control js-example-basic-single select2c" required name="followerUser" id="followerUser" multiple>
+                                            @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                            {
+                                                <option></option>
+                                                @foreach (var item in follower)
+                                                {
+                                                    if (!string.IsNullOrEmpty(item))
+                                                    {
+                                                        <option value="@item" selected>@adyContext.User.FirstOrDefault(x => item == x.EmailAddress).FirstName @adyContext.User.FirstOrDefault(x => item == x.EmailAddress).LastName</option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Tag</label>
+
+                                    <div class="col-sm-7">
+                                        <input type="text" value="@tags" class="form-control tagsinput" id="meetingTags" />
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="row row_twenty">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Başlama tarixi</label>
+
+                                    <div class="col-sm-7">
+                                        <div class="input-group">
+                                            <input type="text" required class="form-control datepicker" id="meeting_start_date" data-format="dd/mm/yyyy" value="@stime.Day/@stime.Month/@stime.Year">
+
+                                            <div class="input-group-addon">
+                                                <a href="javascript:void(0)"><i class="entypo-calendar"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @{
+                                string ftime_string;
+                                if (!string.IsNullOrEmpty(value[8]))
+                                {
+                                    ftime_string = $"{ftime.Day}/{ftime.Month}/{ftime.Year}";
+                                }
+                                else
+                                {
+                                    ftime_string = "";
+                                }
+                            }
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Başlama tarixi 2</label>
+
+                                    <div class="col-sm-7">
+                                        <div class="input-group">
+                                            <input type="text" required class="form-control datepicker" id="meeting_finish_date" data-format="dd/mm/yyyy" value="@ftime_string">
+                                            <div class="input-group-addon">
+                                                <a href="javascript:void(0)"><i class="entypo-calendar"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row row_twenty">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Departament</label>
+
+                                    <div class="col-sm-10">
+                                        <select id="meetingDepartment" name="departmentId" class="js-example-basic-single select2c" required multiple>
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row row_twenty meeting_add_submit_row">
+                            <div class="col-md-3 search_meeting_col">
+                                <a href="javascript:void(0)" class="btn btn-green btn-sm report_search">Axtar</a>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

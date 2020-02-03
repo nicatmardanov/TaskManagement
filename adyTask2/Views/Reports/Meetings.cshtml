@@ -5,278 +5,217 @@
 }
 
 @using adyTask2.Models;
-<div class="meeting_add" data-type="0" data-edit="0">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-primary" data-collapsed="0">
 
-                <div class="panel-heading">
-                    <div class="panel-title" id="meeting-title-section">
-                        İclas əlavə etmə formu
-                    </div>
+@section Modal{
+    @await Component.InvokeAsync("TrainLoadingModal")
+    @await Component.InvokeAsync("ReportSelectFilterModal")
+    @await Component.InvokeAsync("ReportSaveFilterModal")
+}
 
-                    <div class="panel-options" hidden>
-                        <a href="#" class="minimize_meeting" data-rel="collapse"><i class="entypo-down-open"></i></a>
-                    </div>
+<div id="report_page">
+    <div id="m_report">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-primary" data-collapsed="0">
 
-                </div>
-
-                <div class="panel-body">
-
-                    <form role="form" class="form-horizontal form-groups-bordered" enctype="multipart/form-data">
-
-                        <div class="row">
-
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">İclas növü</label>
-                                    <div class="col-sm-7">
-                                        <select class="form-control js-example-basic-single select2c" required name="meeting_type" id="meeting_type">
-                                            @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
-                                            {
-                                                int user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value);
-                                                var permissions = adyContext.Permission.FirstOrDefault(x => x.UserId == user_id);
-                                                
-                                                if (permissions != null)
-                                                {
-                                                    bool isNullMTypePermission = string.IsNullOrEmpty(permissions.Mtype);
-                                                    int[] MeetingTypesArray = !isNullMTypePermission ? Array.ConvertAll(permissions.Mtype.Split(';'), x => int.Parse(x)) : new int[0];
-
-                                                    var MTypes = adyContext.MeetingType.Where(x => MeetingTypesArray.Contains(x.Id));
-
-                                                    foreach (var item in MTypes)
-                                                    {
-                                                        <option value="@item.Id">@item.Name</option>
-                                                    }
-                                                }
-                                                else if (User.IsInRole("Admin"))
-                                                {
-                                                    foreach (var item in adyContext.MeetingType)
-                                                    {
-                                                        <option value="@item.Id">@item.Name</option>
-                                                    }
-                                                }
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="title" class="col-sm-5 control-label">Mövzu</label>
-
-                                    <div class="col-sm-7">
-                                        <input type="text" required class="form-control" id="title" placeholder="Mövzu">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">Yer</label>
-
-                                    <div class="col-sm-7">
-                                        <select name="place" id="meeting_place" class="js-example-basic-single select2c" required>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
+                    <div class="panel-heading">
+                        <div class="panel-title" id="meeting-title-section">
+                            İnteraktiv İclas Hesabatı
                         </div>
 
-                        <div class="row row_twenty">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">İclas rəhbəri</label>
-
-                                    <div class="col-sm-7">
-                                        <select class="form-control js-example-basic-single select2c" required name="ownerUser" id="ownerUser">
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">Təqib edən</label>
-
-                                    <div class="col-sm-7">
-                                        <select class="form-control js-example-basic-single select2c" required name="followerUser" id="followerUser">
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">Tag</label>
-
-                                    <div class="col-sm-7">
-                                        <input type="text" value="" class="form-control tagsinput" id="meetingTags" />
-                                    </div>
-                                </div>
-                            </div>
-
-
+                        <div class="new_meeting_line_option new_meeting_operation panel-options">
+                            <a href="javascript:void(0)" class="save_filter">
+                                <span>Filtri saxla</span>
+                                <i class="fa fa-save"></i>
+                            </a>
+                        </div>
+                        <div class="new_meeting_line_option new_meeting_operation panel-options">
+                            <a href="javascript:void(0)" class="select_filter">
+                                <span>Filtri seç</span>
+                                <i class="fa fa-copy"></i>
+                            </a>
                         </div>
 
-                        @{
-                            var now = DateTime.UtcNow.AddHours(4);
-                            var later = DateTime.UtcNow.AddHours(6);
-                        }
+                    </div>
 
-                        <div class="row row_twenty">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">Tarix</label>
+                    <div class="panel-body">
 
-                                    <div class="col-sm-7">
-                                        <div class="input-group">
-                                            <input type="text" required class="form-control datepicker" id="meeting_start_date" data-format="dd/mm/yyyy" value="@now.Day/@now.Month/@now.Year">
+                        <form role="form" class="form-horizontal form-groups-bordered" enctype="multipart/form-data">
 
-                                            <div class="input-group-addon">
-                                                <a href="javascript:void(0)"><i class="entypo-calendar"></i></a>
+                            <div class="row">
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="col-sm-5 control-label">İclas növü</label>
+                                        <div class="col-sm-7">
+                                            <select class="form-control js-example-basic-single select2c" required name="meeting_type" id="meeting_type" multiple>
+                                                @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                                {
+                                                    int user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+                                                    var permissions = adyContext.Permission.FirstOrDefault(x => x.UserId == user_id);
+
+                                                    if (permissions != null)
+                                                    {
+                                                        bool isNullMTypePermission = string.IsNullOrEmpty(permissions.Mtype);
+                                                        int[] MeetingTypesArray = !isNullMTypePermission ? Array.ConvertAll(permissions.Mtype.Split(';'), x => int.Parse(x)) : new int[0];
+
+                                                        var MTypes = adyContext.MeetingType.Where(x => MeetingTypesArray.Contains(x.Id));
+
+                                                        foreach (var item in MTypes)
+                                                        {
+                                                            <option value="@item.Id">@item.Name</option>
+                                                        }
+                                                    }
+                                                    else if (User.IsInRole("Admin"))
+                                                    {
+                                                        foreach (var item in adyContext.MeetingType)
+                                                        {
+                                                            <option value="@item.Id">@item.Name</option>
+                                                        }
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="title" class="col-sm-5 control-label">Mövzu</label>
+
+                                        <div class="col-sm-7">
+                                            <input type="text" required class="form-control" id="title" placeholder="Mövzu">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="col-sm-5 control-label">Yer</label>
+
+                                        <div class="col-sm-7">
+                                            <select name="place" id="meeting_place" class="js-example-basic-single select2c" required multiple>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row row_twenty">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="col-sm-5 control-label">İclas rəhbəri</label>
+
+                                        <div class="col-sm-7">
+                                            <select class="form-control js-example-basic-single select2c" required name="ownerUser" id="ownerUser" multiple>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="col-sm-5 control-label">Təqib edən</label>
+
+                                        <div class="col-sm-7">
+                                            <select class="form-control js-example-basic-single select2c" required name="followerUser" id="followerUser" multiple>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="col-sm-5 control-label">Tag</label>
+
+                                        <div class="col-sm-7">
+                                            <input type="text" value="" class="form-control tagsinput" id="meetingTags" />
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            @{
+                                var now = DateTime.UtcNow.AddHours(4);
+                                var later = DateTime.UtcNow.AddHours(6);
+                            }
+
+                            <div class="row row_twenty">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="col-sm-5 control-label">Başlama tarixi</label>
+
+                                        <div class="col-sm-7">
+                                            <div class="input-group">
+                                                <input type="text" required class="form-control datepicker" id="meeting_start_date" data-format="dd/mm/yyyy" value="@now.Day/@now.Month/@now.Year">
+
+                                                <div class="input-group-addon">
+                                                    <a href="javascript:void(0)"><i class="entypo-calendar"></i></a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">Başlama saatı</label>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="col-sm-5 control-label">Başlama tarixi 2</label>
 
-                                    <div class="col-sm-7">
-                                        <input type="text" required class="form-control timepicker" id="meeting_start_time" data-template="dropdown" data-show-seconds="false" data-default-time="@now.Hour:@now.Minute" data-show-meridian="false" data-minute-step="5" name="start_date" />
+                                        <div class="col-sm-7">
+                                            <div class="input-group">
+                                                <input type="text" required class="form-control datepicker" id="meeting_finish_date" data-format="dd/mm/yyyy" value="">
+
+                                                <div class="input-group-addon">
+                                                    <a href="javascript:void(0)"><i class="entypo-calendar"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+
                             </div>
 
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">Bitmə saatı</label>
-                                    <div class="col-sm-7">
-                                        <input type="text" required id="meeting_finish_time" class="form-control timepicker" data-template="dropdown" data-show-seconds="false" data-default-time="@later.Hour:@later.Minute" data-show-meridian="false" data-minute-step="5" name="finish_date" />
+                            @*<div class="row row_twenty">
+                                    <div class="col-md-10">
+                                        <div class="form-group">
+                                            <label for="description" class="col-sm-2 control-label">Açıqlama</label>
+
+                                            <div class="col-sm-10">
+                                                <textarea class="form-control m_description" id="description" required placeholder="Açıqlama" name="description"></textarea>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
+                                </div>*@
 
-                        </div>
+                            <div class="row row_twenty">
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">Departament</label>
 
-                        <div class="row row_twenty">
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <label for="description" class="col-sm-2 control-label">Açıqlama</label>
+                                        <div class="col-sm-10">
+                                            <select id="meetingDepartment" name="departmentId" class="js-example-basic-single select2c" required multiple>
+                                            </select>
 
-                                    <div class="col-sm-10">
-                                        <textarea class="form-control m_description" id="description" required placeholder="Açıqlama" name="description"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row row_twenty">
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Departament</label>
-
-                                    <div class="col-sm-10">
-                                        <select id="meetingDepartment" name="departmentId" class="js-example-basic-single select2c" required multiple>
-                                        </select>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="row row_twenty">
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Məlumat veriləcək</label>
-
-                                    <div class="col-sm-10">
-                                        <select name="informedUser" id="informedUser" class="js-example-basic-single select2c" multiple>
-                                        </select>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row row_twenty">
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">ADY xarici iştirakçılar</label>
-
-                                    <div class="col-sm-9">
-
-                                        <select name="other_participants" id="other_participants" class="js-example-basic-single select2c" multiple>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-sm-1">
-                                        <a href="javascript:void(0)" class="add_others_btn" data-toggle="modal" data-target="#modal-6">
-                                            <i class="fa fa-plus"></i>
-                                        </a>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row row_twenty">
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">İştirak edənlər</label>
-
-                                    <div class="col-sm-10">
-
-                                        <select name="participants" id="participants" required class="js-example-basic-single select2c" multiple>
-                                        </select>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row row_twenty">
-                            <div class="col-md-8">
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Sənədlər</label>
-
-                                    <div class="col-sm-10">
-                                        <div class="fileinput fileinput-new" data-provides="fileinput">
-                                            <span class="btn btn-info btn-file">
-                                                <span class="fileinput-new">Yüklə</span>
-                                                <span class="fileinput-exists">Dəyiş</span>
-                                                <input type="file" name="meetingFile" id="meetingFile">
-                                            </span>
-                                            <span class="fileinput-filename"></span>
-                                            <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">&times;</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-
-                        <div class="row row_twenty meeting_add_submit_row">
-                            <div class="col-md-3">
-                                <a href="javascript:void(0)" class="btn btn-red btn-sm close_button">Bağla</a>
+                            <div class="row row_twenty meeting_add_submit_row">
+                                <div class="col-md-3 search_meeting_col">
+                                    <a href="javascript:void(0)" class="btn btn-green btn-sm report_search">Axtar</a>
+                                </div>
                             </div>
+                        </form>
 
-                            <div class="col-md-3 updtSave">
-                                <a href="javascript:void(0)" class="btn btn-green btn-sm saveMeeting">Yadda saxla</a>
-                            </div>
-                        </div>
-                    </form>
+                    </div>
 
                 </div>
 
             </div>
-
         </div>
     </div>
 </div>
@@ -293,5 +232,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
     <script src="/Content/assets/js/zurb-responsive-tables/responsive-tables.js"></script>
     <script src="/Content/assets/js/bootstrap-datepicker.js"></script>
+    <script src="/Content/assets/js/bootstrap-tagsinput.min.js"></script>
     <script src="~/Content/assets/js/reportsm.js"></script>
 }

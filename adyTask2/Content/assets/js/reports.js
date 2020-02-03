@@ -214,8 +214,7 @@
                 fd.append('meetingType', parseInt(item));
             });
         }
-        else
-            fd.set('meetingType', '');
+
 
 
         if ($('#ml_type').val() != null) {
@@ -223,8 +222,7 @@
                 fd.append('mlType', parseInt(item));
             });
         }
-        else
-            fd.set('mlType', '');
+
 
         if ($('#mlDepartment').val() != null) {
             $.each($('#mlDepartment').val(), function (index, item) {
@@ -232,8 +230,7 @@
             });
             dep_array = $('#mlDepartment').val();
         }
-        else
-            fd.set('department', '');
+
 
 
         if ($('#responsibleUser').val() != null) {
@@ -241,34 +238,31 @@
                 fd.append('responsibleEmail', parseInt(item));
             });
         }
-       
+
 
         if ($('#mlFollowerUser').val() != null) {
             $.each($('#mlFollowerUser').val(), function (index, item) {
                 fd.append('followerEmail', parseInt(item));
             });
         }
-        else
-            fd.set('followerEmail', '');
+
 
         if ($('#identifierUser').val() != null) {
             $.each($('#identifierUser').val(), function (index, item) {
                 fd.append('confirmedEmail', parseInt(item));
             });
         }
-        else
-            fd.set('confirmedEmail', '');
+
 
         if ($('#mlStatus').val() != null) {
             $.each($('#mlStatus').val(), function (index, item) {
                 fd.append('status', parseInt(item));
             });
         }
-        else
-            fd.set('status', '');
 
-        fd.set('STime', $('ml_start_date').val());
-        fd.set('FTime', $('ml_finish_date').val());
+
+        fd.set('STime', $('#ml_start_date').val());
+        fd.set('FTime', $('#ml_finish_date').val());
 
 
     }
@@ -332,6 +326,11 @@
         fdataAppend();
 
         var val = "";
+        var m_start = $('#ml_start_date').val().split('/');
+        m_start = m_start[1] + "/" + m_start[0] + "/" + m_start[2];
+
+        var m_finish = $('#ml_finish_date').val().length > 0 ? $('#ml_finish_date').val().split('/') : "";
+        m_finish = $('#ml_finish_date').val().length > 0 ? m_finish[1] + "/" + m_finish[0] + "/" + m_finish[2] : "";
 
         val += $('#meeting_type').val().join('+') + "-";
         val += $('#ml_type').val().join('+') + "-";
@@ -340,8 +339,8 @@
         val += $('#mlFollowerUser').val() != null ? $('#mlFollowerUser').val().join('+') + "-" : "-";
         val += $('#identifierUser').val() != null ? $('#identifierUser').val().join('+') + "-" : "-";
         val += $('#mlStatus').val().join('+') + "-";
-        val += $('#ml_start_date').val()+"-";
-        val += $('#ml_finish_date').val().length > 0 ? $('#ml_finish_date').val() : "-";
+        val += m_start + "-";
+        val += m_finish + "-";
 
         $('#modal-1').modal('show', { backdrop: 'static' });
         $('#modal-12').modal('hide');

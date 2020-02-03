@@ -1,7 +1,13 @@
 ﻿$(document).ready(function (e) {
+
+    $('.select2c').select2({
+        //allowClear: true,
+        placeholder: "Seçim edin"
+    });
+
+
     var userObject = new Object({
         minimumInputLength: 1,
-        //allowClear: true,
         language: {
             inputTooShort: function () {
                 return 'Sorğunu daxil edin';
@@ -37,8 +43,79 @@
         }
     });
 
+    var otherParticipantsObject = new Object({
+        minimumInputLength: 1,
+        language: {
+            inputTooShort: function () {
+                return 'Sorğunu daxil edin';
+            },
+            noResults: function () {
+                return "Bu sorğuya uyğun nəticə tapılmadı";
+            },
+            searching: function () {
+                return "Axtarış gedir..."
+            }
+        },
+        placeholder: "Daxil edin",
+        ajax: {
+            url: '/Users/GetOtherParticipants',
+            dataType: 'json',
+            type: "GET",
+            data: function (term) {
+                return term;
+            },
+            processResults: function (data) {
+                var myResults = [];
+                $.each(data, function (index, item) {
+                    myResults.push({
+                        'id': item.id,
+                        'text': item.full_name
+                    });
+                });
+                return {
+                    results: myResults
+                };
+            }
 
-    var dep_array = [];
+        }
+    });
+
+    var places = new Object({
+        minimumInputLength: 2,
+        language: {
+            inputTooShort: function () {
+                return 'Sorğunu daxil edin';
+            },
+            noResults: function () {
+                return "Bu sorğuya uyğun nəticə tapılmadı";
+            },
+            searching: function () {
+                return "Axtarış gedir..."
+            }
+        },
+        placeholder: "Daxil edin",
+        ajax: {
+            url: '/Place/GetPlaces',
+            dataType: 'json',
+            type: "GET",
+            data: function (term) {
+                return term;
+            },
+            processResults: function (data) {
+                var myResults = [];
+                $.each(data, function (index, item) {
+                    myResults.push({
+                        'id': item.id,
+                        'text': item.full_name
+                    });
+                });
+                return {
+                    results: myResults
+                };
+            }
+
+        }
+    });
 
     var departments = new Object({
         minimumInputLength: 1,
@@ -77,6 +154,42 @@
         }
     });
 
+    var userDepartments = new Object({
+        language: {
+            inputTooShort: function () {
+                return 'Sorğunu daxil edin';
+            },
+            noResults: function () {
+                return "Bu sorğuya uyğun nəticə tapılmadı";
+            },
+            searching: function () {
+                return "Axtarış gedir..."
+            }
+        },
+        placeholder: "Daxil edin",
+        ajax: {
+            url: '/Department/GetUsersDepartments',
+            dataType: 'json',
+            type: "GET",
+            data: function (term) {
+                return term;
+            },
+            processResults: function (data) {
+                var myResults = [];
+                $.each(data, function (index, item) {
+                    myResults.push({
+                        'id': item.id,
+                        'text': item.full_name
+                    });
+                });
+                return {
+                    results: myResults
+                };
+            }
+
+        }
+    });
+
     var reports = new Object({
         minimumInputLength: 1,
         language: {
@@ -92,7 +205,7 @@
         },
         placeholder: "Daxil edin",
         ajax: {
-            url: '/Reports/GetReports',
+            url: '/Reports/GetMReports',
             dataType: 'json',
             type: "GET",
             data: function (term) {
@@ -117,17 +230,13 @@
         }
     });
 
-    $('.select2c').select2({
-        //allowClear: true,
-        placeholder: "Seçim edin"
-    });
-
-
-    $('#mlDepartment').select2(departments);
-    $('#responsibleUser').select2(userObject);
-    $('#identifierUser').select2(userObject);
-    $('#mlFollowerUser').select2(userObject);
+    $('#informedUser').select2(userObject);
+    $('#ownerUser').select2(userObject);
+    $('#followerUser').select2(userObject);
+    $('#meeting_place').select2(places);
+    $('#meetingDepartment').select2(userDepartments);
     $('#select_filter').select2(reports);
+
 
     var page = 1;
     var fd = new FormData();
@@ -139,21 +248,23 @@
             $('#modal-1').modal('show', { backdrop: 'static' });
             setTimeout(function (e) {
                 $.ajax({
-                    url: '/Reports/MLReport',
+                    url: '/Reports/MReport',
                     method: 'post',
                     contentType: false,
                     processData: false,
                     data: fd,
                     cache: false,
                     success: function (result) {
-                        $('#report_partial').remove();
+                        $('.meeting_operation_line_table').remove();
+                        $('#meeting_show_partial').remove();
                         $('#ml_show_partial').remove();
+
 
                         $('#report_page').append(result);
 
                         setTimeout(function () {
                             $('#modal-1').modal('hide');
-                        }, 500)
+                        }, 500);
                     }
                 });
 
@@ -182,8 +293,33 @@
         Pagination(page);
     });
 
+    $(document).on('click', '#show_close a', function () {
+        $('#meeting_show_partial').remove();
+        $('#ml_show_partial').remove();
+    })
+
+    $(document).on('click', '.meeting_c', function () {
+        var val = $(this).data('id');
+        $('#meeting_show_partial').remove();
+        $('#ml_show_partial').remove();
+
+        $.ajax({
+            type: 'get',
+            url: '/Meeting/Show/' + val,
+            contentType: "application/json",
+            success: function (result) {
+                $('#report_page').append(result);
+                //window.scrollTo(0, $('.meeting_show').position().top);
+                var body = $("html, body");
+                body.stop().animate({ scrollTop: $('.meeting_operation_line_table').position().top }, 500, 'swing');
+            }
+        });
+    });
+
+
     $(document).on('click', '.meeting_line_c', function () {
         var val = $(this).data('id');
+        $('#meeting_show_partial').remove();
         $('#ml_show_partial').remove();
 
         $.ajax({
@@ -192,17 +328,14 @@
             contentType: "application/json",
             success: function (result) {
                 $('#report_page').append(result);
+
+                $(result).insertBefore('#meeting_show_close');
                 var body = $("html, body");
                 body.stop().animate({ scrollTop: $('#ml_show_partial').position().top }, 500, 'swing');
             }
         });
     });
 
-    $(document).on('click', '#show_close a', function (e) {
-        var body = $("html, body");
-        body.stop().animate({ scrollTop: $('#report_partial').position().top }, 500, 'swing');
-        $('#ml_show_partial').remove();
-    });
 
     function fdataAppend() {
         fd = new FormData();
@@ -214,61 +347,49 @@
                 fd.append('meetingType', parseInt(item));
             });
         }
-        else
-            fd.set('meetingType', '');
 
 
-        if ($('#ml_type').val() != null) {
-            $.each($('#ml_type').val(), function (index, item) {
-                fd.append('mlType', parseInt(item));
-            });
+
+        if ($('#title').val() != null) {
+            fd.append('title', $('#title').val());
         }
-        else
-            fd.set('mlType', '');
 
-        if ($('#mlDepartment').val() != null) {
-            $.each($('#mlDepartment').val(), function (index, item) {
+
+        if ($('#meetingDepartment').val() != null) {
+            $.each($('#meetingDepartment').val(), function (index, item) {
                 fd.append('department', parseInt(item));
             });
-            dep_array = $('#mlDepartment').val();
         }
-        else
-            fd.set('department', '');
 
 
-        if ($('#responsibleUser').val() != null) {
-            $.each($('#responsibleUser').val(), function (index, item) {
-                fd.append('responsibleEmail', parseInt(item));
+
+        if ($('#meeting_place').val() != null) {
+            $.each($('#meeting_place').val(), function (index, item) {
+                fd.append('place', parseInt(item));
             });
         }
 
 
-        if ($('#mlFollowerUser').val() != null) {
-            $.each($('#mlFollowerUser').val(), function (index, item) {
-                fd.append('followerEmail', parseInt(item));
+        if ($('#ownerUser').val() != null) {
+            $.each($('#ownerUser').val(), function (index, item) {
+                fd.append('ownerUser', parseInt(item));
             });
         }
-        else
-            fd.set('followerEmail', '');
 
-        if ($('#identifierUser').val() != null) {
-            $.each($('#identifierUser').val(), function (index, item) {
-                fd.append('confirmedEmail', parseInt(item));
+
+        if ($('#followerUser').val() != null) {
+            $.each($('#followerUser').val(), function (index, item) {
+                fd.append('followerUser', parseInt(item));
             });
         }
-        else
-            fd.set('confirmedEmail', '');
 
-        if ($('#mlStatus').val() != null) {
-            $.each($('#mlStatus').val(), function (index, item) {
-                fd.append('status', parseInt(item));
-            });
+        if ($('#meetingTags').val() != null) {
+            fd.append('tags', $('#meetingTags').val());
         }
-        else
-            fd.set('status', '');
 
-        fd.set('STime', $('ml_start_date').val());
-        fd.set('FTime', $('ml_finish_date').val());
+
+        fd.set('STime', $('#meeting_start_date').val());
+        fd.set('FTime', $('#meeting_finish_date').val());
 
 
     }
@@ -290,7 +411,7 @@
         $('#modal-11').modal('hide');
         setTimeout(function (e) {
             $.ajax({
-                url: '/Reports/MeetingLineFull/' + fr,
+                url: '/Reports/MeetingFull/' + fr,
                 method: 'get',
                 contentType: false,
                 processData: false,
@@ -303,15 +424,16 @@
                         //allowClear: true,
                         placeholder: "Seçim edin"
                     });
-                    $('#mlDepartment').select2(departments);
-                    $('#responsibleUser').select2(userObject);
-                    $('#identifierUser').select2(userObject);
-                    $('#mlFollowerUser').select2(userObject);
-                    $('#select_filter').select2(reports);
-                    $('#ml_start_date').datepicker({
+                    $('#informedUser').select2(userObject);
+                    $('#ownerUser').select2(userObject);
+                    $('#followerUser').select2(userObject);
+                    $('#participants').select2(userObject);
+                    $('#meetingDepartment').select2(userDepartments);
+                    $('#meetingTags').tagsinput();
+                    $('#meeting_start_date').datepicker({
                         format: 'dd/mm/yyyy'
                     });
-                    $('#ml_finish_date').datepicker({
+                    $('#meeting_finish_date').datepicker({
                         format: 'dd/mm/yyyy'
                     });
                     $('#modal-1').modal('hide');
@@ -332,16 +454,21 @@
         fdataAppend();
 
         var val = "";
+        var m_start = $('#meeting_start_date').val().split('/');
+        m_start = m_start[1] + "/" + m_start[0] + "/" + m_start[2];
+
+        var m_finish = $('#meeting_finish_date').val().length > 0 ? $('#meeting_finish_date').val().split('/') : "";
+        m_finish = $('#meeting_finish_date').val().length > 0 ? m_finish[1] + "/" + m_finish[0] + "/" + m_finish[2] : "";
 
         val += $('#meeting_type').val().join('+') + "-";
-        val += $('#ml_type').val().join('+') + "-";
-        val += $('#mlDepartment').val() != null ? $('#mlDepartment').val().join('+') + "-" : "-";
-        val += $('#responsibleUser').val() != null ? $('#responsibleUser').val().join('+') + "-" : "-";
-        val += $('#mlFollowerUser').val() != null ? $('#mlFollowerUser').val().join('+') + "-" : "-";
-        val += $('#identifierUser').val() != null ? $('#identifierUser').val().join('+') + "-" : "-";
-        val += $('#mlStatus').val().join('+') + "-";
-        val += $('#ml_start_date').val() + "-";
-        val += $('#ml_finish_date').val().length > 0 ? $('#ml_finish_date').val() : "-";
+        val += $('#title').val().length > 0 ? $('#title').val() + "-" : "-";
+        val += $('#meeting_place').val() != null ? $('#meeting_place').val().join('+') + "-" : "-";
+        val += $('#ownerUser').val() != null ? $('#ownerUser').val().join('+') + "-" : "-";
+        val += $('#followerUser').val() != null ? $('#followerUser').val().join('+') + "-" : "-";
+        val += $('#meetingTags').val().length > 0 ? $('#meetingTags').val().split(',').join("+") + "-" : "-";
+        val += m_start + "-";
+        val += m_finish + "-";
+        val += $('#departmentId').val() != null ? $('#departmentId').val().join('+') + "-" : "-";
 
         $('#modal-1').modal('show', { backdrop: 'static' });
         $('#modal-12').modal('hide');
@@ -351,7 +478,7 @@
             form_data.append('name', $('#filter_name_save').val());
 
             $.ajax({
-                url: '/Reports/ReportSave',
+                url: '/Reports/ReportMSave',
                 method: 'post',
                 contentType: false,
                 processData: false,
@@ -389,7 +516,7 @@
 
 
 
-        return $('#ml_start_date').val().length > 0;
+        return $('#meeting_start_date').val().length > 0;
     }
 
 
