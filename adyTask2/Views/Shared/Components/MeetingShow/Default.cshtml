@@ -63,7 +63,10 @@
                                     @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
                                     {
                                         var _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == meeting.OwnerUser);
-                                        <span>@_user.FirstName @_user.LastName</span>
+                                        @if (_user != null)
+                                        {
+                                            <span>@_user.FirstName @_user.LastName</span>
+                                        }
                                     }
                                 </div>
                             </div>
@@ -77,7 +80,11 @@
                                     @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
                                     {
                                         var _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == meeting.FollowerUser);
-                                        <span>@_user.FirstName @_user.LastName</span>
+                                        @if (_user != null)
+                                        {
+                                            <span>@_user.FirstName @_user.LastName</span>
+                                        }
+
                                     }
                                 </div>
                             </div>
@@ -162,7 +169,10 @@
                                 <label class="col-sm-5 control-label">Yer</label>
 
                                 <div class="col-sm-7">
-                                    <span>@meeting.PlaceNavigation.Name</span>
+                                    @if (meeting.Place.HasValue)
+                                    {
+                                        <span>@meeting.PlaceNavigation.Name</span>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -172,13 +182,16 @@
                                 <label class="col-sm-5 control-label">İştirak edənlər</label>
 
                                 <div class="col-sm-7">
-                                    @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                    @if (!string.IsNullOrEmpty(meeting.Participiants))
                                     {
-                                        var pSplit = meeting.Participiants.Split(';');
-                                        var pUsers = adyContext.User.Where(x => pSplit.Contains(x.EmailAddress));
-                                        var user = pUsers.Select(x => new { FullName = x.FirstName + " " + x.LastName });
+                                        using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                        {
+                                            var pSplit = meeting.Participiants.Split(';');
+                                            var pUsers = adyContext.User.Where(x => pSplit.Contains(x.EmailAddress));
+                                            var user = pUsers.Select(x => new { FullName = x.FirstName + " " + x.LastName });
 
-                                        <span>@string.Join(", ", user.Select(x => x.FullName))</span>
+                                            <span>@string.Join(", ", user.Select(x => x.FullName))</span>
+                                        }
                                     }
 
                                 </div>

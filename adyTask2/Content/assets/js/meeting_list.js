@@ -177,7 +177,8 @@
             url: '/MeetingLine/Show/' + val,
             contentType: "application/json",
             success: function (result) {
-                $($(result).find('.meeting_operation_table')).insertBefore('#meeting_show_partial>.row');
+                $(result).insertBefore('#meeting_show_partial>.row');
+                $('#show_close').remove();
                 //window.scrollTo(0, $('#ml_show_partial').position().top);
                 var body = $("html, body");
                 body.stop().animate({ scrollTop: $('.meeting_operation_table').position().top }, 500, 'swing');

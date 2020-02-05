@@ -78,6 +78,13 @@ namespace adyTask2.Controllers
             return View();
 
         }
+        public async Task Remove(int id)
+        {
+            adyTaskManagementContext adyContext = new adyTaskManagementContext();
+            var ML = await adyContext.MeetingLine.FirstOrDefaultAsync(x => x.Id == id);
+            adyContext.MeetingLine.Remove(ML);
+            await adyContext.SaveChangesAsync();
+        }
 
         public async Task<IActionResult> Show(int id)
         {
@@ -123,11 +130,12 @@ namespace adyTask2.Controllers
             Tags _tags; MDepartment _mDepartment;
 
             string[] sTime = StartTime.Split('/');
-            string[] fTime = FinishTime.Split('/');
+            string[] fTime = !string.IsNullOrEmpty(FinishTime) ? FinishTime.Split('/') : new string[0];
             int user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
 
             _meetingline.StartTime = new DateTime(int.Parse(sTime[2]), int.Parse(sTime[1]), int.Parse(sTime[0]));
-            _meetingline.FinishTime = new DateTime(int.Parse(fTime[2]), int.Parse(fTime[1]), int.Parse(fTime[0]));
+            if (!string.IsNullOrEmpty(FinishTime))
+                _meetingline.FinishTime = new DateTime(int.Parse(fTime[2]), int.Parse(fTime[1]), int.Parse(fTime[0]));
             _meetingline.CreateDate = DateTime.UtcNow.AddHours(4);
             _meetingline.CreatorId = user_id;
             _meetingline.StatusId = 1;
@@ -214,7 +222,7 @@ namespace adyTask2.Controllers
                 else if (adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).StatusId == 5)
                 {
                     adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).StatusId = 6;
-                    await _log.LogAdd(2, data.Description, data.RefId, 12, user_id,IpAdress, AInformation);
+                    await _log.LogAdd(2, data.Description, data.RefId, 12, user_id, IpAdress, AInformation);
                     if (await adyContext.Revision.CountAsync() > 0)
                         if (await adyContext.Revision.OrderByDescending(x => x.Id).FirstOrDefaultAsync(x => x.MlId == data.RefId) != null)
                         {
@@ -225,7 +233,7 @@ namespace adyTask2.Controllers
                 else if (adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).StatusId == 6)
                 {
                     adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).StatusId = 7;
-                    await _log.LogAdd(2, data.Description, data.RefId, 13, user_id,IpAdress, AInformation);
+                    await _log.LogAdd(2, data.Description, data.RefId, 13, user_id, IpAdress, AInformation);
                     if (await adyContext.Revision.CountAsync() > 0)
                         if (await adyContext.Revision.OrderByDescending(x => x.Id).FirstOrDefaultAsync(x => x.MlId == data.RefId) != null)
                         {
@@ -253,8 +261,8 @@ namespace adyTask2.Controllers
                     {
                         meetingLine.StatusId = 3;
                         meetingLine.IsPublished = 1;
-                        await _log.LogAdd(2, "", ids[i], 15, user_id,IpAdress, AInformation);
-                        
+                        await _log.LogAdd(2, "", ids[i], 15, user_id, IpAdress, AInformation);
+
                     }
                     else if (meetingLine.StatusId == 6)
                     {
@@ -277,7 +285,7 @@ namespace adyTask2.Controllers
         {
             using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
             {
-                var user_id = int.Parse(User.Claims.FirstOrDefault(x=>x.Type==ClaimTypes.NameIdentifier).Value);
+                var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
 
                 Revision _rev = new Revision
                 {
@@ -302,7 +310,7 @@ namespace adyTask2.Controllers
                 await adyContext.SaveChangesAsync();
 
                 Classes.Log _log = new Classes.Log();
-                await _log.LogAdd(2, data.Description, data.RefId, 10, user_id,IpAdress, AInformation);
+                await _log.LogAdd(2, data.Description, data.RefId, 10, user_id, IpAdress, AInformation);
             }
         }
 
@@ -311,7 +319,7 @@ namespace adyTask2.Controllers
         {
             using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
             {
-                var user_id = int.Parse(User.Claims.FirstOrDefault(x=>x.Type==ClaimTypes.NameIdentifier).Value);
+                var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
                 MeetingLine meetingLine;
                 for (int i = 0; i < ids.Length; i++)
                 {
@@ -396,10 +404,12 @@ namespace adyTask2.Controllers
                 meetingLine.InformedUserEmail = mLine.InformedUserEmail;
 
                 var sTime = STime.Split('/');
-                var fTime = FTime.Split('/');
+                var fTime = !string.IsNullOrEmpty(FTime) ? FTime.Split('/') : new string[0];
 
                 meetingLine.StartTime = new DateTime(int.Parse(sTime[2]), int.Parse(sTime[1]), int.Parse(sTime[0]));
-                meetingLine.FinishTime = new DateTime(int.Parse(fTime[2]), int.Parse(fTime[1]), int.Parse(fTime[0]));
+
+                if (FTime != null && FTime.Length > 0)
+                    meetingLine.FinishTime = new DateTime(int.Parse(fTime[2]), int.Parse(fTime[1]), int.Parse(fTime[0]));
 
                 //if (await TryUpdateModelAsync(meetingLine))
                 //{

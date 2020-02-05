@@ -247,7 +247,7 @@
 
     $(document).on('click', '.publish_ml_task', function (e) {
         var data = {
-            Description: "Yayınlandı",
+            Description: "Təsdiqləndi",
             RefId: $('.publish_ml_task').data('id')
         };
 
@@ -319,6 +319,25 @@
         }
 
     });
+
+
+    var xhr;
+
+    $(document).on('input', '#salam', function (e) {
+        var val = $(this).val();
+
+        if (xhr && xhr.readyState != 4) {
+            xhr.onreadystatechange = null;
+            xhr.abort();
+        }
+        xhr = $.ajax({
+            url: 'Users/GetUsers/' + val,
+            type: 'get',
+            success: function () {
+                alert('a');
+            }
+        })
+    })
 
     ////
 });

@@ -2,7 +2,7 @@
 @using adyTask2.Models
 
 @{
-    ViewData["Title"] = "Nizamla";
+    ViewData["Title"] = "Düzəliş et";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     MeetingLine _meetingLine = Model;
@@ -24,7 +24,7 @@
 
                 <div class="panel-heading">
                     <div class="panel-title">
-                        İclas sətiri nizamlama formu
+                        İclas sətiri düzəliş etmə formu
                     </div>
 
                     <div class="panel-options">
@@ -86,7 +86,10 @@
                                                     foreach (string item in _meetingLine.ResponsibleEmail.Split(';'))
                                                     {
                                                         _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == item);
-                                                        <option selected value="@item">@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
+                                                        @if (_user != null)
+                                                        {
+                                                            <option selected value="@item">@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
+                                                        }
                                                     }
                                                 }
                                             }
@@ -116,7 +119,10 @@
                                                     foreach (string item in _meetingLine.FollowerEmail.Split(';'))
                                                     {
                                                         _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == item);
-                                                        <option selected value="@item">@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
+                                                        @if (_user != null)
+                                                        {
+                                                            <option selected value="@item">@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
+                                                        }
                                                     }
                                                 }
                                             }
@@ -139,7 +145,10 @@
                                                     foreach (string item in _meetingLine.IdentifierEmail.Split(';'))
                                                     {
                                                         _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == item);
-                                                        <option selected value="@item">@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
+                                                        @if (_user != null)
+                                                        {
+                                                            <option selected value="@item">@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
+                                                        }
                                                     }
                                                 }
                                             }
@@ -178,9 +187,8 @@
                                     <div class="col-sm-7">
                                         <div class="input-group meeting_l_fi">
                                             @{
-                                                var FinishTime = _meetingLine.FinishTime.Value;
-
-                                                <input type="text" required class="form-control datepicker ml_up_f_date" data-format="dd/mm/yyyy" value="@FinishTime.Day/@FinishTime.Month/@FinishTime.Year">
+                                                string FinishTime = _meetingLine.FinishTime.HasValue ? $"{ _meetingLine.FinishTime.Value.Day}/{ _meetingLine.FinishTime.Value.Month}/{ _meetingLine.FinishTime.Value.Year}" : "";
+                                                <input type="text" required class="form-control datepicker ml_up_f_date" data-format="dd/mm/yyyy" value="@FinishTime">
                                             }
 
                                             <div class="input-group-addon">
@@ -285,11 +293,11 @@
 
                         <div class="row row_twenty meeting_line_add_submit_row">
                             @*<div class="col-md-3">
-                <a href="javascript:void(0)" class="btn btn-red btn-sm close_button">Bağla</a>
-            </div>*@
+                                    <a href="javascript:void(0)" class="btn btn-red btn-sm close_button">Bağla</a>
+                                </div>*@
 
                             <div class="col-md-3">
-                                <a href="javascript:void(0)" class="btn btn-green btn-sm editMeetingLine">Nizamla</a>
+                                <a href="javascript:void(0)" class="btn btn-green btn-sm editMeetingLine">Düzəliş et</a>
                             </div>
                         </div>
                     </form>

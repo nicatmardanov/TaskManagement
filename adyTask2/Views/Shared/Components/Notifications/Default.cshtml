@@ -164,25 +164,25 @@
                                                 if (item.Type == 1)
                                                 {
                                                     var meeting = adyContext.Meeting.FirstOrDefault(x => x.Id == item.RefId);
-                                                    <tr data-id="@item.Id">
+                                                    <tr data-id="@item.RefId">
                                                         <td width="1%">
-                                                            <input tabindex="5" type="checkbox" data-id="@item.Id" class="ml_check icheck-11">
+                                                            <input tabindex="5" type="checkbox" data-id="@item.RefId" class="ml_check icheck-11">
                                                         </td>
-                                                        <td class="meeting_c">@i</td>
-                                                        <th class="meeting_c" data-id="@item.Id">İclas</th>
-                                                        <th class="meeting_c" data-id="@item.Id">@item.Description</th>
+                                                        <td class="meeting_c" data-id="@item.RefId">@i</td>
+                                                        <th class="meeting_c" data-id="@item.RefId">İclas</th>
+                                                        <th class="meeting_c" data-id="@item.RefId">@item.Description</th>
                                                         <td class="meeting_c">@item.Operation.Operation</td>
-                                                        <th class="meeting_c" data-id="@item.Id">@item.User.FirstName @item.User.LastName</th>
-                                                        <th class="meeting_c" data-id="@item.Id">@item.CreateDate.Value.Day/@item.CreateDate.Value.Month/@item.CreateDate.Value.Year</th>
-                                                        <th class="meeting_c" data-id="@item.Id">@meeting.Status.StatusName</th>
+                                                        <th class="meeting_c" data-id="@item.RefId">@item.User.FirstName @item.User.LastName</th>
+                                                        <th class="meeting_c" data-id="@item.RefId">@item.CreateDate.Value.Day/@item.CreateDate.Value.Month/@item.CreateDate.Value.Year</th>
+                                                        <th class="meeting_c" data-id="@item.RefId">@meeting.Status.StatusName</th>
                                                         <td width="1%"><a class="remove_notification" href="javascript:void(0)"><i class="fa fa-trash-o"></i></a></td>
                                                     </tr>
                                                 }
                                                 else if (item.Type == 2)
                                                 {
-                                                    <tr data-id="@item.Id">
+                                                    <tr data-id="@item.RefId">
                                                         <td width="1%">
-                                                            <input tabindex="5" type="checkbox" data-id="@item.Id" class="ml_check icheck-11">
+                                                            <input tabindex="5" type="checkbox" data-id="@item.RefId" class="ml_check icheck-11">
                                                         </td>
                                                         <td class="meeting_line_c">@i</td>
                                                         <td class="meeting_line_c">@adyContext.MeetingLine.FirstOrDefault(x => x.Id == item.RefId).MlTypeNavigation.Name</td>

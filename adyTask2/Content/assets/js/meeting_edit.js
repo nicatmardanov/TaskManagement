@@ -238,7 +238,7 @@
         fd.append("Id", $('#ml_update').data('id'));
 
         var checkVal = checkValid('ml_add');
-        var isValiDate = compareDate($('.ml_up_s_date').val(), $('.ml_up_f_date').val(), 1);
+        var isValiDate = compareDate('ml_up_s_date', 'ml_up_f_date', 1);
 
         if (checkVal && isValiDate) {
             fd.append('MlType', $('.ml_up_type').val());
@@ -283,6 +283,7 @@
 
                         deletedDepartment = [];
                         addedDepartment = [];
+                        $('#modal-7').modal("hide");
                     }
                 });
             }, 500);

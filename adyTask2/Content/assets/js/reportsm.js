@@ -43,43 +43,6 @@
         }
     });
 
-    var otherParticipantsObject = new Object({
-        minimumInputLength: 1,
-        language: {
-            inputTooShort: function () {
-                return 'Sorğunu daxil edin';
-            },
-            noResults: function () {
-                return "Bu sorğuya uyğun nəticə tapılmadı";
-            },
-            searching: function () {
-                return "Axtarış gedir..."
-            }
-        },
-        placeholder: "Daxil edin",
-        ajax: {
-            url: '/Users/GetOtherParticipants',
-            dataType: 'json',
-            type: "GET",
-            data: function (term) {
-                return term;
-            },
-            processResults: function (data) {
-                var myResults = [];
-                $.each(data, function (index, item) {
-                    myResults.push({
-                        'id': item.id,
-                        'text': item.full_name
-                    });
-                });
-                return {
-                    results: myResults
-                };
-            }
-
-        }
-    });
-
     var places = new Object({
         minimumInputLength: 2,
         language: {
@@ -96,43 +59,6 @@
         placeholder: "Daxil edin",
         ajax: {
             url: '/Place/GetPlaces',
-            dataType: 'json',
-            type: "GET",
-            data: function (term) {
-                return term;
-            },
-            processResults: function (data) {
-                var myResults = [];
-                $.each(data, function (index, item) {
-                    myResults.push({
-                        'id': item.id,
-                        'text': item.full_name
-                    });
-                });
-                return {
-                    results: myResults
-                };
-            }
-
-        }
-    });
-
-    var departments = new Object({
-        minimumInputLength: 1,
-        language: {
-            inputTooShort: function () {
-                return 'Sorğunu daxil edin';
-            },
-            noResults: function () {
-                return "Bu sorğuya uyğun nəticə tapılmadı";
-            },
-            searching: function () {
-                return "Axtarış gedir..."
-            }
-        },
-        placeholder: "Daxil edin",
-        ajax: {
-            url: '/Department/GetDepartments',
             dataType: 'json',
             type: "GET",
             data: function (term) {
@@ -242,6 +168,25 @@
     var fd = new FormData();
 
 
+    function compareDate(selector1, selector2, type) {
+        if (type == 0) {
+            var date1_string = $("#" + selector1).val().split("/");
+            var date2_string = $("#" + selector2).val().split("/");
+        }
+        else {
+            var date1_string = $("." + selector1).val().split("/");
+            var date2_string = $("." + selector2).val().split("/");
+        }
+
+        var date1 = new Date(date1_string[1] + "/" + date1_string[0] + "/" + date1_string[2]);
+        var date2 = new Date(date2_string[1] + "/" + date2_string[0] + "/" + date2_string[2]);
+
+        if (date2 > date1 || date2 == "Invalid Date")
+            return true;
+
+        return false;
+    }
+
     function ajaxReportMl() {
         var isValid = checkValid('reportForm');
         if (isValid) {
@@ -278,6 +223,26 @@
         ajaxReportMl();
     }
 
+    $(document).on('change', '#meeting_start_date', function (e) {
+        $($($($('#meeting_start_date').parent()).parent()).find('.invalid-feedback')).remove();
+        $($($($('#meeting_finish_date').parent()).parent()).find('.invalid-feedback')).remove();
+        var valid = compareDate('meeting_start_date', 'meeting_finish_date', 0);
+
+        if (!valid && $('#meeting_finish_date').val() != "")
+            $($($('#meeting_start_date').parent()).parent()).append('<div class="invalid-feedback">Bitmə vaxtı başlama vaxtından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
+
+    })
+
+    $(document).on('change', '#meeting_finish_date', function (e) {
+        $($($($('#meeting_start_date').parent()).parent()).find('.invalid-feedback')).remove();
+        $($($($('#meeting_finish_date').parent()).parent()).find('.invalid-feedback')).remove();
+        var valid = compareDate('meeting_start_date', 'meeting_finish_date', 0);
+
+        if (!valid && $('#meeting_finish_date').val() != "")
+            $($($('#meeting_finish_date').parent()).parent()).append('<div class="invalid-feedback">Bitmə vaxtı başlama vaxtından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
+
+    })
+
     $(document).on('click', '.move_page', function (e) {
         page = $(this).data('page');
         Pagination(page)
@@ -294,6 +259,15 @@
     });
 
     $(document).on('click', '#show_close a', function () {
+        $('#meeting_show_partial').remove();
+        $('#ml_show_partial').remove();
+    });
+
+    $(document).on('click', '#meeting_show_close a', function (e) {
+        //var body = $("html, body");
+        //body.stop().animate({ scrollTop: $('#report_partial').position().top }, 500, 'swing');
+        //$('#ml_show_partial').remove();
+
         $('#meeting_show_partial').remove();
         $('#ml_show_partial').remove();
     })

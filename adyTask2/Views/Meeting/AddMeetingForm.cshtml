@@ -46,7 +46,7 @@
                                                 //bool isNullMTypePermission = string.IsNullOrEmpty(permissions.Mtype);
                                                 //int[] MTypes = !isNullMTypePermission ? Array.ConvertAll(permissions.Mtype.Split(';'), x => int.Parse(x)) : new int[0];
 
-                                                if (permissions != null)
+                                                if (permissions != null && !User.IsInRole("Admin"))
                                                 {
                                                     bool isNullMTypePermission = string.IsNullOrEmpty(permissions.Mtype);
                                                     int[] MeetingTypesArray = !isNullMTypePermission ? Array.ConvertAll(permissions.Mtype.Split(';'), x => int.Parse(x)) : new int[0];

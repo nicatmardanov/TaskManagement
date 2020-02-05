@@ -1,6 +1,6 @@
 ﻿@using adyTask2.Models
 @{
-    ViewData["Title"] = "İclas nizamlama";
+    ViewData["Title"] = "İclas düzəliş etmə";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     Meeting _meeting = Model;
@@ -55,7 +55,7 @@
                                                 int user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value);
                                                 var permissions = adyContext.Permission.FirstOrDefault(x => x.UserId == user_id);
 
-                                                if (permissions != null)
+                                                if (permissions != null && !User.IsInRole("Admin"))
                                                 {
                                                     bool isNullMTypePermission = string.IsNullOrEmpty(permissions.Mtype);
                                                     int[] MeetingTypesArray = !isNullMTypePermission ? Array.ConvertAll(permissions.Mtype.Split(';'), x => int.Parse(x)) : new int[0];
@@ -104,29 +104,33 @@
                                         <input type="text" required class="form-control" id="title" placeholder="Mövzu" value="@_meeting.Title">
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label class="col-sm-5 control-label">Yer</label>
+                            </div>
 
-                                        <div class="col-sm-7">
-                                            <select name="place" id="meeting_place" class="js-example-basic-single select2c" required>
-                                                @if (_meeting.Place > 0)
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Yer</label>
+
+                                    <div class="col-sm-7">
+                                        <select name="place" id="meeting_place" class="js-example-basic-single select2c" required>
+                                            @if (_meeting.Place > 0)
+                                            {
+                                                using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
                                                 {
-                                                    using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
-                                                    {
-                                                        <option></option>
-                                                        <option value="@_meeting.Place" selected>@adyContext.Place.FirstOrDefault(x => x.Id == _meeting.Place).Name</option>
-                                                    }
-
+                                                    <option></option>
+                                                    <option value="@_meeting.Place" selected>@adyContext.Place.FirstOrDefault(x => x.Id == _meeting.Place).Name</option>
                                                 }
-                                            </select>
-                                        </div>
+
+                                            }
+                                        </select>
                                     </div>
                                 </div>
-
                             </div>
 
 
+
+                        </div>
+
+                        <div class="row row_twenty">
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="col-sm-5 control-label">Tag</label>
@@ -136,10 +140,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                        </div>
-
-                        <div class="row row_twenty">
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="col-sm-5 control-label">İclas rəhbəri</label>
@@ -152,7 +152,10 @@
                                                 {
                                                     var ownerUser = _meeting.OwnerUser;
                                                     var _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == ownerUser);
-                                                    <option selected value="@ownerUser">@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
+                                                    @if (_user != null)
+                                                    {
+                                                        <option selected value="@ownerUser">@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
+                                                    }
                                                 }
                                             }
                                         </select>
@@ -172,7 +175,11 @@
                                                 {
                                                     var followerUser = _meeting.FollowerUser;
                                                     var _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == followerUser);
-                                                    <option selected value="@followerUser">@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
+                                                    @if (_user != null)
+                                                    {
+                                                        <option selected value="@followerUser">@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</option>
+                                                    }
+
                                                 }
                                             }
                                         </select>
@@ -249,11 +256,14 @@
 
                                         <select id="meetingDepartment" name="departmentId" class="js-example-basic-single select2c" required multiple>
                                             <option></option>
-                                            @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                            @if (_dep != null && _dep.Length > 0)
                                             {
-                                                foreach (int item in _dep)
+                                                using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
                                                 {
-                                                    <option selected value="@item">@adyContext.Department.FirstOrDefault(x => x.Id == item).Name</option>
+                                                    foreach (int item in _dep)
+                                                    {
+                                                        <option selected value="@item">@adyContext.Department.FirstOrDefault(x => x.Id == item).Name</option>
+                                                    }
                                                 }
                                             }
                                         </select>
@@ -264,7 +274,7 @@
                         </div>
 
                         <div class="row row_twenty">
-                            <div class="col-md-2">
+                            <div class="col-md-10">
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Məlumat veriləcək</label>
 
@@ -382,7 +392,7 @@
 
                         <div class="row row_twenty meeting_add_submit_row">
                             <div class="col-md-3 updtSave">
-                                <a href="javascript:void(0)" class="btn btn-green btn-sm updateMeeting">Nizamla</a>
+                                <a href="javascript:void(0)" class="btn btn-green btn-sm updateMeeting">Düzəliş et</a>
                             </div>
                         </div>
                     </form>

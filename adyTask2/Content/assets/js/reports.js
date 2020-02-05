@@ -161,6 +161,44 @@
         }
     }
 
+    function compareDate(selector1, selector2, type) {
+        if (type == 0) {
+            var date1_string = $("#" + selector1).val().split("/");
+            var date2_string = $("#" + selector2).val().split("/");
+        }
+        else {
+            var date1_string = $("." + selector1).val().split("/");
+            var date2_string = $("." + selector2).val().split("/");
+        }
+
+        var date1 = new Date(date1_string[1] + "/" + date1_string[0] + "/" + date1_string[2]);
+        var date2 = new Date(date2_string[1] + "/" + date2_string[0] + "/" + date2_string[2]);
+
+        if (date2 > date1 || date2 == "Invalid Date")
+            return true;
+
+        return false;
+    }
+
+    $(document).on('change', '#ml_start_date', function (e) {
+        $($($($('#ml_start_date').parent()).parent()).find('.invalid-feedback')).remove();
+        $($($($('#ml_finish_date').parent()).parent()).find('.invalid-feedback')).remove();
+        var valid = compareDate('ml_start_date', 'ml_finish_date', 0);
+
+        if (!valid && $('#ml_finish_date').val() != "")
+            $($($('#ml_start_date').parent()).parent()).append('<div class="invalid-feedback">Bitmə vaxtı başlama vaxtından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
+
+    })
+
+    $(document).on('change', '#ml_finish_date', function (e) {
+        $($($($('#ml_start_date').parent()).parent()).find('.invalid-feedback')).remove();
+        $($($($('#ml_finish_date').parent()).parent()).find('.invalid-feedback')).remove();
+        var valid = compareDate('ml_start_date', 'ml_finish_date', 0);
+
+        if (!valid && $('#ml_finish_date').val() != "")
+            $($($('#ml_finish_date').parent()).parent()).append('<div class="invalid-feedback">Bitmə vaxtı başlama vaxtından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
+    })
+
     function Pagination(parameter_page) {
         page = parameter_page;
         fd.set('page', parseInt(page));
@@ -204,6 +242,12 @@
         $('#ml_show_partial').remove();
     });
 
+    $(document).on('click', '#meeting_show_close a', function (e) {
+        var body = $("html, body");
+        body.stop().animate({ scrollTop: $('#report_partial').position().top }, 500, 'swing');
+        $('#ml_show_partial').remove();
+    })
+
     function fdataAppend() {
         fd = new FormData();
 
@@ -239,6 +283,7 @@
             });
         }
 
+        
 
         if ($('#mlFollowerUser').val() != null) {
             $.each($('#mlFollowerUser').val(), function (index, item) {
