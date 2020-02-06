@@ -51,6 +51,12 @@ namespace adyTask2.Controllers
                     _meetingLine = adyContext.MeetingLine.Where(x => x.StatusId > 1 && (x.ResponsibleEmail == User.Identity.Name) || x.Direct.FirstOrDefault(y => y.ToUserId == user_id && y.IsActive == 1) != null || x.FollowerEmail.Contains(User.Identity.Name) || x.IdentifierEmail.Contains(User.Identity.Name));
                 else if (mtype == 7)
                     _meetingLine = adyContext.MeetingLine.Where(x => x.StatusId > 1 && x.CreatorId == user_id);
+                else if (mtype == 8)
+                {
+                    _meetingLine = adyContext.MeetingLine.Where(x => x.CreatorId==user_id);
+                    await _meetingLine.Where(x => x.ReadDate == null && x.ResponsibleEmail == User.Identity.Name).ForEachAsync(x => x.ReadDate = DateTime.UtcNow.AddHours(4));
+                    await adyContext.SaveChangesAsync();
+                }
                 else
                     _meetingLine = Enumerable.Empty<MeetingLine>().AsQueryable();
 
@@ -265,6 +271,39 @@ namespace adyTask2.Controllers
 
                 return View("MyTasks", _meetingLine.OrderByDescending(x => x.Id).Include(x => x.Direct).Include(x => x.Meeting).Include(x => x.MlTypeNavigation).Include(x => x.Status).Take(10).ToList());
             }
+        }
+
+        public async Task<IActionResult> MyLines()
+        {
+            using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+            {
+
+                var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
+                var _meetingLine = adyContext.MeetingLine.Where(x => x.CreatorId==user_id);
+
+                await _meetingLine.Where(x => x.ReadDate == null && x.ResponsibleEmail == User.Identity.Name).ForEachAsync(x => x.ReadDate = DateTime.UtcNow.AddHours(4));
+                await adyContext.SaveChangesAsync();
+
+                double page_count = _meetingLine.Count() / 10.0;
+
+                if (page_count % 1 > 0)
+                    page_count++;
+
+
+                ViewBag.MaxPage = (int)page_count;
+                ViewBag.PageNumber = 1;
+
+                ViewBag.MeetingLine = 0;
+                ViewBag.NotCompleted = 0;
+                ViewBag.MyMeetingLines = 0;
+                ViewBag.Department = 0;
+                ViewBag.Type = (byte)0;
+                ViewBag.MType = (byte)8;
+                ViewBag.Title = "Daxil edilmiş tapşırıqlarım";
+
+                return View("MyTasks", _meetingLine.OrderByDescending(x => x.Id).Include(x => x.Direct).Include(x => x.Meeting).Include(x => x.MlTypeNavigation).Include(x => x.Status).Take(10).ToList());
+            }
+
         }
 
         public IActionResult Confirmation()

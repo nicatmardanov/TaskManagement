@@ -50,6 +50,33 @@ namespace adyTask2.Controllers
 
         }
 
+        public IActionResult MyMeetings()
+        {
+            using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+            {
+                var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
+                IQueryable<Meeting> _meeting = adyContext.Meeting.Where(x => x.CreatorId == user_id);    ////////////////////////////
+
+                double page_count = _meeting.Count() / 10.0;
+
+                if (page_count % 1 > 0)
+                    page_count++;
+
+
+                ViewBag.MaxPage = (int)page_count;
+                ViewBag.PageNumber = 1;
+
+                ViewBag.MeetingType = 0;
+                ViewBag.MyMeetings = false;
+                ViewBag.Department = 0;
+                ViewBag.Type = 1;
+                ViewBag.Title = "Daxil edilmiş iclaslarım";
+
+                return View("MeetingList", _meeting.OrderByDescending(x => x.Id).Include(x => x.MeetingTypeNavigation).Include(x => x.Status).Take(10).ToList());
+            }
+
+        }
+
         public IActionResult InMeetings()
         {
             using adyTaskManagementContext adyContext = new adyTaskManagementContext();
