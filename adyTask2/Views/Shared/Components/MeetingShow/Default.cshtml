@@ -92,31 +92,6 @@
 
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label class="col-sm-5 control-label">Məlumat veriləcək</label>
-
-                                <div class="col-sm-7">
-                                    @if (!string.IsNullOrEmpty(meeting.InformedUser))
-                                    {
-                                        using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
-                                        {
-                                            var iuSplit = meeting.InformedUser.Split(';');
-                                            var iuUsers = adyContext.User.Where(x => iuSplit.Contains(x.EmailAddress));
-                                            var user = iuUsers.Select(x => new { FullName = x.FirstName + " " + x.LastName });
-
-                                            <span>@string.Join(", ", user.Select(x => x.FullName))</span>
-                                        }
-
-                                    }
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="row row_twenty">
-                        <div class="col-md-4">
-                            <div class="form-group">
                                 <label class="col-sm-5 control-label">Tarix</label>
 
                                 <div class="col-sm-7">
@@ -130,6 +105,11 @@
                             </div>
                         </div>
 
+                        
+
+                    </div>
+
+                    <div class="row row_twenty">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="col-sm-5 control-label">Başlama saatı</label>
@@ -161,9 +141,6 @@
                             </div>
                         </div>
 
-                    </div>
-
-                    <div class="row row_twenty">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="col-sm-5 control-label">Yer</label>
@@ -177,11 +154,39 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label class="col-sm-5 control-label">İştirak edənlər</label>
+                    </div>
 
-                                <div class="col-sm-7">
+                    <div class="row row_twenty">
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Məlumat veriləcək</label>
+
+                                <div class="col-sm-10">
+                                    @if (!string.IsNullOrEmpty(meeting.InformedUser))
+                                    {
+                                        using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                        {
+                                            var iuSplit = meeting.InformedUser.Split(';');
+                                            var iuUsers = adyContext.User.Where(x => iuSplit.Contains(x.EmailAddress));
+                                            var user = iuUsers.Select(x => new { FullName = x.FirstName + " " + x.LastName });
+
+                                            <span>@string.Join(", ", user.Select(x => x.FullName))</span>
+                                        }
+
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row row_twenty">
+                        
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">İştirak edənlər</label>
+
+                                <div class="col-sm-10">
                                     @if (!string.IsNullOrEmpty(meeting.Participiants))
                                     {
                                         using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
@@ -198,11 +203,15 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label class="col-sm-5 control-label">ADY xarici iştirakçılar</label>
 
-                                <div class="col-sm-7">
+                    </div>
+
+                    <div class="row row_twenty">
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">ADY xarici iştirakçılar</label>
+
+                                <div class="col-sm-10">
                                     @if (!string.IsNullOrEmpty(meeting.OtherParticipiants))
                                     {
                                         @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
@@ -233,11 +242,11 @@
                     </div>
 
                     <div class="row row_twenty">
-                        <div class="col-md-4">
+                        <div class="col-md-10">
                             <div class="form-group">
-                                <label class="col-sm-5 control-label">Tag</label>
+                                <label class="col-sm-2 control-label">Tag</label>
 
-                                <div class="col-sm-7">
+                                <div class="col-sm-10">
                                     @{
                                         string tags = "";
                                         using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
@@ -250,7 +259,11 @@
                             </div>
                         </div>
 
-                        <div class="col-md-8">
+                        
+                    </div>
+
+                    <div class="row row_twenty">
+                        <div class="col-md-10">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Sənədlər</label>
 
@@ -269,6 +282,7 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
 
             </div>

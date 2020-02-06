@@ -199,30 +199,47 @@ namespace adyTask2.Controllers
             {
                 var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
                 Classes.Log _log = new Classes.Log();
+
                 if (adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).StatusId == 1)
                 {
                     adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).StatusId = 3;
                     adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).IsPublished = 1;
-                    await _log.LogAdd(2, "", data.RefId, 15, user_id, IpAdress, AInformation);
+
+                    if (adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).IsRevised == 1)
+                        await _log.LogAdd(2, "", data.RefId, 19, user_id, IpAdress, AInformation);
+                    else
+                        await _log.LogAdd(2, "", data.RefId, 15, user_id, IpAdress, AInformation);
+
+                    adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).IsRevised = 0;
                 }
 
                 else if (adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).StatusId == 3)
                 {
                     adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).StatusId = 5;
-                    await _log.LogAdd(2, data.Description, data.RefId, 11, user_id, IpAdress, AInformation);
+                    if (adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).IsRevised == 1)
+                        await _log.LogAdd(2, data.Description, data.RefId, 19, user_id, IpAdress, AInformation);
+                    else
+                        await _log.LogAdd(2, data.Description, data.RefId, 11, user_id, IpAdress, AInformation);
+
                     if (await adyContext.Revision.CountAsync() > 0)
                     {
                         if (await adyContext.Revision.OrderByDescending(x => x.Id).FirstOrDefaultAsync(x => x.MlId == data.RefId) != null)
                         {
                             adyContext.Revision.OrderByDescending(x => x.Id).FirstOrDefault(x => x.MlId == data.RefId).Active = 0;
                             adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).IsRevised = 0;
+
                         }
                     }
                 }
                 else if (adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).StatusId == 5)
                 {
                     adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).StatusId = 6;
-                    await _log.LogAdd(2, data.Description, data.RefId, 12, user_id, IpAdress, AInformation);
+
+                    if (adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).IsRevised == 1)
+                        await _log.LogAdd(2, data.Description, data.RefId, 19, user_id, IpAdress, AInformation);
+                    else
+                        await _log.LogAdd(2, data.Description, data.RefId, 12, user_id, IpAdress, AInformation);
+
                     if (await adyContext.Revision.CountAsync() > 0)
                         if (await adyContext.Revision.OrderByDescending(x => x.Id).FirstOrDefaultAsync(x => x.MlId == data.RefId) != null)
                         {
@@ -233,7 +250,11 @@ namespace adyTask2.Controllers
                 else if (adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).StatusId == 6)
                 {
                     adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).StatusId = 7;
-                    await _log.LogAdd(2, data.Description, data.RefId, 13, user_id, IpAdress, AInformation);
+                    if (adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).IsRevised == 1)
+                        await _log.LogAdd(2, data.Description, data.RefId, 19, user_id, IpAdress, AInformation);
+                    else
+                        await _log.LogAdd(2, data.Description, data.RefId, 13, user_id, IpAdress, AInformation);
+
                     if (await adyContext.Revision.CountAsync() > 0)
                         if (await adyContext.Revision.OrderByDescending(x => x.Id).FirstOrDefaultAsync(x => x.MlId == data.RefId) != null)
                         {
@@ -253,15 +274,23 @@ namespace adyTask2.Controllers
                 Classes.Log _log;
                 var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
                 MeetingLine meetingLine;
+
                 for (int i = 0; i < ids.Length; i++)
                 {
                     _log = new Classes.Log();
                     meetingLine = adyContext.MeetingLine.FirstOrDefault(x => x.Id == ids[i]);
+
                     if (meetingLine.StatusId == 1)
                     {
                         meetingLine.StatusId = 3;
                         meetingLine.IsPublished = 1;
-                        await _log.LogAdd(2, "", ids[i], 15, user_id, IpAdress, AInformation);
+                        if (meetingLine.IsRevised == 1)
+                            await _log.LogAdd(2, "", ids[i], 19, user_id, IpAdress, AInformation);
+                        else
+                            await _log.LogAdd(2, "", ids[i], 15, user_id, IpAdress, AInformation);
+
+
+                        meetingLine.IsRevised = 0;
 
                     }
                     else if (meetingLine.StatusId == 6)
@@ -272,7 +301,14 @@ namespace adyTask2.Controllers
                             if (await adyContext.Revision.OrderByDescending(x => x.Id).FirstOrDefaultAsync(x => x.MlId == ids[i]) != null)
                             {
                                 adyContext.Revision.OrderByDescending(x => x.Id).FirstOrDefault(x => x.MlId == ids[i]).Active = 0;
+                                if (meetingLine.IsRevised == 1)
+                                    await _log.LogAdd(2, meetingLine.Description, ids[i], 19, user_id, IpAdress, AInformation);
+                                else
+                                    await _log.LogAdd(2, meetingLine.Description, ids[i], 13, user_id, IpAdress, AInformation);
+
+
                                 adyContext.MeetingLine.FirstOrDefault(x => x.Id == ids[i]).IsRevised = 0;
+
                             }
                     }
                     await adyContext.SaveChangesAsync();

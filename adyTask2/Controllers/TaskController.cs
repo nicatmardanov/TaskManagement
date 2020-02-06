@@ -202,7 +202,6 @@ namespace adyTask2.Controllers
 
         }
 
-
         public async Task<IActionResult> AllTasks()
         {
             using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
@@ -406,7 +405,7 @@ namespace adyTask2.Controllers
             {
 
                 var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
-                var _meetingLine = adyContext.MeetingLine.Where(x => x.StatusId > 1 && (x.ResponsibleEmail == User.Identity.Name) || x.Direct.FirstOrDefault(y => y.ToUserId == user_id && y.IsActive == 1) != null || x.FollowerEmail.Contains(User.Identity.Name) || x.IdentifierEmail.Contains(User.Identity.Name));
+                var _meetingLine = adyContext.MeetingLine.Where(x => ((x.StatusId > 1) || x.StatusId==1 && x.IsRevised==1) && (x.ResponsibleEmail == User.Identity.Name) || x.Direct.FirstOrDefault(y => y.ToUserId == user_id && y.IsActive == 1) != null || x.FollowerEmail.Contains(User.Identity.Name) || x.IdentifierEmail.Contains(User.Identity.Name));
 
                 double page_count = _meetingLine.Count() / 10.0;
 
@@ -486,6 +485,7 @@ namespace adyTask2.Controllers
 
             return View("Notifications", logs);
         }
+
         public IActionResult Notifications(int page, byte mtype, byte nc, byte mm)
         {
             adyTaskManagementContext adyContext = new adyTaskManagementContext();

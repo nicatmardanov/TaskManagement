@@ -92,8 +92,11 @@
                                         using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
                                         {
                                             var _ru = adyContext.User.FirstOrDefault(x => x.EmailAddress == _meetingLine.ResponsibleEmail);
-                                            string responsibleUser = _ru.FirstName + " " + _ru.LastName;
-                                            <span>@responsibleUser</span>
+                                            @if (_ru != null)
+                                            {
+                                                string responsibleUser = _ru.FirstName + " " + _ru.LastName;
+                                                <span>@responsibleUser</span>
+                                            }
                                         }
                                     }
                                 </div>
@@ -109,8 +112,11 @@
                                         using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
                                         {
                                             var _cu = adyContext.User.FirstOrDefault(x => x.EmailAddress == _meetingLine.IdentifierEmail);
-                                            string confirmerUser = _cu.FirstName + " " + _cu.LastName;
-                                            <span>@confirmerUser</span>
+                                            @if (_cu != null)
+                                            {
+                                                string confirmerUser = _cu.FirstName + " " + _cu.LastName;
+                                                <span>@confirmerUser</span>
+                                            }
                                         }
                                     }
                                 </div>
@@ -126,8 +132,11 @@
                                         using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
                                         {
                                             var _fu = adyContext.User.FirstOrDefault(x => x.EmailAddress == _meetingLine.FollowerEmail);
-                                            string followerUser = _fu.FirstName + " " + _fu.LastName;
-                                            <span>@followerUser</span>
+                                            @if (_fu != null)
+                                            {
+                                                string followerUser = _fu.FirstName + " " + _fu.LastName;
+                                                <span>@followerUser</span>
+                                            }
                                         }
                                     }
                                 </div>
@@ -136,27 +145,7 @@
                     </div>
 
                     <div class="row row_twenty">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label class="col-sm-5 control-label">Məlumat veriləcək</label>
-
-                                <div class="col-sm-7">
-                                        @if (!string.IsNullOrEmpty(_meetingLine.InformedUserEmail))
-                                        {
-                                            using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
-                                            {
-                                                var iuSplit = _meetingLine.InformedUserEmail.Split(';');
-                                                var iuUsers = adyContext.User.Where(x => iuSplit.Contains(x.EmailAddress));
-
-                                                var user = iuUsers.Select(x => new { FullName = x.FirstName + " " + x.LastName });
-
-                                                <span>@string.Join(", ", user.Select(x => x.FullName))</span>
-                                            }
-                                        }
-                                </div>
-                            </div>
-                        </div>
-
+                       
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="col-sm-5 control-label">Başlama Tarixi</label>
@@ -178,11 +167,32 @@
 
                                 <div class="col-sm-7">
                                     <div class="input-group">
-                                        @{
+                                        @if (_meetingLine.FinishTime.HasValue)
+                                        {
                                             var finishTime = _meetingLine.FinishTime.Value;
+                                            <span>@finishTime.Day/@finishTime.Month/@finishTime.Year</span>
                                         }
-                                        <span>@finishTime.Day/@finishTime.Month/@finishTime.Year</span>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">Sənədlər</label>
+
+                                <div class="col-sm-7">
+                                    @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                    {
+                                        var _attach = adyContext.Attachment.FirstOrDefault(x => x.Type == 2 && x.RefId == _meetingLine.Id);
+
+                                        if (_attach != null)
+                                        {
+                                            <a href="@_attach.Path" class="attachment btn btn-info btn-file">Endir</a>
+                                        }
+
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -194,18 +204,20 @@
                     <div class="row row_twenty">
                         <div class="col-md-10">
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">Sənədlər</label>
+                                <label class="col-sm-2 control-label">Məlumat veriləcək</label>
 
                                 <div class="col-sm-10">
-                                    @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                    @if (!string.IsNullOrEmpty(_meetingLine.InformedUserEmail))
                                     {
-                                        var _attach = adyContext.Attachment.FirstOrDefault(x => x.Type == 2 && x.RefId == _meetingLine.Id);
-
-                                        if (_attach != null)
+                                        using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
                                         {
-                                            <a href="@_attach.Path" class="attachment btn btn-info btn-file">Endir</a>
-                                        }
+                                            var iuSplit = _meetingLine.InformedUserEmail.Split(';');
+                                            var iuUsers = adyContext.User.Where(x => iuSplit.Contains(x.EmailAddress));
 
+                                            var user = iuUsers.Select(x => new { FullName = x.FirstName + " " + x.LastName });
+
+                                            <span>@string.Join(", ", user.Select(x => x.FullName))</span>
+                                        }
                                     }
                                 </div>
                             </div>
