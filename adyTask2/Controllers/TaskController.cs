@@ -48,9 +48,9 @@ namespace adyTask2.Controllers
                 else if (mtype == 5)
                     _meetingLine = adyContext.MeetingLine.Where(x => x.StatusId == 1 && x.CreatorId == user_id);
                 else if (mtype == 6)
-                    _meetingLine = adyContext.MeetingLine.Where(x => x.StatusId > 1 && (x.ResponsibleEmail == User.Identity.Name) || x.Direct.FirstOrDefault(y => y.ToUserId == user_id && y.IsActive == 1) != null || x.FollowerEmail.Contains(User.Identity.Name) || x.IdentifierEmail.Contains(User.Identity.Name));
+                    _meetingLine = adyContext.MeetingLine.Where(x => ((x.StatusId > 1) || x.StatusId == 1 && x.IsRevised == 1) && (x.ResponsibleEmail == User.Identity.Name) || x.Direct.FirstOrDefault(y => y.ToUserId == user_id && y.IsActive == 1) != null || x.FollowerEmail.Contains(User.Identity.Name) || x.IdentifierEmail.Contains(User.Identity.Name));
                 else if (mtype == 7)
-                    _meetingLine = adyContext.MeetingLine.Where(x => x.StatusId > 1 && x.CreatorId == user_id);
+                    _meetingLine = adyContext.MeetingLine.Where(x => ((x.StatusId > 1) || x.StatusId == 1 && x.IsRevised == 1) && x.CreatorId == user_id);
                 else if (mtype == 8)
                 {
                     _meetingLine = adyContext.MeetingLine.Where(x => x.CreatorId==user_id);
@@ -473,7 +473,7 @@ namespace adyTask2.Controllers
             {
 
                 var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
-                var _meetingLine = adyContext.MeetingLine.Where(x => x.StatusId > 1 && x.CreatorId == user_id);
+                var _meetingLine = adyContext.MeetingLine.Where(x => ((x.StatusId > 1) || x.StatusId == 1 && x.IsRevised == 1) && x.CreatorId == user_id);
 
                 double page_count = _meetingLine.Count() / 10.0;
 
