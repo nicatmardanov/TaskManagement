@@ -305,41 +305,41 @@
     })
 
     $(document).on('change', '.ml_up_s_date', function (e) {
-        $($($($('.ml_up_s_date').parent().parent())).find('.invalid-feedback')).remove();
+        $($($($('.ml_up_s_date').parent()).parent()).find('.invalid-feedback')).remove();
         $($($($('.ml_up_f_date').parent()).parent()).find('.invalid-feedback')).remove();
 
         var isValidDate = compareDate('ml_up_s_date', 'ml_up_f_date', 1) && $('.ml_up_f_date').val().length > 0;
         if (!isValidDate) {
-            $($($($('.ml_up_s_date').parent()).parent()).parent()).append('<div class="invalid-feedback">Bitmə vaxtı başlama vaxtından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
+            $($($('.ml_up_s_date').parent()).parent()).append('<div class="invalid-feedback">Bitmə vaxtı başlama vaxtından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
         }
     })
 
     $(document).on('change', '.ml_up_f_date', function (e) {
-        $($($($($('.ml_up_s_date').parent()).parent()).parent()).find('.invalid-feedback')).remove();
-        $($($($($('.ml_up_f_date').parent()).parent()).parent()).find('.invalid-feedback')).remove();
+        $($($($('.ml_up_s_date').parent()).parent()).find('.invalid-feedback')).remove();
+        $($($($('.ml_up_f_date').parent()).parent()).find('.invalid-feedback')).remove();
         var isValidDate = compareDate('ml_up_s_date', 'ml_up_f_date', 1);
 
         if (!isValidDate) {
-            $($($($('.ml_up_f_date').parent()).parent()).parent()).append('<div class="invalid-feedback">Bitmə vaxtı başlama vaxtından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
+            $($($('.ml_up_f_date').parent()).parent()).append('<div class="invalid-feedback">Bitmə vaxtı başlama vaxtından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
         }
     })
 
     $(document).on('change', '#meeting_l_start_date', function (e) {
-        $($($($($('#meeting_l_start_date').parent()).parent().parent())).find('.invalid-feedback')).remove();
-        $($($($($('#meeting_l_finish_date').parent()).parent().parent())).find('.invalid-feedback')).remove();
+        $($($($('#meeting_l_start_date').parent()).parent()).find('.invalid-feedback')).remove();
+        $($($($('#meeting_l_finish_date').parent()).parent()).find('.invalid-feedback')).remove();
         var isValidDate = compareDate('meeting_l_start_date', 'meeting_l_finish_date', 0);
 
         if (!isValidDate && $('#meeting_l_finish_date').val().length > 0) {
-            $($($($('#meeting_l_start_date').parent()).parent().parent())).append('<div class="invalid-feedback">Bitmə vaxtı başlama vaxtından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
+            $($($('#meeting_l_start_date').parent()).parent()).append('<div class="invalid-feedback">Bitmə vaxtı başlama vaxtından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
         }
     })
 
     $(document).on('change', '#meeting_l_finish_date', function (e) {
-        $($($($($('#meeting_l_start_date').parent()).parent().parent())).find('.invalid-feedback')).remove();
-        $($($($($('#meeting_l_finish_date').parent()).parent().parent())).find('.invalid-feedback')).remove();
+        $($($($('#meeting_l_start_date').parent()).parent()).find('.invalid-feedback')).remove();
+        $($($($('#meeting_l_finish_date').parent()).parent()).find('.invalid-feedback')).remove();
         var isValidDate = compareDate('meeting_l_start_date', 'meeting_l_finish_date', 0);
         if (!isValidDate) {
-            $($($($('#meeting_l_finish_date').parent()).parent().parent())).append('<div class="invalid-feedback">Bitmə vaxtı başlama vaxtından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
+            $($($('#meeting_l_finish_date').parent()).parent()).append('<div class="invalid-feedback">Bitmə vaxtı başlama vaxtından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
         }
     })
 
@@ -648,8 +648,11 @@
 
                             fileChange = true;
 
-                            if (type == 0)
-                                $('.publish_meeting').show();
+                            //if (type == 0)
+                            //    $('.publish_meeting').show();
+
+                            $('.publish_meeting').hide();
+
                         }
                     })
                 }
@@ -719,8 +722,7 @@
 
                                         fileChange = true;
 
-                                        if (type == 0)
-                                            $('.publish_meeting').show();
+
                                     }
                                 })
 

@@ -69,7 +69,8 @@ namespace adyTask2.Controllers
                 ViewBag.MeetingType = 0;
                 ViewBag.MyMeetings = false;
                 ViewBag.Department = 0;
-                ViewBag.Type = 1;
+                ViewBag.Type = 2;
+                ViewBag.MMPage = 1;
                 ViewBag.Title = "Daxil edilmiş iclaslarım";
 
                 return View("MeetingList", _meeting.OrderByDescending(x => x.Id).Include(x => x.MeetingTypeNavigation).Include(x => x.Status).Take(10).ToList());
@@ -137,6 +138,8 @@ namespace adyTask2.Controllers
                     _meeting = adyContext.Meeting.Where(x => x.IsPublished == 1 && (x.FollowerUser.Contains(User.Identity.Name) || x.OwnerUser == User.Identity.Name || x.InformedUser.Contains(User.Identity.Name) || x.Participiants.Contains(User.Identity.Name)));    ////////////////////////////
                 else if (type == 1)
                     _meeting = _meeting.Where(x => x.IsPublished==1 && x.CreatorId == user_id);
+                else if(type==2)
+                    _meeting = _meeting.Where(x => x.CreatorId == user_id);
 
 
 

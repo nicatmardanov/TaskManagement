@@ -10857,7 +10857,7 @@ body.page-fade-only-init {
 .custom_switch_inner > div, .custom_switch_inner > a {
     position: absolute;
     top: 0;
-    left: 0;
+    right: 0;
 }
 
 .custom_switch_inner > a {
@@ -10882,7 +10882,7 @@ body.page-fade-only-init {
 
 .meeting_operation_line_table .custom_switch_active {
     background: #337ab7;
-    left: 50%;
+    right: 50%;
 }
 
 .custom_ap {
