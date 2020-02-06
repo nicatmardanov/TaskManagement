@@ -52,7 +52,7 @@ namespace adyTask2.Controllers
                 var _user = User.Identity.Name;
                 var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
 
-                if ((_meetingLine.StatusId == 1 && _meetingLine.CreatorId == user_id) || (_meetingLine.StatusId == 3 && _meetingLine.ResponsibleEmail == _user) || (_meetingLine.StatusId == 5 && _meetingLine.FollowerEmail == _user) || (_meetingLine.StatusId == 6 && _meetingLine.IdentifierEmail == _user))
+                if ((_meetingLine.StatusId == 1 && _meetingLine.CreatorId == user_id) || (_meetingLine.StatusId == 3 && _meetingLine.ResponsibleEmail == _user) || (_meetingLine.StatusId == 5 && _meetingLine.IdentifierEmail == _user) || (_meetingLine.StatusId == 6 && _meetingLine.FollowerEmail == _user))
                 {
                     ViewBag.Id = id;
                     return View(adyContext.MeetingLine.Where(x => x.Id == id).Include(x => x.Meeting).Include(x => x.MlTypeNavigation).Include(x => x.Status).ToList());
@@ -419,6 +419,7 @@ namespace adyTask2.Controllers
             using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
             {
                 adyContext.MeetingLine.FirstOrDefault(x => x.Id == MlId).StatusId = 8;
+                await adyContext.SaveChangesAsync();
                 int user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
                 Classes.Log _log = new Classes.Log();
                 await _log.LogAdd(2, Description, MlId, 17, user_id, IpAdress, AInformation);

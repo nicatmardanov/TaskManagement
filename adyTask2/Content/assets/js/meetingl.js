@@ -465,9 +465,9 @@
         var disabled = 'checked';
 
         if (checkVal && isValidDate)
-            $('.ml_add').attr('data-valid', 1);
+            $('#mlp').attr('data-valid', 1);
         else {
-            $('.ml_add').attr('data-valid', 0);
+            $('#mlp').attr('data-valid', 0);
             disabled = 'disabled';
         }
 
@@ -607,7 +607,7 @@
 
     $(document).on('click', '.publish_meeting a', function (e) {
 
-        if ($('.meeting_add').attr('data-valid') == 1) {
+        if ($('.meeting_add').attr('data-valid') == 1 || $('#mlp').attr('data-valid') == 1) {
             $('#modal-7').modal('show', { backdrop: 'static' });
             $('#modal-7 .ajax_modal_7 span').html('');
             setTimeout(function (e) {
@@ -730,6 +730,10 @@
                         });
                     }
                 }
+
+                $('#modal-7').modal('hide');
+
+
                 ///
             }, 500);
         }
@@ -1260,9 +1264,9 @@
         var disabled = 'checked';
 
         if (checkVal && isValiDate)
-            $('.ml_add').attr('data-valid', 1);
+            $('#mlp').attr('data-valid', 1);
         else {
-            $('.ml_add').attr('data-valid', 0);
+            $('#mlp').attr('data-valid', 0);
             disabled = 'disabled';
         }
 

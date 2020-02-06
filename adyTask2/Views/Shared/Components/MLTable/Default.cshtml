@@ -1,5 +1,6 @@
 ﻿@{
     Layout = null;
+    int user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value);
 }
 
 @using adyTask2.Models;
@@ -62,7 +63,7 @@
                                                 <option value="1">Birbaşa tapşırıqlar</option>
                                                 <option value="2">İcas tapşırıqları</option>
                                             }
-                                            
+
 
                                         }
                                     </select>
@@ -226,8 +227,8 @@
                                         <th>Status</th>
                                     </tr>
                                     @*<tr>
-                                        <th><input id="salam" type="text" placeholder="salam" /></th>
-                                    </tr>*@
+                                            <th><input id="salam" type="text" placeholder="salam" /></th>
+                                        </tr>*@
                                 </thead>
                                 <tbody>
                                     @{
@@ -259,7 +260,7 @@
                                                                 <span class="caret"></span>
                                                             </button>
                                                             <ul class="dropdown-menu">
-                                                                @if (item.StatusId == 1)
+                                                                @if (item.StatusId == 1 && item.CreatorId==user_id)
                                                                 {
                                                                     if (item.MeetingId == null)
                                                                     {
@@ -292,8 +293,8 @@
                                                                         _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == User.Identity.Name);
                                                                     }
                                                                     bool _directed = item.StatusId == 3 && (item.IsDirected == 0 && item.ResponsibleEmail == User.Identity.Name) || (item.IsDirected == 1 && item.Direct.FirstOrDefault(x => x.ToUserId == _user.Id) != null);
-                                                                    bool _follower = item.StatusId == 5 && item.FollowerEmail == User.Identity.Name;
-                                                                    bool _confirmer = item.StatusId == 6 && item.IdentifierEmail == User.Identity.Name;
+                                                                    bool _confirmer = item.StatusId == 5 && item.IdentifierEmail == User.Identity.Name;
+                                                                    bool _follower = item.StatusId == 6 && item.FollowerEmail == User.Identity.Name;
 
                                                                     if (ViewBag.Type == 0 && (_directed || _follower || _confirmer))
                                                                     {
@@ -319,7 +320,7 @@
                                                 <th class="meeting_line_c" data-id="@item.Id">@item.MlTypeNavigation.Name</th>
                                                 <th class="meeting_line_c" data-id="@item.Id">@item.Description</th>
                                                 <th class="meeting_line_c" data-id="@item.Id">@item.StartTime.Value.Day/@item.StartTime.Value.Month/@item.StartTime.Value.Year</th>
-                                                @{ 
+                                                @{
                                                     string finish_time = item.FinishTime.HasValue ? $"{item.FinishTime.Value.Day}/{item.FinishTime.Value.Month}/{item.FinishTime.Value.Year}" : "";
                                                 }
                                                 <th class="meeting_line_c" data-id="@item.Id">@finish_time</th>
@@ -343,14 +344,18 @@
                                                     var confirmedPerson = adyContext.User.FirstOrDefault(x => x.EmailAddress == item.IdentifierEmail);
 
 
-                                                    var rPerson = responsePerson!=null ? $"{responsePerson.FirstName} {responsePerson.LastName}" : "";
-                                                    var cPerson = confirmedPerson != null ? $"{confirmedPerson.FirstName} {confirmedPerson.LastName}" : "";
+                                                    string rPerson = responsePerson != null ? $"{responsePerson.FirstName} {responsePerson.LastName}" : "";
+                                                    string cPerson = confirmedPerson != null ? $"{confirmedPerson.FirstName} {confirmedPerson.LastName}" : "";
+                                                    string status_name = /*item.StatusId == 1 && item.IsRevised == 1 ? "Ləğv edildi" : */item.Status.StatusName;
 
                                                     <th class="meeting_line_c" data-id="@item.Id">@rPerson</th>
                                                     <th class="meeting_line_c" data-id="@item.Id">@cPerson</th>
+                                                    <th class="meeting_line_c" data-id="@item.Id">@status_name</th>
                                                 }
 
-                                                <th class="meeting_line_c" data-id="@item.Id">@item.Status.StatusName</th>
+
+
+
                                             </tr>
                                             i++;
                                         }

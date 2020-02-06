@@ -24,7 +24,7 @@ namespace adyTask2.Controllers
                 IQueryable<MeetingLine> _meetingLine;
                 if (mtype == 0)
                 {
-                    _meetingLine = adyContext.MeetingLine.Where(x => ((x.ResponsibleEmail == User.Identity.Name && x.StatusId > 1 && x.StatusId != 8) || (x.CreatorId == user_id && x.StatusId > 1 && x.StatusId != 8)) || x.Direct.FirstOrDefault(y => y.ToUserId == user_id && y.IsActive == 1) != null);
+                    _meetingLine = adyContext.MeetingLine.Where(x => ((x.ResponsibleEmail == User.Identity.Name && x.StatusId > 1 && x.StatusId != 8) || (x.CreatorId == user_id && ((x.StatusId == 1 && x.IsRevised == 1) || (x.StatusId > 1 && x.StatusId != 8)))) || x.Direct.FirstOrDefault(y => y.ToUserId == user_id && y.IsActive == 1) != null);
                     await _meetingLine.Where(x => x.ReadDate == null && x.ResponsibleEmail == User.Identity.Name).ForEachAsync(x => x.ReadDate = DateTime.UtcNow.AddHours(4));
                     await adyContext.SaveChangesAsync();
                 }
@@ -36,13 +36,13 @@ namespace adyTask2.Controllers
                 }
                 else if (mtype == 2)
                 {
-                    _meetingLine = adyContext.MeetingLine.Where(x => x.IdentifierEmail == User.Identity.Name && x.StatusId == 6);
+                    _meetingLine = adyContext.MeetingLine.Where(x => x.IdentifierEmail == User.Identity.Name && x.StatusId == 5);
                     ViewBag.HasCheck = (byte)0;
                     ViewBag.SType = 0;
                     ViewBag.MType = (byte)2;
                 }
                 else if (mtype == 3)
-                    _meetingLine = adyContext.MeetingLine.Where(x => x.FollowerEmail == User.Identity.Name && x.StatusId == 5);
+                    _meetingLine = adyContext.MeetingLine.Where(x => x.FollowerEmail == User.Identity.Name && x.StatusId == 6);
                 else if (mtype == 4)
                     _meetingLine = adyContext.MeetingLine.Where(x => x.InformedUserEmail.Contains(User.Identity.Name) && x.StatusId > 1 && x.StatusId != 8);
                 else if (mtype == 5)
@@ -125,7 +125,7 @@ namespace adyTask2.Controllers
 
             if (mtype == 3)
             {
-                MLines = adyContext.MeetingLine.Where(x => x.FollowerEmail.Contains(User.Identity.Name) && x.StatusId == 5);
+                MLines = adyContext.MeetingLine.Where(x => x.FollowerEmail.Contains(User.Identity.Name) && x.StatusId == 6);
                 Meetings = adyContext.Meeting.Where(x => x.FollowerUser.Contains(User.Identity.Name) && x.StatusId == 2);
             }
             else
@@ -214,7 +214,7 @@ namespace adyTask2.Controllers
             {
 
                 var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
-                var _meetingLine = adyContext.MeetingLine.Where(x => ((x.ResponsibleEmail == User.Identity.Name && x.StatusId > 1 && x.StatusId != 8) || (x.CreatorId == user_id && x.StatusId > 1 && x.StatusId != 8)) || x.Direct.FirstOrDefault(y => y.ToUserId == user_id && y.IsActive == 1) != null);
+                var _meetingLine = adyContext.MeetingLine.Where(x => (x.ResponsibleEmail == User.Identity.Name && x.StatusId > 1 && x.StatusId != 8) || (x.CreatorId == user_id && ((x.StatusId == 1 && x.IsRevised == 1) || (x.StatusId > 1 && x.StatusId != 8))) || x.Direct.FirstOrDefault(y => y.ToUserId == user_id && y.IsActive == 1) != null);
 
                 await _meetingLine.Where(x => x.ReadDate == null && x.ResponsibleEmail == User.Identity.Name).ForEachAsync(x => x.ReadDate = DateTime.UtcNow.AddHours(4));
                 await adyContext.SaveChangesAsync();
@@ -310,7 +310,7 @@ namespace adyTask2.Controllers
         {
             using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
             {
-                var _meetingLine = adyContext.MeetingLine.Where(x => x.IdentifierEmail == User.Identity.Name && x.StatusId == 6);
+                var _meetingLine = adyContext.MeetingLine.Where(x => x.IdentifierEmail == User.Identity.Name && x.StatusId == 5);
                 var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
 
                 double page_count = _meetingLine.Count() / 10.0;
@@ -341,7 +341,7 @@ namespace adyTask2.Controllers
             //using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
             //{
             //    var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
-            //    var _meetingLine = adyContext.MeetingLine.Where(x => x.FollowerEmail == User.Identity.Name && x.StatusId == 5);
+            //    var _meetingLine = adyContext.MeetingLine.Where(x => x.FollowerEmail == User.Identity.Name && x.StatusId == 6);
 
             //    double page_count = _meetingLine.Count() / 10.0;
 
@@ -365,7 +365,7 @@ namespace adyTask2.Controllers
 
 
             adyTaskManagementContext adyContext = new adyTaskManagementContext();
-            var _meetingLine = adyContext.MeetingLine.Where(x => x.FollowerEmail.Contains(User.Identity.Name) && x.StatusId == 5)
+            var _meetingLine = adyContext.MeetingLine.Where(x => x.FollowerEmail.Contains(User.Identity.Name) && x.StatusId == 6)
                 .Select(x => new Classes.Meeting_Line { Type = 2, Id = x.Id, CreateDate = x.CreateDate.Value }) as IQueryable<Classes.Meeting_Line>;
 
 
@@ -645,13 +645,13 @@ namespace adyTask2.Controllers
 
                 //
 
-                int all_tasks_count = await adyContext.MeetingLine.Where(x => ((x.ResponsibleEmail == User.Identity.Name && x.StatusId > 1 && x.StatusId != 8) || (x.CreatorId == user_id && x.StatusId > 1 && x.StatusId != 8)) || x.Direct.FirstOrDefault(y => y.ToUserId == user_id && y.IsActive == 1) != null).CountAsync();
+                int all_tasks_count = await adyContext.MeetingLine.Where(x => (x.ResponsibleEmail == User.Identity.Name && x.StatusId > 1 && x.StatusId != 8) || (x.CreatorId == user_id && ((x.StatusId == 1 && x.IsRevised == 1) || (x.StatusId > 1 && x.StatusId != 8))) || x.Direct.FirstOrDefault(y => y.ToUserId == user_id && y.IsActive == 1) != null).CountAsync();
                 int all_offers_count = await adyContext.MeetingLine.Where(x => x.MlType == 2 && (((x.ResponsibleEmail == User.Identity.Name && x.StatusId > 1 && x.StatusId != 8) || (x.CreatorId == user_id && x.StatusId > 1 && x.StatusId != 8)) || x.Direct.FirstOrDefault(y => y.ToUserId == user_id && y.IsActive == 1) != null)).CountAsync();
-                int cofirmed_count = await adyContext.MeetingLine.Where(x => x.IdentifierEmail == User.Identity.Name && x.StatusId == 6).CountAsync();
+                int cofirmed_count = await adyContext.MeetingLine.Where(x => x.IdentifierEmail == User.Identity.Name && x.StatusId == 5).CountAsync();
 
 
                 // followed
-                var _meetingLine_follow = adyContext.MeetingLine.Where(x => x.FollowerEmail.Contains(User.Identity.Name) && x.StatusId == 5)
+                var _meetingLine_follow = adyContext.MeetingLine.Where(x => x.FollowerEmail.Contains(User.Identity.Name) && x.StatusId == 6)
                 .Select(x => new Classes.Meeting_Line { Type = 2, Id = x.Id, CreateDate = x.CreateDate.Value }) as IQueryable<Classes.Meeting_Line>;
 
                 var _meeting_follow = adyContext.Meeting.Where(x => x.FollowerUser.Contains(User.Identity.Name) && x.StatusId == 2)
