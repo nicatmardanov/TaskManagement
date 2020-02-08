@@ -657,7 +657,7 @@
                     })
                 }
 
-                else {
+                else if ($('.ml_add').length > 0) {
                     var checkVal = checkValid('ml_add');
                     var isValidDate = compareDate('meeting_l_start_date', 'meeting_l_finish_date', 0);
                     if (checkVal && isValidDate) {
@@ -731,7 +731,16 @@
                     }
                 }
 
-                $('#modal-7').modal('hide');
+                $('#modal-7 .ajax_modal_7 span').hide();
+                $('#modal-7 .ajax_modal_7 p').hide();
+                $('#modal-7 .ajax_modal_7 small').show();
+
+                setTimeout(function () {
+                    $('#modal-7').modal('hide');
+                    $('#modal-7 .ajax_modal_7 span').show();
+                    $('#modal-7 .ajax_modal_7 p').show();
+                    $('#modal-7 .ajax_modal_7 small').hide();
+                }, 300)
 
 
                 ///

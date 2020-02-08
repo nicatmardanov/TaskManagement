@@ -23,7 +23,7 @@ namespace adyTask2.Components
 
             m_logs = m_logs.Concat(adyContext.MLog.Where(x => x.Type == 3 && m_operations_id.Contains(x.RefId)));
 
-            return View(m_logs.OrderByDescending(x => x.Id).Include(x => x.User).Include(x => x.Operation));
+            return View(m_logs.OrderBy(x => x.Id).Include(x => x.User).Include(x => x.Operation));
         }
     }
 }

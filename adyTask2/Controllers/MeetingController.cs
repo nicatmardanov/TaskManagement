@@ -55,7 +55,7 @@ namespace adyTask2.Controllers
             using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
             {
                 var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
-                IQueryable<Meeting> _meeting = adyContext.Meeting.Where(x => x.CreatorId == user_id);    ////////////////////////////
+                IQueryable<Meeting> _meeting = adyContext.Meeting.Where(x => x.CreatorId == user_id && x.IsPublished == 1);    ////////////////////////////
 
                 double page_count = _meeting.Count() / 10.0;
 
@@ -69,7 +69,7 @@ namespace adyTask2.Controllers
                 ViewBag.MeetingType = 0;
                 ViewBag.MyMeetings = false;
                 ViewBag.Department = 0;
-                ViewBag.Type = 2;
+                ViewBag.Type = 1;
                 ViewBag.MMPage = 1;
                 ViewBag.Title = "Daxil edilmiş iclaslarım";
 
@@ -81,7 +81,7 @@ namespace adyTask2.Controllers
         public IActionResult InMeetings()
         {
             using adyTaskManagementContext adyContext = new adyTaskManagementContext();
-            IQueryable<Meeting> _meeting = adyContext.Meeting.Where(x => x.IsPublished==1 && (x.FollowerUser.Contains(User.Identity.Name) || x.OwnerUser == User.Identity.Name || x.InformedUser.Contains(User.Identity.Name) || x.Participiants.Contains(User.Identity.Name)));    ////////////////////////////
+            IQueryable<Meeting> _meeting = adyContext.Meeting.Where(x => x.IsPublished == 1 && (x.FollowerUser.Contains(User.Identity.Name) || x.OwnerUser == User.Identity.Name || x.InformedUser.Contains(User.Identity.Name) || x.Participiants.Contains(User.Identity.Name)));    ////////////////////////////
 
 
             double page_count = _meeting.Count() / 10.0;
@@ -106,7 +106,7 @@ namespace adyTask2.Controllers
         {
             using adyTaskManagementContext adyContext = new adyTaskManagementContext();
             var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
-            IQueryable<Meeting> _meeting = adyContext.Meeting.Where(x => x.IsPublished==1 && x.CreatorId == user_id);    ////////////////////////////
+            IQueryable<Meeting> _meeting = adyContext.Meeting.Where(x => x.IsPublished == 1 && x.CreatorId == user_id);    ////////////////////////////
 
             double page_count = _meeting.Count() / 10.0;
 
@@ -137,9 +137,8 @@ namespace adyTask2.Controllers
                 if (type == 0)
                     _meeting = adyContext.Meeting.Where(x => x.IsPublished == 1 && (x.FollowerUser.Contains(User.Identity.Name) || x.OwnerUser == User.Identity.Name || x.InformedUser.Contains(User.Identity.Name) || x.Participiants.Contains(User.Identity.Name)));    ////////////////////////////
                 else if (type == 1)
-                    _meeting = _meeting.Where(x => x.IsPublished==1 && x.CreatorId == user_id);
-                else if(type==2)
-                    _meeting = _meeting.Where(x => x.CreatorId == user_id);
+                    _meeting = _meeting.Where(x => x.IsPublished == 1 && x.CreatorId == user_id);
+
 
 
 
@@ -237,11 +236,14 @@ namespace adyTask2.Controllers
             }
         }
 
-        public async Task<IActionResult> Status(int id)
+        public async Task Status(int id)
         {
-            using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+            using adyTaskManagementContext adyContext = new adyTaskManagementContext();
+            
+            Classes.ValidMeeting_Line _valid = new Classes.ValidMeeting_Line();
+            var meeting = adyContext.Meeting.FirstOrDefault(x => x.Id == id);
+            if (_valid.ValidMeeting(meeting))
             {
-                var meeting = adyContext.Meeting.FirstOrDefault(x => x.Id == id);
                 var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
                 meeting.StatusId = 2;
                 meeting.IsPublished = 1;
@@ -250,11 +252,12 @@ namespace adyTask2.Controllers
 
                 Classes.Log log = new Classes.Log();
                 await log.LogAdd(1, "", meeting.Id, 15, user_id, IpAdress, AInformation);
-
-
             }
-
-            return RedirectToAction("AllMeetings");
+            else
+            {
+                Response.StatusCode = 406;
+                await Response.WriteAsync("İclas təsdiqlənmək üçün uyğun formada deyil!");
+            }
         }
 
         public async Task<IActionResult> Edit(int id)

@@ -191,9 +191,11 @@
                                                         <td class="meeting_line_c">@item.User.FirstName @item.User.LastName</td>
                                                         @{
                                                             var create_date = item.CreateDate.Value;
+                                                            var mls = adyContext.MeetingLine.FirstOrDefault(x => x.Id == item.RefId);
+                                                            string status_name = mls.StatusId == 1 && mls.IsRevised == 1 ? "Revizə" : mls.Status.StatusName;
                                                             <td class="meeting_line_c">@create_date.Day/@create_date.Month/@create_date.Year</td>
+                                                            <td>@status_name</td>
                                                         }
-                                                        <td>@adyContext.MeetingLine.FirstOrDefault(x => x.Id == item.RefId).Status.StatusName</td>
                                                         <td width="1%"><a class="remove_notification" href="javascript:void(0)"><i class="fa fa-trash-o"></i></a></td>
                                                     </tr>
                                                 }

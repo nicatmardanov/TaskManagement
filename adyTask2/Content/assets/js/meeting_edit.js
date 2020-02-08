@@ -204,9 +204,7 @@
         return false;
     }
 
-
-
-    $(document).on('click', '.editMeetingLine', function () {
+    function edit_mline(type) {
         var fd = new FormData();
 
         if ($("#ml_edit_file")[0].files[0] != undefined && $('#ml_edit_file').hasClass('fileChange')) {
@@ -278,19 +276,55 @@
                         return xhr;
                     },
                     success: function () {
-                        deletedTags = [];
-                        addedTags = [];
 
-                        deletedDepartment = [];
-                        addedDepartment = [];
-                        $('#modal-7').modal("hide");
+                        if (type == 0) {
+                            deletedTags = [];
+                            addedTags = [];
+
+                            deletedDepartment = [];
+                            addedDepartment = [];
+
+                            setTimeout(function () {
+                                $('#modal-7').modal("hide");
+                            }, 500)
+                        }
+                        else if (type == 1) {
+
+                            var arr = [parseInt($('#ml_update').data('id'))];
+                            var fd = new FormData();
+
+                            $.each(arr, function (index, item) {
+                                fd.append('ids', item);
+                            });
+
+
+                            $.ajax({
+                                url: '/MeetingLine/StatusMulti',
+                                method: 'post',
+                                contentType: false,
+                                processData: false,
+                                data: fd,
+                                cache: false,
+                                success: function () {
+                                    window.location.href = "/Task/AllTasks";
+                                }
+                            })
+                        }
+
                     }
                 });
             }, 500);
 
         }
 
+    }
 
+    $(document).on('click', '.editMeetingLine', function () {
+        edit_mline(0);
+    });
+
+    $(document).on('click', '.submit_mline', function () {
+        edit_mline(1);
     });
 
 

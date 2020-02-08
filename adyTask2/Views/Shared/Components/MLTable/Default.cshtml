@@ -126,59 +126,62 @@
 
                             </div>
 
-                            <div class="col-xs-4">
-                                <div class="s30">
-                                    <span>Mənim yaratdıqlarım</span>
-                                </div>
-                                @*<div class="s60">
-                                        <div class="custom_switch">
-                                            <div class="myMeetingLines custom_switch_inner">
-                                                @if (!ViewBag.MyMeetingLines)
-                                                {
-                                                    <div class="custom_ap custom_switch_passive"></div>
-                                                    <a href="javascript:void(0)" class="custom_switch_button myMeetingLinesButton"></a>
-                                                    <input type="checkbox" id="myTasksCheck" hidden />
-                                                }
-                                                else if (ViewBag.MyMeetingLines)
-                                                {
-                                                    <div class="custom_ap custom_switch_active"></div>
-                                                    <a href="javascript:void(0)" class="custom_switch_button myMeetingLinesButton"></a>
-                                                    <input type="checkbox" id="myTasksCheck" checked hidden />
-                                                }
+                            @if (ViewBag.MLM!=1)
+                            {
+                                <div class="col-xs-4">
+                                    <div class="s30">
+                                        <span>Mənim yaratdıqlarım</span>
+                                    </div>
+                                    @*<div class="s60">
+                                            <div class="custom_switch">
+                                                <div class="myMeetingLines custom_switch_inner">
+                                                    @if (!ViewBag.MyMeetingLines)
+                                                    {
+                                                        <div class="custom_ap custom_switch_passive"></div>
+                                                        <a href="javascript:void(0)" class="custom_switch_button myMeetingLinesButton"></a>
+                                                        <input type="checkbox" id="myTasksCheck" hidden />
+                                                    }
+                                                    else if (ViewBag.MyMeetingLines)
+                                                    {
+                                                        <div class="custom_ap custom_switch_active"></div>
+                                                        <a href="javascript:void(0)" class="custom_switch_button myMeetingLinesButton"></a>
+                                                        <input type="checkbox" id="myTasksCheck" checked hidden />
+                                                    }
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>*@
+                                        </div>*@
 
-                                <div class="s70 taskSelect">
-                                    <select class="form-control select2c select2" name="myMeetingLinesButton" id="myMeetingLinesButton">
-                                        <option></option>
-                                        @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
-                                        {
-                                            if (ViewBag.MyMeetingLines == 1)
+                                    <div class="s70 taskSelect">
+                                        <select class="form-control select2c select2" name="myMeetingLinesButton" id="myMeetingLinesButton">
+                                            <option></option>
+                                            @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
                                             {
-                                                <option value="3">Hamısı</option>
-                                                <option value="1" selected>Mənim yaratdıqlarım</option>
-                                                <option value="2">Digərlərinin yaratdıqları</option>
-                                            }
-                                            else if (ViewBag.MyMeetingLines == 2)
-                                            {
-                                                <option value="3">Hamısı</option>
-                                                <option value="1">Mənim yaratdıqlarım</option>
-                                                <option value="2" selected>Digərlərinin yaratdıqları</option>
-                                            }
-                                            else
-                                            {
-                                                <option value="3" selected>Hamısı</option>
-                                                <option value="1">Mənim yaratdıqlarım</option>
-                                                <option value="2">Digərlərinin yaratdıqları</option>
-                                            }
+                                                if (ViewBag.MyMeetingLines == 1)
+                                                {
+                                                    <option value="3">Hamısı</option>
+                                                    <option value="1" selected>Mənim yaratdıqlarım</option>
+                                                    <option value="2">Digərlərinin yaratdıqları</option>
+                                                }
+                                                else if (ViewBag.MyMeetingLines == 2)
+                                                {
+                                                    <option value="3">Hamısı</option>
+                                                    <option value="1">Mənim yaratdıqlarım</option>
+                                                    <option value="2" selected>Digərlərinin yaratdıqları</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="3" selected>Hamısı</option>
+                                                    <option value="1">Mənim yaratdıqlarım</option>
+                                                    <option value="2">Digərlərinin yaratdıqları</option>
+                                                }
 
-                                        }
-                                    </select>
+                                            }
+                                        </select>
+                                    </div>
+
+
                                 </div>
-
-
-                            </div>
+                            }
                             @*<div class="col-xs-3">
                                     <div class="s40">
                                         <span>Department</span>
@@ -260,21 +263,27 @@
                                                                 <span class="caret"></span>
                                                             </button>
                                                             <ul class="dropdown-menu">
-                                                                @if (item.StatusId == 1 && item.CreatorId==user_id)
+                                                                <li>
+                                                                    <a href="javascript:void(0)" data-id="@item.Id" class="show_meeting_line_modal meeting_line_c">Bax</a>
+                                                                </li>
+                                                                @if (item.StatusId == 1 && item.CreatorId == user_id)
                                                                 {
-                                                                    if (item.MeetingId == null)
+                                                                    if (item.IsRevised == 0)
                                                                     {
-                                                                        <li>
-                                                                            <a href="javascript:void(0)" data-id="@item.Id" class="publish_ml_task">Təsdiqlə</a>
-                                                                        </li>
-                                                                    }
-                                                                    else if (item.Meeting.StatusId == 2)
-                                                                    {
-                                                                        <li>
-                                                                            <a href="javascript:void(0)" data-id="@item.Id" class="publish_ml_task">Təsdiqlə</a>
-                                                                        </li>
-                                                                    }
+                                                                        if (item.MeetingId == null)
+                                                                        {
+                                                                            <li>
+                                                                                <a href="javascript:void(0)" data-id="@item.Id" class="publish_ml_task">Təsdiqlə</a>
+                                                                            </li>
+                                                                        }
+                                                                        else if (item.Meeting.StatusId == 2)
+                                                                        {
+                                                                            <li>
+                                                                                <a href="javascript:void(0)" data-id="@item.Id" class="publish_ml_task">Təsdiqlə</a>
+                                                                            </li>
+                                                                        }
 
+                                                                    }
                                                                     <li>
                                                                         <a href="/MeetingLine/Edit/@item.Id" class="edit_ml_task">Düzəliş et</a>
                                                                     </li>
@@ -283,9 +292,7 @@
 
                                                                     </li>
                                                                 }
-                                                                <li>
-                                                                    <a href="javascript:void(0)" data-id="@item.Id" class="show_meeting_line_modal meeting_line_c">Bax</a>
-                                                                </li>
+
                                                                 @{
                                                                     adyTask2.Models.User _user;
                                                                     using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
@@ -346,7 +353,7 @@
 
                                                     string rPerson = responsePerson != null ? $"{responsePerson.FirstName} {responsePerson.LastName}" : "";
                                                     string cPerson = confirmedPerson != null ? $"{confirmedPerson.FirstName} {confirmedPerson.LastName}" : "";
-                                                    string status_name = /*item.StatusId == 1 && item.IsRevised == 1 ? "Ləğv edildi" : */item.Status.StatusName;
+                                                    string status_name = item.StatusId == 1 && item.IsRevised == 1 ? "Revizə" : item.Status.StatusName;
 
                                                     <th class="meeting_line_c" data-id="@item.Id">@rPerson</th>
                                                     <th class="meeting_line_c" data-id="@item.Id">@cPerson</th>

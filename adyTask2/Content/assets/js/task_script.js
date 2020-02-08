@@ -178,8 +178,7 @@
     $(document).on('click', '.meeting_line_c', function () {
         var val = $(this).data('id');
         $('#ml_show_partial').remove();
-        $('#meeting_show_partial').remove();
-
+        $('#meeting_show_close').remove();
         $.ajax({
             type: 'get',
             url: '/MeetingLine/Show/' + val,
@@ -259,6 +258,9 @@
             cache: false,
             success: function () {
                 ajax_mlTable();
+            },
+            error: function (xhr) {
+                alert(xhr.responseText);
             }
         })
     });

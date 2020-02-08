@@ -1,12 +1,15 @@
-﻿@{
+﻿@using adyTask2.Models
+@{
     ViewData["Title"] = "İcas sətirinin statusunu dəyiş";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    MeetingLine meetingLine = Model;
 }
 
-<div class="meeting_status_page" data-id="@ViewBag.Id">
-    @await Component.InvokeAsync("MLTable", new { _meetingLine = Model, type = (byte)1,page=1 })
-    @{ await Html.RenderPartialAsync("MeetingStatusForm");}
-</div>
+    <div class="meeting_status_page" data-id="@ViewBag.Id">
+        @*@await Component.InvokeAsync("MLTable", new { _meetingLine = Model, type = (byte)1, page = 1 })*@
+        @await Component.InvokeAsync("MeetingLineShow", meetingLine)
+        @{ await Html.RenderPartialAsync("MeetingStatusForm");}
+    </div>
 
 
 

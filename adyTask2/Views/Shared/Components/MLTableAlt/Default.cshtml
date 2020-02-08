@@ -344,7 +344,12 @@
                                                         <td class="meeting_line_c" data-id="@item.Id">@item.Description</td>
                                                         <td class="meeting_line_c" data-id="@item.Id">@item.Creator.FirstName @item.Creator.LastName</td>
                                                         <td class="meeting_line_c" data-id="@item.Id">@item.CreateDate.Value.Day/@item.CreateDate.Value.Month/@item.CreateDate.Value.Year</td>
-                                                        <td class="meeting_line_c" data-id="@item.Id">@item.Status.StatusName</td>
+
+                                                        @{
+                                                            string status_name = item.StatusId == 1 && item.IsRevised == 1 ? "Revizə" : item.Status.StatusName;
+
+                                                            <td class="meeting_line_c" data-id="@item.Id">@status_name</td>
+                                                        }
                                                     </tr>
                                                 }
 

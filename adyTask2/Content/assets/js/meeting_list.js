@@ -78,6 +78,21 @@
     }
 
 
+    $(document).on('click', '.publish_meeting', function (e) {
+        var id = parseInt($(this).data('id'));
+        $.ajax({
+            url: '/Meeting/Status/' + id,
+            type: 'get',
+            success: function () {
+                ajax_mTable();
+            },
+            error: function (xhr) {
+                alert(xhr.responseText);
+            }
+        })
+    });
+
+
     $(document).on('change', '#meeting_department', function (e) {
         if ($(this).val() != "")
             dep = $(this).val();

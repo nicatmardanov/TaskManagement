@@ -46,6 +46,8 @@
 
 
                                 adyTask2.Models.User responsePerson;
+                                string status_name = item.StatusId == 1 && item.IsRevised == 1 ? "Revizə" : item.Status.StatusName;
+
 
                                 if (item.Direct.Where(x => x.MlId == item.Id).Count() > 0)
                                 {
@@ -68,7 +70,7 @@
                                 <th class="meeting_line_c" data-id="@item.Id">@item.StartTime.Value.Day/@item.StartTime.Value.Month/@item.StartTime.Value.Year</th>
                                 <th class="meeting_line_c" data-id="@item.Id">@item.FinishTime.Value.Day/@item.FinishTime.Value.Month/@item.FinishTime.Value.Year</th>
                                 <th class="meeting_line_c" width="5%">@completion</th>
-                                <th class="meeting_line_c" data-id="@item.Id">@item.Status.StatusName</th>
+                                <th class="meeting_line_c" data-id="@item.Id">@status_name</th>
                             }
                         </tr>
                         i++;

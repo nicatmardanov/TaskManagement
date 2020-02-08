@@ -104,7 +104,7 @@ namespace adyTask2.Controllers
                 followerCheck = followerEmail != null && followerEmail.Length > 0, confirmedCheck = confirmedEmail != null && confirmedEmail.Length > 0,
                 statusCheck = status != null && status.Length > 0, STimeCheck = !string.IsNullOrEmpty(STime), FTimeCheck = !string.IsNullOrEmpty(FTime);
 
-            var meetingLine = adyContext.MeetingLine.AsQueryable();
+            var meetingLine = adyContext.MeetingLine.Where(x=>x.IsPublished==1);
 
             if (meetingCheck || mlTypeCheck || depCheck || responsibleCheck || followerCheck || confirmedCheck || statusCheck || STimeCheck || FTimeCheck)
             {
@@ -147,7 +147,7 @@ namespace adyTask2.Controllers
                 //}
 
                 if (statusCheck && meetingLine != null)
-                    meetingLine = meetingLine.Where(x => status.Contains(x.StatusId.Value) && x.IsPublished == 1);
+                    meetingLine = meetingLine.Where(x => status.Contains(x.StatusId.Value));
 
                 if (STimeCheck && meetingLine != null)
                 {
@@ -205,7 +205,7 @@ namespace adyTask2.Controllers
 
 
 
-            var meeting = adyContext.Meeting.AsQueryable();
+            var meeting = adyContext.Meeting.Where(x => x.IsPublished == 1 && x.StatusId > 1);
 
             if (meetingCheck || placeCheck || depCheck || ownerCheck || followerCheck || titleCheck || tagsCheck || STimeCheck || FTimeCheck)
             {

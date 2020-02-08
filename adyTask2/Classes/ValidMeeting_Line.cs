@@ -47,5 +47,39 @@ namespace adyTask2.Classes
 
             return true;
         }
+
+        public bool ValidMLine(MeetingLine meetingLine)
+        {
+
+            if (string.IsNullOrEmpty(meetingLine.ResponsibleEmail))
+                return false;
+
+            if (string.IsNullOrEmpty(meetingLine.FollowerEmail))
+                return false;
+
+            if (string.IsNullOrEmpty(meetingLine.IdentifierEmail))
+                return false;
+
+            if (string.IsNullOrEmpty(meetingLine.Description))
+                return false;
+
+            if (!meetingLine.StartTime.HasValue)
+                return false;
+
+            if (!meetingLine.FinishTime.HasValue)
+                return false;
+
+            using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+            {
+                MDepartment mld = adyContext.MDepartment.FirstOrDefault(x => x.Type == 2 && x.RefId == meetingLine.Id);
+                if (mld == null)
+                    return false;
+            }
+
+
+
+            return true;
+        }
+
     }
 }

@@ -44,18 +44,19 @@ namespace adyTask2.Controllers
                 return View(_meetingLine.Include(x => x.Meeting).Include(x => x.MlTypeNavigation).Include(x => x.Status).ToList());
             }
         }
-        public IActionResult Status(int id)
+        public async Task<IActionResult> Status(int id)
         {
             using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
             {
-                var _meetingLine = adyContext.MeetingLine.FirstOrDefault(x => x.Id == id);
+                var _meetingLine = await adyContext.MeetingLine.FirstOrDefaultAsync(x => x.Id == id);
                 var _user = User.Identity.Name;
                 var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
 
                 if ((_meetingLine.StatusId == 1 && _meetingLine.CreatorId == user_id) || (_meetingLine.StatusId == 3 && _meetingLine.ResponsibleEmail == _user) || (_meetingLine.StatusId == 5 && _meetingLine.IdentifierEmail == _user) || (_meetingLine.StatusId == 6 && _meetingLine.FollowerEmail == _user))
                 {
                     ViewBag.Id = id;
-                    return View(adyContext.MeetingLine.Where(x => x.Id == id).Include(x => x.Meeting).Include(x => x.MlTypeNavigation).Include(x => x.Status).ToList());
+                    //return View(await adyContext.MeetingLine.FirstOrDefaultAsync(x => x.Id == id)/*.Include(x => x.Meeting).Include(x => x.MlTypeNavigation).Include(x => x.Status).ToList()*/);
+                    return View(await adyContext.MeetingLine.Where(x => x.Id == id).Include(x => x.MlTypeNavigation).FirstOrDefaultAsync());
                 }
                 else
                 {
@@ -202,15 +203,27 @@ namespace adyTask2.Controllers
 
                 if (adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).StatusId == 1)
                 {
-                    adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).StatusId = 3;
-                    adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).IsPublished = 1;
+                    var meetingLine = adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId);
+                    Classes.ValidMeeting_Line _valid = new Classes.ValidMeeting_Line();
 
-                    if (adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).IsRevised == 1)
-                        await _log.LogAdd(2, "", data.RefId, 19, user_id, IpAdress, AInformation);
+                    if (_valid.ValidMLine(meetingLine))
+                    {
+                        meetingLine.StatusId = 3;
+                        meetingLine.IsPublished = 1;
+
+                        if (meetingLine.IsRevised == 1)
+                            await _log.LogAdd(2, "", data.RefId, 19, user_id, IpAdress, AInformation);
+                        else
+                            await _log.LogAdd(2, "", data.RefId, 15, user_id, IpAdress, AInformation);
+
+                        meetingLine.IsRevised = 0;
+                    }
                     else
-                        await _log.LogAdd(2, "", data.RefId, 15, user_id, IpAdress, AInformation);
+                    {
+                        Response.StatusCode = 406; 
+                        await Response.WriteAsync("İclas sətiri təsdiqlənmək üçün uyğun formada deyil!");
+                    }
 
-                    adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).IsRevised = 0;
                 }
 
                 else if (adyContext.MeetingLine.FirstOrDefault(x => x.Id == data.RefId).StatusId == 3)
