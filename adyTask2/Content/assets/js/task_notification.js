@@ -83,7 +83,7 @@
                     setTimeout(function (e) {
                         $('#modal-1').modal('hide');
                         var body = $("html, body");
-                        body.stop().animate({ scrollTop: $('#ml_type_all').position().top }, 500, 'swing');
+                        body.stop().animate({ scrollTop: $('#notificationPage').position().top }, 500, 'swing');
                     }, 500)
                 }
             });
@@ -200,7 +200,9 @@
     $(document).on('click', '.meeting_line_c', function () {
         var val = $($(this).parent()).data('id');
         $('#ml_show_partial').remove();
-        //$('#meeting_show_partial').remove();
+        var isMline = $(this).hasClass('mline_c');
+        if (isMline)
+            $('#meeting_show_partial').remove();
 
         $.ajax({
             type: 'get',
@@ -208,12 +210,14 @@
             contentType: "application/json",
             success: function (result) {
                 //$('#notificationPage').append(result);
-                if ($('#meeting_show_close').length > 0)
+                if ($('#meeting_show_close').length > 0) {
                     $(result).insertBefore('#meeting_show_close');
-                else
-                    $('#notificationPage').append(result);
-
                 $('#show_close').remove();
+                }
+                else {
+                    $('#notificationPage').append(result);
+                }
+
                 var body = $("html, body");
                 body.stop().animate({ scrollTop: $('#ml_show_partial').position().top }, 500, 'swing');
             }

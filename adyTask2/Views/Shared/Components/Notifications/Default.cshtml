@@ -184,16 +184,16 @@
                                                         <td width="1%">
                                                             <input tabindex="5" type="checkbox" data-id="@item.RefId" class="ml_check icheck-11">
                                                         </td>
-                                                        <td class="meeting_line_c">@i</td>
-                                                        <td class="meeting_line_c">@adyContext.MeetingLine.FirstOrDefault(x => x.Id == item.RefId).MlTypeNavigation.Name</td>
-                                                        <td class="meeting_line_c">@item.Description</td>
-                                                        <td class="meeting_line_c">@item.Operation.Operation</td>
-                                                        <td class="meeting_line_c">@item.User.FirstName @item.User.LastName</td>
+                                                        <td class="meeting_line_c mline_c">@i</td>
+                                                        <td class="meeting_line_c mline_c">@adyContext.MeetingLine.FirstOrDefault(x => x.Id == item.RefId).MlTypeNavigation.Name</td>
+                                                        <td class="meeting_line_c mline_c">@item.Description</td>
+                                                        <td class="meeting_line_c mline_c">@item.Operation.Operation</td>
+                                                        <td class="meeting_line_c mline_c">@item.User.FirstName @item.User.LastName</td>
                                                         @{
                                                             var create_date = item.CreateDate.Value;
                                                             var mls = adyContext.MeetingLine.FirstOrDefault(x => x.Id == item.RefId);
                                                             string status_name = mls.StatusId == 1 && mls.IsRevised == 1 ? "Revizə" : mls.Status.StatusName;
-                                                            <td class="meeting_line_c">@create_date.Day/@create_date.Month/@create_date.Year</td>
+                                                            <td class="meeting_line_c mline_c">@create_date.Day/@create_date.Month/@create_date.Year</td>
                                                             <td>@status_name</td>
                                                         }
                                                         <td width="1%"><a class="remove_notification" href="javascript:void(0)"><i class="fa fa-trash-o"></i></a></td>
