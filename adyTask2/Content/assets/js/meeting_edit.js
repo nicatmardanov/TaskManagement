@@ -185,6 +185,27 @@
         addedDepartment[addedDepartment.length] = parseInt(e.params.data.id);
     });
 
+
+    $(document).on('change', '.ml_up_s_date', function (e) {
+        $($($($('.ml_up_s_date').parent()).parent()).find('.invalid-feedback')).remove();
+        $($($($('.ml_up_f_date').parent()).parent()).find('.invalid-feedback')).remove();
+
+        var isValidDate = compareDate('ml_up_s_date', 'ml_up_f_date', 1) && $('.ml_up_f_date').val().length > 0;
+        if (!isValidDate) {
+            $($($('.ml_up_s_date').parent()).parent()).append('<div class="invalid-feedback">Bitmə vaxtı başlama vaxtından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
+        }
+    })
+
+    $(document).on('change', '.ml_up_f_date', function (e) {
+        $($($($('.ml_up_s_date').parent()).parent()).find('.invalid-feedback')).remove();
+        $($($($('.ml_up_f_date').parent()).parent()).find('.invalid-feedback')).remove();
+        var isValidDate = compareDate('ml_up_s_date', 'ml_up_f_date', 1);
+
+        if (!isValidDate) {
+            $($($('.ml_up_f_date').parent()).parent()).append('<div class="invalid-feedback">Bitmə vaxtı başlama vaxtından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
+        }
+    })
+
     function compareDate(selector1, selector2, type) {
         if (type == 0) {
             var date1_string = $("#" + selector1).val().split("/");
@@ -205,40 +226,45 @@
     }
 
     function edit_mline(type) {
-        var fd = new FormData();
 
-        if ($("#ml_edit_file")[0].files[0] != undefined && $('#ml_edit_file').hasClass('fileChange')) {
-            fd.append("meetingLFile", $("#ml_edit_file")[0].files[0]);
-        }
-        else if (!$('#ml_edit_file').hasClass('fileChange') && $('.remove_file').length == 1) {
-            fd.append("FileNotChanged", true);
-        }
-        else if ($('.remove_file').length == 0) {
-            fd.append("FileEmpty", true);
-        }
+        $($($($('.ml_up_s_date').parent()).parent()).find('.invalid-feedback')).remove();
+        $($($($('.ml_up_f_date').parent()).parent()).find('.invalid-feedback')).remove();
+        var isValidDate = compareDate('ml_up_s_date', 'ml_up_f_date', 1);
+        var checkVal = type == 1 ? checkValid('ml_add') : true;
 
-        $.each(deletedTags, function (index, item) {
-            fd.append('deletedTags', item);
-        });
 
-        $.each(addedTags.slice(addedTagsLength), function (index, item) {
-            fd.append('addedTags', item);
-        });
+        if (isValidDate && checkVal) {
+            var fd = new FormData();
 
-        $.each(deletedDepartment, function (index, item) {
-            fd.append('deletedDepartment', item);
-        });
+            if ($("#ml_edit_file")[0].files[0] != undefined && $('#ml_edit_file').hasClass('fileChange')) {
+                fd.append("meetingLFile", $("#ml_edit_file")[0].files[0]);
+            }
+            else if (!$('#ml_edit_file').hasClass('fileChange') && $('.remove_file').length == 1) {
+                fd.append("FileNotChanged", true);
+            }
+            else if ($('.remove_file').length == 0) {
+                fd.append("FileEmpty", true);
+            }
 
-        $.each(addedDepartment, function (index, item) {
-            fd.append('addedDepartment', item);
-        });
+            $.each(deletedTags, function (index, item) {
+                fd.append('deletedTags', item);
+            });
 
-        fd.append("Id", $('#ml_update').data('id'));
+            $.each(addedTags.slice(addedTagsLength), function (index, item) {
+                fd.append('addedTags', item);
+            });
 
-        var checkVal = checkValid('ml_add');
-        var isValiDate = compareDate('ml_up_s_date', 'ml_up_f_date', 1);
+            $.each(deletedDepartment, function (index, item) {
+                fd.append('deletedDepartment', item);
+            });
 
-        if (checkVal && isValiDate) {
+            $.each(addedDepartment, function (index, item) {
+                fd.append('addedDepartment', item);
+            });
+
+            fd.append("Id", $('#ml_update').data('id'));
+
+
             fd.append('MlType', $('.ml_up_type').val());
             fd.append('Description', $('.ml_up_description').val());
             fd.append('ResponsibleEmail', $('.ml_up_resp_user').val());
@@ -285,7 +311,7 @@
                             addedDepartment = [];
 
                             setTimeout(function () {
-                                $('#modal-7').modal("hide");
+                                window.location.href = "/Task/MeetingLineDraft";
                             }, 500)
                         }
                         else if (type == 1) {
@@ -316,6 +342,14 @@
             }, 500);
 
         }
+
+        else if (!isValidDate) {
+            $('.ml_up_f_date').focus();
+            $($($('.ml_up_f_date').parent()).parent()).append('<div class="invalid-feedback">Bitmə vaxtı başlama vaxtından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
+        }
+
+
+
 
     }
 

@@ -200,14 +200,20 @@
     $(document).on('click', '.meeting_line_c', function () {
         var val = $($(this).parent()).data('id');
         $('#ml_show_partial').remove();
-        $('#meeting_show_partial').remove();
+        //$('#meeting_show_partial').remove();
 
         $.ajax({
             type: 'get',
             url: '/MeetingLine/Show/' + val,
             contentType: "application/json",
             success: function (result) {
-                $('#notificationPage').append(result);
+                //$('#notificationPage').append(result);
+                if ($('#meeting_show_close').length > 0)
+                    $(result).insertBefore('#meeting_show_close');
+                else
+                    $('#notificationPage').append(result);
+
+                $('#show_close').remove();
                 var body = $("html, body");
                 body.stop().animate({ scrollTop: $('#ml_show_partial').position().top }, 500, 'swing');
             }

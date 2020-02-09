@@ -411,9 +411,21 @@
             $('.meeting_add').attr('data-valid', 0);
 
 
-        $('.meeting_add .panel-options .minimize_meeting').click();
-        $('.meeting_add .invalid-feedback').remove();
-        meetingSend(e, 0, 0);
+
+        if (!compareMeetingTime()) {
+            $('.meeting_add .panel-options .minimize_meeting').click();
+            $('.meeting_add .invalid-feedback').remove();
+            meetingSend(e, 0, 0);
+        }
+        else {
+            $($($('#meeting_start_time').parent()).find('.invalid-feedback')).remove();
+            $($($('#meeting_finish_time').parent()).find('.invalid-feedback')).remove();
+            //if (compareMeetingTime()) {
+            //    $($('#meeting_start_time').parent()).append('<div class="invalid-feedback">Bitmə saatı başlama saatından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
+            //}
+            $($('#meeting_finish_time').parent()).append('<div class="invalid-feedback">Bitmə saatı başlama saatından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
+            $('#meeting_finish_time').focus();
+        }
 
 
         e.preventDefault();
@@ -431,26 +443,32 @@
             $('.meeting_add').attr('data-valid', 0);
 
 
-        $('.meeting_add .panel-options .minimize_meeting').click();
-        $('.meeting_add .invalid-feedback').remove();
-        var meeting_id = $('.meeting_add').data('id');
-        meetingSend(e, 1, meeting_id);
+        if (!compareMeetingTime()) {
+            $('.meeting_add .panel-options .minimize_meeting').click();
+            $('.meeting_add .invalid-feedback').remove();
+            var meeting_id = $('.meeting_add').data('id');
+            meetingSend(e, 1, meeting_id);
+        }
+        else {
+            $($('#meeting_finish_time').parent()).append('<div class="invalid-feedback">Bitmə saatı başlama saatından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
+            $('#meeting_finish_time').focus();
+        }
 
 
     });
 
-    var ml_type = [];
-    var mlDepartment = [];
-    var mlTags = [];
-    var ml_description = [];
-    var responsibleUser = [];
-    var mlFollowerUser = [];
-    var identifierUser = [];
-    var informedUserMl = [];
-    var meeting_l_start_date = [];
-    var meeting_l_finish_date = [];
-    var mlFile = [];
-    var mlFilePos = [];
+    //var ml_type = [];
+    //var mlDepartment = [];
+    //var mlTags = [];
+    //var ml_description = [];
+    //var responsibleUser = [];
+    //var mlFollowerUser = [];
+    //var identifierUser = [];
+    //var informedUserMl = [];
+    //var meeting_l_start_date = [];
+    //var meeting_l_finish_date = [];
+    //var mlFile = [];
+    //var mlFilePos = [];
 
     var deletedTags = [];
     var addedTags = [];
@@ -471,78 +489,83 @@
             disabled = 'disabled';
         }
 
+        if (isValidDate) {
+            var form_data = new FormData();
+            form_data.append("MeetingId", $('.meeting_add').data('id'));
+            form_data.append("MlType", $('#ml_type').val());
+            form_data.append("Description", $('#ml_description').val());
+            form_data.append("StartTime", $('#meeting_l_start_date').val());
+            form_data.append("FinishTime", $('#meeting_l_finish_date').val());
+            form_data.append("ResponsibleEmail", $('#responsibleUser').val());
+            form_data.append("FollowerEmail", $('#mlFollowerUser').val());
+            form_data.append("IdentifierEmail", $('#identifierUser').val());
+            if ($('#informedUserMl').val() != null)
+                form_data.append("InformedUserEmail", $('#informedUserMl').val().join(';'));
 
+            form_data.append("MLFile", $("#mlFile")[0].files[0]);
 
-        var form_data = new FormData();
-        form_data.append("MeetingId", $('.meeting_add').data('id'));
-        form_data.append("MlType", $('#ml_type').val());
-        form_data.append("Description", $('#ml_description').val());
-        form_data.append("StartTime", $('#meeting_l_start_date').val());
-        form_data.append("FinishTime", $('#meeting_l_finish_date').val());
-        form_data.append("ResponsibleEmail", $('#responsibleUser').val());
-        form_data.append("FollowerEmail", $('#mlFollowerUser').val());
-        form_data.append("IdentifierEmail", $('#identifierUser').val());
-        if ($('#informedUserMl').val() != null)
-            form_data.append("InformedUserEmail", $('#informedUserMl').val().join(';'));
+            form_data.append('Tags', $('#mlTags').val());
 
-        form_data.append("MLFile", $("#mlFile")[0].files[0]);
+            if ($('#mlDepartment').val() != null)
+                $.each($('#mlDepartment').val(), function (index, item) {
+                    form_data.append('Departments', parseInt(item));
+                });
 
-        form_data.append('Tags', $('#mlTags').val());
+            var meeting_line_id = 0;
 
-        if ($('#mlDepartment').val() != null)
-            $.each($('#mlDepartment').val(), function (index, item) {
-                form_data.append('Departments', parseInt(item));
-            });
-
-        var meeting_line_id = 0;
-
-        $.ajax({
-            url: '/MeetingLine/AddMeetingLine',
-            method: 'post',
-            contentType: false,
-            processData: false,
-            data: form_data,
-            cache: false,
-            async: false,
-            success: function (result) {
-                meeting_line_id = result;
-            }
-        })
-
-
-        if ($(".meeting_line_add_table").length == 0 && perm == 1) {
             $.ajax({
-                type: 'get',
-                url: '/MeetingLine/MeetingLineTable',
-                success: function (newResult) {
-                    $(newResult).insertBefore('.publish_meeting');
-                    var tbody = '<tr data-id=' + meeting_line_id + '><td><input tabindex="5" ' + disabled + ' type="checkbox" class="ml_check icheck-11"></td><td><div class="dropdown"><button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Əməliyyatlar<span class="caret"></span></button><ul class="dropdown-menu"><li><a href="javascript:void(0)" class="edit_meeting_line" data-eindex=' + eindex + ' data-id=' + meeting_line_id + '>Bax</a></li><li><a href="javascript:void(0)" data-id=' + meeting_line_id + ' class="delete_ml">Sil</a></li></ul></div></td><td>' + $('#ml_type option:selected').html() + '</td><td class="table_desc">' + $('#ml_description').val() + '</td><td>' + $('#meeting_l_start_date').val() + '</td><td>' + $('#meeting_l_finish_date').val() + '</td><td class="tableUsers">' + $('#responsibleUser option:selected').text().split(' (')[0] + '</td><td class="tableUsers">' + $('#mlFollowerUser option:selected').text().split(' (')[0] + '</td><td class="tableUsers">' + $('#identifierUser option:selected').text().split(' (')[0] + '</td><td>Qaralama</td></tr>';
-                    $('.meeting_line_add_table tbody').append(tbody);
-                    eindex++;
-
-                    $('#ml_add .panel-options a').click();
-                    setTimeout(function () {
-                        $('#ml_add').remove();
-                        //$('.publish_meeting').show();
-                    }, 500);
+                url: '/MeetingLine/AddMeetingLine',
+                method: 'post',
+                contentType: false,
+                processData: false,
+                data: form_data,
+                cache: false,
+                async: false,
+                success: function (result) {
+                    meeting_line_id = result;
                 }
-            });
+            })
+
+
+            if ($(".meeting_line_add_table").length == 0 && perm == 1) {
+                $.ajax({
+                    type: 'get',
+                    url: '/MeetingLine/MeetingLineTable',
+                    success: function (newResult) {
+                        $(newResult).insertBefore('.publish_meeting');
+                        var tbody = '<tr data-id=' + meeting_line_id + '><td><input tabindex="5" ' + disabled + ' type="checkbox" class="ml_check icheck-11"></td><td><div class="dropdown"><button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Əməliyyatlar<span class="caret"></span></button><ul class="dropdown-menu"><li><a href="javascript:void(0)" class="edit_meeting_line" data-eindex=' + eindex + ' data-id=' + meeting_line_id + '>Bax</a></li><li><a href="javascript:void(0)" data-id=' + meeting_line_id + ' class="delete_ml">Sil</a></li></ul></div></td><td>' + $('#ml_type option:selected').html() + '</td><td class="table_desc">' + $('#ml_description').val() + '</td><td>' + $('#meeting_l_start_date').val() + '</td><td>' + $('#meeting_l_finish_date').val() + '</td><td class="tableUsers">' + $('#responsibleUser option:selected').text().split(' (')[0] + '</td><td class="tableUsers">' + $('#mlFollowerUser option:selected').text().split(' (')[0] + '</td><td class="tableUsers">' + $('#identifierUser option:selected').text().split(' (')[0] + '</td><td>Qaralama</td></tr>';
+                        $('.meeting_line_add_table tbody').append(tbody);
+                        eindex++;
+
+                        $('#ml_add .panel-options a').click();
+                        setTimeout(function () {
+                            $('#ml_add').remove();
+                            //$('.publish_meeting').show();
+                        }, 500);
+                    }
+                });
+            }
+
+            else {
+                var tbody = '<tr data-id=' + meeting_line_id + '><td><input tabindex="5" ' + disabled + ' type="checkbox" class="ml_check icheck-11"></td><td><div class="dropdown"><button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Əməliyyatlar<span class="caret"></span></button><ul class="dropdown-menu"><li><a href="javascript:void(0)" class="edit_meeting_line" data-eindex=' + eindex + ' data-id=' + meeting_line_id + '>Bax</a></li><li><a href="javascript:void(0)" data-id=' + meeting_line_id + ' class="delete_ml">Sil</a></li></ul></div></td><td>' + $('#ml_type option:selected').html() + '</td><td class="table_desc">' + $('#ml_description').val() + '</td><td>' + $('#meeting_l_start_date').val() + '</td><td>' + $('#meeting_l_finish_date').val() + '</td><td class="tableUsers">' + $('#responsibleUser option:selected').text().split(' (')[0] + '</td><td class="tableUsers">' + $('#mlFollowerUser option:selected').text().split(' (')[0] + '</td><td class="tableUsers">' + $('#identifierUser option:selected').text().split(' (')[0] + '</td><td>Qaralama</td></tr>';
+                $('.meeting_line_add_table tbody').append(tbody);
+                eindex++;
+
+                $('#ml_add .panel-options a').click();
+                setTimeout(function () {
+                    $('#ml_add').remove();
+                    //$('.publish_meeting').show();
+                }, 500);
+            }
+
+            if ($('#mlp').data('addml') == 1) {
+                $('.publish_meeting').show();
+            }
         }
 
         else {
-            var tbody = '<tr data-id=' + meeting_line_id + '><td><input tabindex="5" ' + disabled + ' type="checkbox" class="ml_check icheck-11"></td><td><div class="dropdown"><button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Əməliyyatlar<span class="caret"></span></button><ul class="dropdown-menu"><li><a href="javascript:void(0)" class="edit_meeting_line" data-eindex=' + eindex + ' data-id=' + meeting_line_id + '>Bax</a></li><li><a href="javascript:void(0)" data-id=' + meeting_line_id + ' class="delete_ml">Sil</a></li></ul></div></td><td>' + $('#ml_type option:selected').html() + '</td><td class="table_desc">' + $('#ml_description').val() + '</td><td>' + $('#meeting_l_start_date').val() + '</td><td>' + $('#meeting_l_finish_date').val() + '</td><td class="tableUsers">' + $('#responsibleUser option:selected').text().split(' (')[0] + '</td><td class="tableUsers">' + $('#mlFollowerUser option:selected').text().split(' (')[0] + '</td><td class="tableUsers">' + $('#identifierUser option:selected').text().split(' (')[0] + '</td><td>Qaralama</td></tr>';
-            $('.meeting_line_add_table tbody').append(tbody);
-            eindex++;
-
-            $('#ml_add .panel-options a').click();
-            setTimeout(function () {
-                $('#ml_add').remove();
-                //$('.publish_meeting').show();
-            }, 500);
-        }
-
-        if ($('#mlp').data('addml') == 1) {
-            $('.publish_meeting').show();
+            $($($('#meeting_l_finish_date').parent()).parent()).append('<div class="invalid-feedback">Bitmə vaxtı başlama vaxtından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
+            $('#meeting_l_finish_date').focus();
         }
 
 
@@ -736,11 +759,12 @@
                 $('#modal-7 .ajax_modal_7 small').show();
 
                 setTimeout(function () {
-                    $('#modal-7').modal('hide');
-                    $('#modal-7 .ajax_modal_7 span').show();
-                    $('#modal-7 .ajax_modal_7 p').show();
-                    $('#modal-7 .ajax_modal_7 small').hide();
-                }, 300)
+                    //$('#modal-7').modal('hide');
+                    //$('#modal-7 .ajax_modal_7 span').show();
+                    //$('#modal-7 .ajax_modal_7 p').show();
+                    //$('#modal-7 .ajax_modal_7 small').hide();
+                    window.location.reload();
+                }, 700);
 
 
                 ///
@@ -854,7 +878,7 @@
     });
 
 
-    $(document).on('click', '.meeting_add .close_button', function () {
+    $(document).on('click', '.meeting_add .meeting_add_submit_row .close_button', function () {
         closeForm(0);
     });
 
@@ -1223,54 +1247,10 @@
     $(document).on('click', '.editMeetingLine', function (e) {
 
         var checkVal = checkValidSec('ml_update');
-
-        var edit_index = eindex;
-
-
-        var fd = new FormData();
-
-        if ($("#ml_edit_file")[0].files[0] != undefined && $('#ml_edit_file').hasClass('fileChange')) {
-            fd.append("meetingLFile", $("#ml_edit_file")[0].files[0]);
-        }
-        else if (!$('#ml_edit_file').hasClass('fileChange') && $('.remove_file').length == 1) {
-            fd.append("FileNotChanged", true);
-        }
-        else if ($('.remove_file').length == 0) {
-            fd.append("FileEmpty", true);
-        }
-
-
-        $.each(deletedMlTags, function (index, item) {
-            fd.append('deletedTags', item);
-        });
-
-        $.each(addedMlTags.slice(addedMLTagsLength), function (index, item) {
-            fd.append('addedTags', item);
-        });
-
-        $.each(deletedMlDepartment, function (index, item) {
-            fd.append('deletedDepartment', item);
-        });
-
-        $.each(addedMlDepartment, function (index, item) {
-            fd.append('addedDepartment', item);
-        });
-
-        addedMlDepartment = [];
-        addedMlTags = [];
-
-        deletedMlDepartment = [];
-        deletedMlTags = [];
-        addedMLTagsLength = 0;
-
-
-        fd.append("Id", $('#ml_update').data('id'));
-
-        var checkVal = checkValidSec('ml_add');
-
+        var disabled = 'checked';
         var isValiDate = compareDate('ml_up_s_date', 'ml_up_f_date', 1);
 
-        var disabled = 'checked';
+
 
         if (checkVal && isValiDate)
             $('#mlp').attr('data-valid', 1);
@@ -1281,64 +1261,117 @@
 
 
 
-        fd.append('MlType', $('.ml_up_type').val());
-        fd.append('Description', $('.ml_up_description').val());
-        fd.append('ResponsibleEmail', $('.ml_up_resp_user').val());
-        fd.append('IdentifierEmail', $('.ml_up_ident_user').val());
-        fd.append('FollowerEmail', $('.ml_up_follower_user').val());
-
-        if ($('.ml_up_inf_user').val() != null) {
-            fd.append('InformedUserEmail', $('.ml_up_inf_user').val().join(';'));
-        }
-        else
-            fd.append('InformedUserEmail', "");
-
-        fd.append("STime", $('.ml_up_s_date').val());
-        fd.append("FTime", $('.ml_up_f_date').val());
+        if (isValiDate) {
+            var edit_index = eindex;
 
 
+            var fd = new FormData();
+
+            if ($("#ml_edit_file")[0].files[0] != undefined && $('#ml_edit_file').hasClass('fileChange')) {
+                fd.append("meetingLFile", $("#ml_edit_file")[0].files[0]);
+            }
+            else if (!$('#ml_edit_file').hasClass('fileChange') && $('.remove_file').length == 1) {
+                fd.append("FileNotChanged", true);
+            }
+            else if ($('.remove_file').length == 0) {
+                fd.append("FileEmpty", true);
+            }
 
 
-        $('#modal-7').modal('show', { backdrop: 'static' });
-        setTimeout(function (e) {
-            $.ajax({
-                url: '/MeetingLine/Edit',
-                method: 'post',
-                contentType: false,
-                processData: false,
-                data: fd,
-                cache: false,
-                xhr: function () {
-                    var xhr = new window.XMLHttpRequest();
-                    xhr.upload.addEventListener("progress", function (evt) {
-                        if (evt.lengthComputable) {
-                            var prcComplete = evt.loaded / evt.total;
-                            prcComplete = parseInt(prcComplete * 100);
-                            $('#modal-7 .modal_percent').html(prcComplete + '%');
-                        }
-                    }, false);
-                    return xhr;
-                },
-                success: function (result) {
-
-                    var tr = '<td><input tabindex="5" type="checkbox" ' + disabled + ' class="ml_check icheck-11"></td><td><div class="dropdown"><button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Əməliyyatlar<span class="caret"></span></button><ul class="dropdown-menu"><li><a href="javascript:void(0)" class="edit_meeting_line" data-eindex=' + eindex + ' data-id=' + result + '>Bax</a></li><li><a href="javascript:void(0)" data-id=' + result + ' class="delete_ml">Sil</a></li></ul></div></td><td>' + $('.ml_up_type option:selected').html() + '</td><td class="table_desc">' + $('.ml_up_description').val() + '</td><td>' + $('.ml_up_s_date').val() + '</td><td>' + $('.ml_up_f_date').val() + '</td><td class="tableUsers">' + $('.ml_up_resp_user option:selected').text().split(' (')[0] + '</td><td class="tableUsers">' + $('.ml_up_follower_user option:selected').text().split(' (')[0] + '</td><td class="tableUsers">' + $('.ml_up_ident_user option:selected').text().split(' (')[0] + '</td><td>Qaralama</td>';
-
-                    $($('.meeting_line_add_table tbody>tr')[edit_index]).html('');
-
-                    $($('.meeting_line_add_table tbody>tr')[edit_index]).append(tr);
-
-
-
-                    setTimeout(function (e) {
-                        $('#modal-7').modal('hide');
-                        closeForm(2);
-                    }, 500)
-                }
+            $.each(deletedMlTags, function (index, item) {
+                fd.append('deletedTags', item);
             });
 
+            $.each(addedMlTags.slice(addedMLTagsLength), function (index, item) {
+                fd.append('addedTags', item);
+            });
+
+            $.each(deletedMlDepartment, function (index, item) {
+                fd.append('deletedDepartment', item);
+            });
+
+            $.each(addedMlDepartment, function (index, item) {
+                fd.append('addedDepartment', item);
+            });
+
+            addedMlDepartment = [];
+            addedMlTags = [];
+
+            deletedMlDepartment = [];
+            deletedMlTags = [];
+            addedMLTagsLength = 0;
 
 
-        }, 500);
+            fd.append("Id", $('#ml_update').data('id'));
+
+            //var checkVal = checkValidSec('ml_add');
+
+
+            fd.append('MlType', $('.ml_up_type').val());
+            fd.append('Description', $('.ml_up_description').val());
+            fd.append('ResponsibleEmail', $('.ml_up_resp_user').val());
+            fd.append('IdentifierEmail', $('.ml_up_ident_user').val());
+            fd.append('FollowerEmail', $('.ml_up_follower_user').val());
+
+            if ($('.ml_up_inf_user').val() != null) {
+                fd.append('InformedUserEmail', $('.ml_up_inf_user').val().join(';'));
+            }
+            else
+                fd.append('InformedUserEmail', "");
+
+            fd.append("STime", $('.ml_up_s_date').val());
+            fd.append("FTime", $('.ml_up_f_date').val());
+
+
+
+
+            $('#modal-7').modal('show', { backdrop: 'static' });
+            setTimeout(function (e) {
+                $.ajax({
+                    url: '/MeetingLine/Edit',
+                    method: 'post',
+                    contentType: false,
+                    processData: false,
+                    data: fd,
+                    cache: false,
+                    xhr: function () {
+                        var xhr = new window.XMLHttpRequest();
+                        xhr.upload.addEventListener("progress", function (evt) {
+                            if (evt.lengthComputable) {
+                                var prcComplete = evt.loaded / evt.total;
+                                prcComplete = parseInt(prcComplete * 100);
+                                $('#modal-7 .modal_percent').html(prcComplete + '%');
+                            }
+                        }, false);
+                        return xhr;
+                    },
+                    success: function (result) {
+
+                        var tr = '<td><input tabindex="5" type="checkbox" ' + disabled + ' class="ml_check icheck-11"></td><td><div class="dropdown"><button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Əməliyyatlar<span class="caret"></span></button><ul class="dropdown-menu"><li><a href="javascript:void(0)" class="edit_meeting_line" data-eindex=' + eindex + ' data-id=' + result + '>Bax</a></li><li><a href="javascript:void(0)" data-id=' + result + ' class="delete_ml">Sil</a></li></ul></div></td><td>' + $('.ml_up_type option:selected').html() + '</td><td class="table_desc">' + $('.ml_up_description').val() + '</td><td>' + $('.ml_up_s_date').val() + '</td><td>' + $('.ml_up_f_date').val() + '</td><td class="tableUsers">' + $('.ml_up_resp_user option:selected').text().split(' (')[0] + '</td><td class="tableUsers">' + $('.ml_up_follower_user option:selected').text().split(' (')[0] + '</td><td class="tableUsers">' + $('.ml_up_ident_user option:selected').text().split(' (')[0] + '</td><td>Qaralama</td>';
+
+                        $($('.meeting_line_add_table tbody>tr')[edit_index]).html('');
+
+                        $($('.meeting_line_add_table tbody>tr')[edit_index]).append(tr);
+
+
+
+                        setTimeout(function (e) {
+                            $('#modal-7').modal('hide');
+                            closeForm(2);
+                        }, 500)
+                    }
+                });
+
+
+
+            }, 500);
+
+
+        }
+        else {
+            $('.ml_up_f_date').focus();
+            $($($('.ml_up_f_date').parent()).parent()).append('<div class="invalid-feedback">Bitmə vaxtı başlama vaxtından kiçik və ya ona bərabər ola bilməz. Zəhmət olmazsa, seçiminizi dəyişdirin!</div>');
+        }
 
 
 

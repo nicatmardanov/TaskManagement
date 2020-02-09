@@ -238,7 +238,7 @@
                                         int i = (ViewBag.Page - 1) * 10 + 1;
                                         foreach (MeetingLine item in Model)
                                         {
-                                            <tr>
+                                            <tr data-id="@item.Id">
                                                 @if (ViewBag.HasCheck != null)
                                                 {
                                                     <th width="1%">

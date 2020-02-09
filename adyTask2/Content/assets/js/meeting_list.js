@@ -185,7 +185,7 @@
 
     $(document).on('click', '.meeting_line_c', function () {
         var val = $(this).data('id');
-        $('.meeting_operation_table').remove();
+        $('#ml_show_partial').remove();
 
         $.ajax({
             type: 'get',
