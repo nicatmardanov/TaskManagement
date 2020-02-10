@@ -77,7 +77,11 @@
         return false;
     });
 
-    $(document).on('click', '.publish_meeting', function (e) {
+    $(document).on('click', '.close_operation', function (e) {
+        window.location.href = "/Task/AllTasks";
+    });
+
+    $(document).on('click', '.publish_meeting .submit_operation', function (e) {
 
         var fd = new FormData();
 

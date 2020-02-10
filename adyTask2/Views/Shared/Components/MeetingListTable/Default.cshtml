@@ -43,31 +43,31 @@
                             </div>
                         </div>
 
-                        @if (ViewBag.MMPage!=1)
+                        @if (ViewBag.MMPage != 1)
                         {
-                        <div class="col-xs-4">
-                            <div class="s40">
-                                <span>Mənim yaratdıqlarım</span>
-                            </div>
-                            <div class="s60">
-                                <div class="custom_switch">
-                                    <div class="myMeetings custom_switch_inner">
-                                        @if (!ViewBag.MyMeetings)
-                                        {
-                                            <div class="custom_ap custom_switch_passive"></div>
-                                            <a href="javascript:void(0)" class="custom_switch_button myMeetingsButton"></a>
-                                            <input type="checkbox" id="myTasksCheck" hidden />
-                                        }
-                                        else if (ViewBag.MyMeetings)
-                                        {
-                                            <div class="custom_ap custom_switch_active"></div>
-                                            <a href="javascript:void(0)" class="custom_switch_button myMeetingsButton"></a>
-                                            <input type="checkbox" id="myTasksCheck" checked hidden />
-                                        }
+                            <div class="col-xs-4">
+                                <div class="s40">
+                                    <span>Mənim yaratdıqlarım</span>
+                                </div>
+                                <div class="s60">
+                                    <div class="custom_switch">
+                                        <div class="myMeetings custom_switch_inner">
+                                            @if (!ViewBag.MyMeetings)
+                                            {
+                                                <div class="custom_ap custom_switch_passive"></div>
+                                                <a href="javascript:void(0)" class="custom_switch_button myMeetingsButton"></a>
+                                                <input type="checkbox" id="myTasksCheck" hidden />
+                                            }
+                                            else if (ViewBag.MyMeetings)
+                                            {
+                                                <div class="custom_ap custom_switch_active"></div>
+                                                <a href="javascript:void(0)" class="custom_switch_button myMeetingsButton"></a>
+                                                <input type="checkbox" id="myTasksCheck" checked hidden />
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         }
                         <div class="col-xs-4">
                             <div class="s40">
@@ -148,8 +148,8 @@
                                                                     <a href="/Meeting/Edit/@item.Id" class="edit_meeting">Düzəliş et</a>
                                                                 </li>
                                                                 @*<li>
-                                                                    <a href="/Meeting/Cancel/@item.Id" class="remove_meeting">Ləğv et</a>
-                                                                </li>*@
+                                                                        <a href="/Meeting/Cancel/@item.Id" class="remove_meeting">Ləğv et</a>
+                                                                    </li>*@
                                                             }
                                                         </ul>
                                                     </div>

@@ -657,24 +657,21 @@
                         data: form_data,
                         cache: false,
                         success: function () {
-                            deletedTags = [];
-                            addedTags = [];
+                            //deletedTags = [];
+                            //addedTags = [];
 
-                            deletedDepartment = [];
-                            addedDepartment = [];
+                            //deletedDepartment = [];
+                            //addedDepartment = [];
 
-                            deletedMlTags = [];
-                            addedMlTags = [];
+                            //deletedMlTags = [];
+                            //addedMlTags = [];
 
-                            deletedMlDepartment = [];
-                            addedMlDepartment = [];
+                            //deletedMlDepartment = [];
+                            //addedMlDepartment = [];
 
-                            fileChange = true;
+                            //fileChange = true;
 
-                            //if (type == 0)
-                            //    $('.publish_meeting').show();
-
-                            $('.publish_meeting').hide();
+                            //window.location.reload();
 
                         }
                     })
@@ -731,20 +728,21 @@
                                     cache: false,
                                     success: function () {
 
-                                        deletedTags = [];
-                                        addedTags = [];
+                                        //deletedTags = [];
+                                        //addedTags = [];
 
-                                        deletedDepartment = [];
-                                        addedDepartment = [];
+                                        //deletedDepartment = [];
+                                        //addedDepartment = [];
 
-                                        deletedMlTags = [];
-                                        addedMlTags = [];
+                                        //deletedMlTags = [];
+                                        //addedMlTags = [];
 
-                                        deletedMlDepartment = [];
-                                        addedMlDepartment = [];
+                                        //deletedMlDepartment = [];
+                                        //addedMlDepartment = [];
 
-                                        fileChange = true;
+                                        //fileChange = true;
 
+                                        //window.location.reload();
 
                                     }
                                 })
@@ -772,7 +770,7 @@
         }
 
         else {
-            alert('İclasın müvafiq bölmələri doldurulmamış təsdiqlənə bilməz!');
+            alert('İclas və ya sətirlərinin müvafiq bölmələri doldurulmamış təsdiqlənə bilməz!');
         }
 
 
@@ -802,6 +800,9 @@
     });
 
     $(document).on('change', '.fileinput input', function (e) {
+
+        console.log(URL.createObjectURL(e.target.files[0]));
+
         $($($($($(this).parent()).parent()).parent()).find('.remove_file')).remove();
 
         $($($($(this).parent()).parent()).parent()).append('<div class="remove_file"><div><span>' + e.target.files[0].name + '</span><a href="javascript:void(0)"><i class="fa fa-trash-o"></i></a></div></div>');
@@ -1383,8 +1384,17 @@
 
 
     $(document).on('change', '.first-check', function (e) {
-        if ($(this).prop('checked'))
-            $('.icheck-11').prop('checked', true);
+        var m = 0;
+        if ($(this).prop('checked')) {
+            for (var i = 0; i < $('.ml_check').length; i++) {
+                if (!$($('.ml_check')[i]).prop('disabled')) {
+                    $('.ml_check').prop('checked', true);
+                    m++;
+                }
+            }
+            if (m == 0)
+                $('.first-check').prop('checked', false);
+        }
         else
             $('.icheck-11').prop('checked', false);
     });

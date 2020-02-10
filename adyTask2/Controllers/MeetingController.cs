@@ -121,6 +121,7 @@ namespace adyTask2.Controllers
             ViewBag.MyMeetings = false;
             ViewBag.Department = 0;
             ViewBag.Type = 1;
+            ViewBag.MMPage = 1;
             ViewBag.Title = "Göndərilən iclaslar";
 
             return View("MeetingList", _meeting.OrderByDescending(x => x.Id).Include(x => x.MeetingTypeNavigation).Include(x => x.Status).Take(10).ToList());
