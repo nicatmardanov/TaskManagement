@@ -220,7 +220,7 @@ namespace adyTask2.Controllers
                     }
                     else
                     {
-                        Response.StatusCode = 406; 
+                        Response.StatusCode = 406;
                         await Response.WriteAsync("İclas sətiri təsdiqlənmək üçün uyğun formada deyil!");
                     }
 
@@ -440,7 +440,7 @@ namespace adyTask2.Controllers
         }
 
         [HttpPost]
-        public async Task<int> Edit(MeetingLine mLine, bool FileEmpty, bool FileNotChanged, string STime, string FTime, int[] addedDepartment, int[] deletedDepartment, string[] addedTags, string[] deletedTags)
+        public async Task<int> Edit(MeetingLine mLine, bool FileEmpty, bool FileNotChanged, string STime, string FTime, int[] addedDepartment, int[] deletedDepartment, string[] addedTags, string[] deletedTags, byte isEdit)
         {
             using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
             {
@@ -592,7 +592,8 @@ namespace adyTask2.Controllers
                 string log_description = mLine.Description;
                 var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
 
-                await _log.LogAdd(2, "", mLine.Id, 9, user_id, IpAdress, AInformation);
+                if (isEdit == 1)
+                    await _log.LogAdd(2, "", mLine.Id, 9, user_id, IpAdress, AInformation);
 
                 return mLine.Id;
 

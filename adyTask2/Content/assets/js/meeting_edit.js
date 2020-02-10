@@ -233,6 +233,7 @@
         var checkVal = type == 1 ? checkValid('ml_add') : true;
 
 
+
         if (isValidDate && checkVal) {
             var fd = new FormData();
 
@@ -245,6 +246,9 @@
             else if ($('.remove_file').length == 0) {
                 fd.append("FileEmpty", true);
             }
+
+            if (type == 0)
+                fd.append('isEdit', 1);
 
             $.each(deletedTags, function (index, item) {
                 fd.append('deletedTags', item);

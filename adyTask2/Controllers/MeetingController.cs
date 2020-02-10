@@ -70,6 +70,7 @@ namespace adyTask2.Controllers
                 ViewBag.MyMeetings = false;
                 ViewBag.Department = 0;
                 ViewBag.Type = 1;
+                ViewBag.MType = (byte)1;
                 ViewBag.MMPage = 1;
                 ViewBag.Title = "Daxil edilmiş iclaslarım";
 
@@ -121,6 +122,7 @@ namespace adyTask2.Controllers
             ViewBag.MyMeetings = false;
             ViewBag.Department = 0;
             ViewBag.Type = 1;
+            ViewBag.MType = (byte)2;
             ViewBag.MMPage = 1;
             ViewBag.Title = "Göndərilən iclaslar";
 
@@ -139,6 +141,8 @@ namespace adyTask2.Controllers
                     _meeting = adyContext.Meeting.Where(x => x.IsPublished == 1 && (x.FollowerUser.Contains(User.Identity.Name) || x.OwnerUser == User.Identity.Name || x.InformedUser.Contains(User.Identity.Name) || x.Participiants.Contains(User.Identity.Name)));    ////////////////////////////
                 else if (type == 1)
                     _meeting = _meeting.Where(x => x.IsPublished == 1 && x.CreatorId == user_id);
+                else if (type == 2)
+                    _meeting = _meeting.Where(x => x.StatusId == 1);
 
 
 
@@ -191,7 +195,7 @@ namespace adyTask2.Controllers
         {
             using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
             {
-                var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+                var user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
                 IQueryable<Meeting> _meeting = adyContext.Meeting.Where(x => x.StatusId == 1 && (x.CreatorId == user_id || x.FollowerUser.Contains(User.Identity.Name) || x.OwnerUser == User.Identity.Name || x.InformedUser.Contains(User.Identity.Name) || x.Participiants.Contains(User.Identity.Name)));    ////////////////////////////
 
                 double page_count = _meeting.Count() / 10.0;
@@ -206,6 +210,7 @@ namespace adyTask2.Controllers
                 ViewBag.MeetingType = 0;
                 ViewBag.MyMeetings = false;
                 ViewBag.Department = 0;
+                ViewBag.Type = 2;
                 ViewBag.Title = "Qaralama iclaslar";
 
                 return View("MeetingList", _meeting.OrderByDescending(x => x.Id).Include(x => x.MeetingTypeNavigation).Include(x => x.Status).Take(10).ToList());
@@ -240,7 +245,7 @@ namespace adyTask2.Controllers
         public async Task Status(int id)
         {
             using adyTaskManagementContext adyContext = new adyTaskManagementContext();
-            
+
             Classes.ValidMeeting_Line _valid = new Classes.ValidMeeting_Line();
             var meeting = adyContext.Meeting.FirstOrDefault(x => x.Id == id);
             if (_valid.ValidMeeting(meeting))

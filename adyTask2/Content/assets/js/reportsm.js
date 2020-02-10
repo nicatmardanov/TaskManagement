@@ -1,5 +1,9 @@
 ﻿$(document).ready(function (e) {
 
+    $('.reports_side_bar').click();
+
+
+
     $('.select2c').select2({
         //allowClear: true,
         placeholder: "Seçim edin"

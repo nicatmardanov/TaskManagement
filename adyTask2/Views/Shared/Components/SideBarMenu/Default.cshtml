@@ -108,7 +108,7 @@
 
 
         <li>
-            <a href="javascript:void(0)" class="ml_nav_list">
+            <a href="javascript:void(0)" class="created_side_bar">
                 <i class="entypo-gauge"></i>
                 <span>Daxil edilmişlər</span>
             </a>
@@ -129,7 +129,7 @@
         </li>
 
         <li>
-            <a href="javascript:void(0)" class="ml_nav_list">
+            <a href="javascript:void(0)" class="draft_side_bar">
                 <i class="entypo-gauge"></i>
                 <span>Qaralamalar</span>
             </a>
@@ -160,13 +160,13 @@
         </li>
 
         <li>
-            <a href="javascript:void(0)" class="inbox_nav_list">
+            <a href="javascript:void(0)" class="history_side_bar">
                 <i class="fa fa-cogs"></i>
                 <span>Tarixçə</span>
             </a>
             <ul class="sidebar_ntfcts">
                 <li>
-                    <a href="javascript:void(0)">
+                    <a href="javascript:void(0)" class="inbox_nav_list">
                         <i class="fa fa-bell"></i>
                         <span>Gələnlər</span>
                     </a>
@@ -184,7 +184,7 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="javascript:void(0)">
+                    <a href="javascript:void(0)" class="out_nav_list">
                         <i class="fa fa-bell"></i>
                         <span>Göndərilənlər</span>
                     </a>
@@ -208,7 +208,7 @@
         @if (permissions.IsPermitted(3))
         {
             <li>
-                <a href="/Reports/MeetingLines">
+                <a href="/Reports/MeetingLines" class="reports_side_bar">
                     <i class="fa fa-group"></i>
                     <span>Hesabatlar</span>
                 </a>

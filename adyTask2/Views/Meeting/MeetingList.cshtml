@@ -1,5 +1,6 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    byte mtype = ViewBag.MType!=null ? ViewBag.MType : (byte)0;
 }
 
 @using adyTask2.Models
@@ -37,7 +38,19 @@
 @section script{
     <script>
         $(document).ready(function (e) {
-            $('.meeting_nav_list').click();
+            if (@ViewBag.Type == 0) {
+                $('.history_side_bar').click();
+                $('.inbox_nav_list').click();
+            }
+            else if (@ViewBag.Type== 1 && @mtype== 1)
+                $('.created_side_bar').click();
+            else if (@ViewBag.Type== 1 && @mtype== 2) {
+                $('.history_side_bar').click();
+                $('.out_nav_list').click();
+            }
+            else if (@ViewBag.Type== 2) {
+                $('.draft_side_bar').click();
+            }
         })
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>

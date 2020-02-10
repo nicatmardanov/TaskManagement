@@ -1,4 +1,9 @@
 ﻿$(document).ready(function (e) {
+
+    $('.reports_side_bar').click();
+
+
+
     var userObject = new Object({
         minimumInputLength: 1,
         //allowClear: true,

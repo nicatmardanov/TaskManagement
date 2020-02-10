@@ -501,11 +501,11 @@ namespace adyTask2.Controllers
             adyTaskManagementContext adyContext = new adyTaskManagementContext();
             int user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
 
-            var meeting_lines = adyContext.MeetingLine.Where(x => ((x.ResponsibleEmail == User.Identity.Name && x.StatusId > 1 && x.IsPublished == 1) || (x.CreatorId == user_id && x.StatusId > 1)) || x.Direct.FirstOrDefault(y => y.ToUserId == user_id && y.IsActive == 1) != null || (x.FollowerEmail == User.Identity.Name && x.StatusId > 1) || (x.IdentifierEmail == User.Identity.Name && x.StatusId > 1)).Select(x => x.Id);
+            var meeting_lines = adyContext.MeetingLine.Where(x => ((x.ResponsibleEmail == User.Identity.Name && x.StatusId > 1 && x.IsPublished == 1) || (x.CreatorId == user_id && x.StatusId > 1)) || x.Direct.FirstOrDefault(y => y.ToUserId == user_id && y.IsActive == 1) != null || (x.FollowerEmail == User.Identity.Name && x.StatusId > 1) || (x.IdentifierEmail == User.Identity.Name && x.StatusId > 1) || (x.InformedUserEmail.Contains(User.Identity.Name) && x.StatusId>1)).Select(x => x.Id);
             var meetings = adyContext.Meeting.Where(x => x.IsPublished == 1 && (x.CreatorId == user_id || x.FollowerUser.Contains(User.Identity.Name) || x.OwnerUser == User.Identity.Name || x.InformedUser.Contains(User.Identity.Name) || x.Participiants.Contains(User.Identity.Name))).Select(x => x.Id);    ////////////////////////////
 
-            var ml_logs = adyContext.MLog.Where(x => x.ReadDate == null && x.Type == 2 /*&& x.OperationId != 6 */ && meeting_lines.Contains(x.RefId));
-            var m_logs = adyContext.MLog.Where(x => x.ReadDate == null && x.Type == 1 && meetings.Contains(x.RefId));
+            var ml_logs = adyContext.MLog.Where(x => x.ReadDate == null && x.Type == 2 && x.OperationId != 6 && x.OperationId != 9 && meeting_lines.Contains(x.RefId));
+            var m_logs = adyContext.MLog.Where(x => x.ReadDate == null && x.Type == 1 && x.OperationId != 6 && x.OperationId != 9 && meetings.Contains(x.RefId));
             var logs = ml_logs.Union(m_logs);
 
             double page_count = logs.Count() / 10.0;
@@ -530,7 +530,7 @@ namespace adyTask2.Controllers
             adyTaskManagementContext adyContext = new adyTaskManagementContext();
             int user_id = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
 
-            var meeting_lines = adyContext.MeetingLine.Where(x => ((x.ResponsibleEmail == User.Identity.Name && x.StatusId > 1 && x.IsPublished == 1) || (x.CreatorId == user_id && x.StatusId > 1)) || x.Direct.FirstOrDefault(y => y.ToUserId == user_id && y.IsActive == 1) != null || (x.FollowerEmail == User.Identity.Name && x.StatusId > 1) || (x.IdentifierEmail == User.Identity.Name && x.StatusId > 1));
+            var meeting_lines = adyContext.MeetingLine.Where(x => ((x.ResponsibleEmail == User.Identity.Name && x.StatusId > 1 && x.IsPublished == 1) || (x.CreatorId == user_id && x.StatusId > 1)) || x.Direct.FirstOrDefault(y => y.ToUserId == user_id && y.IsActive == 1) != null || (x.FollowerEmail == User.Identity.Name && x.StatusId > 1) || (x.IdentifierEmail == User.Identity.Name && x.StatusId > 1) || (x.InformedUserEmail.Contains(User.Identity.Name) && x.StatusId > 1));
             var meetings = adyContext.Meeting.Where(x => x.IsPublished == 1 && (x.CreatorId == user_id || x.FollowerUser.Contains(User.Identity.Name) || x.OwnerUser == User.Identity.Name || x.InformedUser.Contains(User.Identity.Name) || x.Participiants.Contains(User.Identity.Name)));    ////////////////////////////
 
             if (mtype == 1)
@@ -569,8 +569,8 @@ namespace adyTask2.Controllers
             var m_lines = meeting_lines.Select(x => x.Id);
             var mtngs = meetings.Select(x => x.Id);
 
-            var ml_logs = adyContext.MLog.Where(x => x.ReadDate == null && x.Type == 2 /*&& x.OperationId != 6 */ && m_lines.Contains(x.RefId));
-            var m_logs = adyContext.MLog.Where(x => x.ReadDate == null && x.Type == 1 && mtngs.Contains(x.RefId));
+            var ml_logs = adyContext.MLog.Where(x => x.ReadDate == null && x.Type == 2 && x.OperationId != 6 && x.OperationId != 9 && m_lines.Contains(x.RefId));
+            var m_logs = adyContext.MLog.Where(x => x.ReadDate == null && x.Type == 1 && x.OperationId != 6 && x.OperationId != 9 && mtngs.Contains(x.RefId));
             IQueryable<MLog> logs = ml_logs;
 
 

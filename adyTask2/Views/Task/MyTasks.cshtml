@@ -37,7 +37,18 @@
 @section script{
     <script>
         $(document).ready(function (e) {
-            $('.inbox_nav_list').click();
+            if(@ViewBag.MType==5)
+                $('.draft_side_bar').click();
+            else if (@ViewBag.MType== 6) {
+                $('.history_side_bar').click();
+                $('.inbox_nav_list').click();
+            }
+            else if (@ViewBag.MType== 7) {
+                $('.history_side_bar').click();
+                $('.out_nav_list').click();
+            }
+            else if(@ViewBag.MType==8)
+                $('.created_side_bar').click();
         })
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
