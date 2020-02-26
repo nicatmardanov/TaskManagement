@@ -145,11 +145,14 @@
                                             <input tabindex="5" type="checkbox" class="icheck-11 first-check">
                                         </th>
                                         <th width="3%">#</th>
+                                        <th>Adı</th>
                                         <th>Növü</th>
                                         <th>Açıqlama</th>
                                         <th>Əməliyyat açıqlaması</th>
                                         <th>İstifadəçi</th>
+                                        <th>İcraçı</th>
                                         <th>Yaradılma tarixi</th>
+                                        <th>Bitmə tarixi</th>
                                         <th>Status</th>
                                         <th width="1%"></th>
                                     </tr>
@@ -164,40 +167,66 @@
                                                 if (item.Type == 1)
                                                 {
                                                     var meeting = adyContext.Meeting.FirstOrDefault(x => x.Id == item.RefId);
+                                                    var meetingOwner = adyContext.User.FirstOrDefault(x => x.EmailAddress == meeting.OwnerUser);
                                                     <tr data-id="@item.RefId">
                                                         <td width="1%">
                                                             <input tabindex="5" type="checkbox" data-id="@item.RefId" class="ml_check icheck-11">
                                                         </td>
                                                         <td class="meeting_c" data-id="@item.RefId">@i</td>
+                                                        <td class="meeting_c" data-id="@item.RefId">@meeting.Title</td>
                                                         <th class="meeting_c" data-id="@item.RefId">İclas</th>
-                                                        <th class="meeting_c" data-id="@item.RefId">@item.Description</th>
+                                                        <th class="meeting_c" data-id="@item.RefId">@meeting.Description</th>
                                                         <td class="meeting_c">@item.Operation.Operation</td>
                                                         <th class="meeting_c" data-id="@item.RefId">@item.User.FirstName @item.User.LastName</th>
+                                                        <th class="meeting_c" data-id="@item.RefId">@meetingOwner.FirstName @meetingOwner.LastName</th>
                                                         <th class="meeting_c" data-id="@item.RefId">@item.CreateDate.Value.Day/@item.CreateDate.Value.Month/@item.CreateDate.Value.Year</th>
+                                                        <th class="meeting_c" data-id="@item.RefId">@meeting.FinishDate.Value.Day/@meeting.FinishDate.Value.Month/@meeting.FinishDate.Value.Year</th>
                                                         <th class="meeting_c" data-id="@item.RefId">@meeting.Status.StatusName</th>
                                                         <td width="1%"><a class="remove_notification" href="javascript:void(0)"><i class="fa fa-trash-o"></i></a></td>
                                                     </tr>
                                                 }
                                                 else if (item.Type == 2)
                                                 {
-                                                    <tr data-id="@item.RefId">
-                                                        <td width="1%">
-                                                            <input tabindex="5" type="checkbox" data-id="@item.RefId" class="ml_check icheck-11">
-                                                        </td>
-                                                        <td class="meeting_line_c mline_c">@i</td>
-                                                        <td class="meeting_line_c mline_c">@adyContext.MeetingLine.FirstOrDefault(x => x.Id == item.RefId).MlTypeNavigation.Name</td>
-                                                        <td class="meeting_line_c mline_c">@item.Description</td>
-                                                        <td class="meeting_line_c mline_c">@item.Operation.Operation</td>
-                                                        <td class="meeting_line_c mline_c">@item.User.FirstName @item.User.LastName</td>
-                                                        @{
-                                                            var create_date = item.CreateDate.Value;
-                                                            var mls = adyContext.MeetingLine.FirstOrDefault(x => x.Id == item.RefId);
-                                                            string status_name = mls.StatusId == 1 && mls.IsRevised == 1 ? "Revizə" : mls.Status.StatusName;
-                                                            <td class="meeting_line_c mline_c">@create_date.Day/@create_date.Month/@create_date.Year</td>
-                                                            <td>@status_name</td>
-                                                        }
-                                                        <td width="1%"><a class="remove_notification" href="javascript:void(0)"><i class="fa fa-trash-o"></i></a></td>
-                                                    </tr>
+                                                    var meetingline = adyContext.MeetingLine.FirstOrDefault(x => x.Id == item.RefId);
+                                                    var responsibleUser = adyContext.User.FirstOrDefault(x => x.EmailAddress == meetingline.ResponsibleEmail);
+                                <tr data-id="@item.RefId">
+                                    <td width="1%">
+                                        <input tabindex="5" type="checkbox" data-id="@item.RefId" class="ml_check icheck-11">
+                                    </td>
+                                    <td class="meeting_line_c mline_c">@i</td>
+                                    <td class="meeting_line_c mline_c"></td>
+                                    <td class="meeting_line_c mline_c">@meetingline.MlTypeNavigation.Name</td>
+                                    <td class="meeting_line_c mline_c">@meetingline.Description</td>
+                                    <td class="meeting_line_c mline_c">@item.Operation.Operation</td>
+                                    <td class="meeting_line_c mline_c">@item.User.FirstName @item.User.LastName</td>
+                                    @if (responsibleUser != null)
+                                    {
+                                        <td class="meeting_line_c mline_c">@responsibleUser.FirstName @responsibleUser.LastName</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="meeting_line_c mline_c"></td>
+
+                                    }
+                                    @{
+                                        var create_date = item.CreateDate.Value;
+                                        var finish_date = meetingline.FinishTime.HasValue;
+                                        var mls = adyContext.MeetingLine.FirstOrDefault(x => x.Id == item.RefId);
+                                        string status_name = mls.StatusId == 1 && mls.IsRevised == 1 ? "Revizə" : mls.Status.StatusName;
+                                        <td class="meeting_line_c mline_c">@create_date.Day/@create_date.Month/@create_date.Year</td>
+                                        @if (finish_date)
+                                        {
+                                            <td class="meeting_line_c mline_c">@meetingline.FinishTime.Value.Day/@meetingline.FinishTime.Value.Month/@meetingline.FinishTime.Value.Year</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="meeting_line_c mline_c"></td>
+
+                                        }
+                                        <td>@status_name</td>
+                                    }
+                                    <td width="1%"><a class="remove_notification" href="javascript:void(0)"><i class="fa fa-trash-o"></i></a></td>
+                                </tr>
                                                 }
                                                 i++;
                                             }

@@ -306,18 +306,18 @@ namespace adyTask2.Controllers
                         meetingLine.IsRevised = 0;
 
                     }
-                    else if (meetingLine.StatusId == 6)
+                    else if (meetingLine.StatusId == 5)
                     {
-                        meetingLine.StatusId = 7;
-                        await _log.LogAdd(2, meetingLine.Description, ids[i], 13, user_id, IpAdress, AInformation);
+                        meetingLine.StatusId = 6;
+                        await _log.LogAdd(2, "", ids[i], 13, user_id, IpAdress, AInformation);
                         if (await adyContext.Revision.CountAsync() > 0)
                             if (await adyContext.Revision.OrderByDescending(x => x.Id).FirstOrDefaultAsync(x => x.MlId == ids[i]) != null)
                             {
                                 adyContext.Revision.OrderByDescending(x => x.Id).FirstOrDefault(x => x.MlId == ids[i]).Active = 0;
                                 if (meetingLine.IsRevised == 1)
-                                    await _log.LogAdd(2, meetingLine.Description, ids[i], 19, user_id, IpAdress, AInformation);
+                                    await _log.LogAdd(2, "", ids[i], 19, user_id, IpAdress, AInformation);
                                 else
-                                    await _log.LogAdd(2, meetingLine.Description, ids[i], 13, user_id, IpAdress, AInformation);
+                                    await _log.LogAdd(2, "", ids[i], 13, user_id, IpAdress, AInformation);
 
 
                                 adyContext.MeetingLine.FirstOrDefault(x => x.Id == ids[i]).IsRevised = 0;

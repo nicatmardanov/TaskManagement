@@ -1,10 +1,22 @@
-﻿$(document).ready(function (e) {
+﻿$('#completion').on("input", function (e) {
+    var value = $(this).val();
+    if (value > 100) {
+        var old_val = value.substring(0, value.length - 1);
+        $(this).val(old_val);
+        alert('Tamamlanma faizi 100-dən böyük ola bilməz!');
+    }
+});
+
+$(document).ready(function (e) {
 
     var moDescp = [];
     var moComp = [];
     var moFile = [];
     var moFilePos = [];
     var iter = parseInt($('.meeting_operation_table').data('count'))+1;
+
+
+
 
 
     function checkValid(className) {
@@ -24,6 +36,8 @@
 
         return checkVal;
     }
+
+
 
     $(document).on('click', '.meeting_operation_add .saveOperation', function (e) {
 
@@ -148,7 +162,9 @@
         e.preventDefault();
         e.stopImmediatePropagation();
         return false;
-    })
+    });
+
+
 
     $(document).on('change', '.fileinput input', function (e) {
         $($($($($(this).parent()).parent()).parent()).find('.remove_file')).remove();

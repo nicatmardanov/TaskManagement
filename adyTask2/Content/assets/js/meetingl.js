@@ -253,7 +253,6 @@
 
     function compareMeetingTime() {
         var start_time = $('#meeting_start_time').val();
-
         var end_time = $('#meeting_finish_time').val();
 
         var stt = new Date("November 13, 2013 " + start_time);

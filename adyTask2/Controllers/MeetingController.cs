@@ -72,7 +72,7 @@ namespace adyTask2.Controllers
                 ViewBag.Type = 1;
                 ViewBag.MType = (byte)1;
                 ViewBag.MMPage = 1;
-                ViewBag.Title = "Daxil edilmiş iclaslarım";
+                ViewBag.Title = "İclaslar";
 
                 return View("MeetingList", _meeting.OrderByDescending(x => x.Id).Include(x => x.MeetingTypeNavigation).Include(x => x.Status).Take(10).ToList());
             }
