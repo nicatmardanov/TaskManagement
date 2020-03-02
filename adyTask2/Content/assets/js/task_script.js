@@ -57,6 +57,7 @@
 
     function ajax_mlTable() {
         var fullUrl = 'page=' + page + '&ml=' + mltype + '&nc=' + not_completed + '&mm=' + myML + '&dep=' + dep + '&type=' + $('#taskPage').data('type') + '&mtype=' + $('#taskPage').data('mtype');
+        $('#ml_show_partial').remove(); $('#meeting_show_partial').remove();
 
         if ($('#taskPage').data('mtype') == 3)
             fullUrl = '/Task/MyTasks2?' + fullUrl;
