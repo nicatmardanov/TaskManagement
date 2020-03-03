@@ -65,7 +65,7 @@
                                         var _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == meeting.OwnerUser);
                                         @if (_user != null)
                                         {
-                                            <span>@_user.FirstName @_user.LastName</span>
+                                            <span>@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</span>
                                         }
                                     }
                                 </div>
@@ -82,7 +82,7 @@
                                         var _user = adyContext.User.FirstOrDefault(x => x.EmailAddress == meeting.FollowerUser);
                                         @if (_user != null)
                                         {
-                                            <span>@_user.FirstName @_user.LastName</span>
+                                            <span>@_user.FirstName @_user.LastName (@_user.OrganizationFullName)</span>
                                         }
 
                                     }

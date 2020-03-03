@@ -95,7 +95,7 @@
                                             @if (_ru != null)
                                             {
                                                 string responsibleUser = _ru.FirstName + " " + _ru.LastName;
-                                                <span>@responsibleUser</span>
+                                                <span>@responsibleUser (@_ru.OrganizationFullName)</span>
                                             }
                                         }
                                     }
@@ -115,7 +115,7 @@
                                             @if (_fu != null)
                                             {
                                                 string followerUser = _fu.FirstName + " " + _fu.LastName;
-                                                <span>@followerUser</span>
+                                                <span>@followerUser (@_fu.OrganizationFullName)</span>
                                             }
                                         }
                                     }
@@ -135,7 +135,7 @@
                                             @if (_cu != null)
                                             {
                                                 string confirmerUser = _cu.FirstName + " " + _cu.LastName;
-                                                <span>@confirmerUser</span>
+                                                <span>@confirmerUser (@_cu.OrganizationFullName)</span>
                                             }
                                         }
                                     }
