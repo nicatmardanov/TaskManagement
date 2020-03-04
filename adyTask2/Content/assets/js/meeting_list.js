@@ -13,6 +13,7 @@
                 return "Axtarış gedir..."
             }
         },
+        allowClear: true,
         placeholder: "Daxil edin",
         ajax: {
             url: '/Department/GetDepartments',
