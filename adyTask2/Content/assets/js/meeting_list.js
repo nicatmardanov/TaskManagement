@@ -40,8 +40,7 @@
     $('#meeting_department').select2(departments);
 
     $mltElement = $('#meeting_type').select2({
-        placeholder: "İclasın növü",
-        allowClear: true
+        placeholder: "İclasın növü"
     });
 
 

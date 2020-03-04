@@ -23,7 +23,7 @@
                             </div>
                             <div class="s70 taskSelect">
                                 <select class="form-control select2c select2" name="meeting_type" id="meeting_type">
-                                    <option></option>
+                                    <option value="0">Hamısı</option>
                                     @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
                                     {
                                         foreach (MeetingType item in adyContext.MeetingType.AsQueryable())
