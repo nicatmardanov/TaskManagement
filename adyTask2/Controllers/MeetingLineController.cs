@@ -144,6 +144,7 @@ namespace adyTask2.Controllers
             _meetingline.IsRevised = 0;
             _meetingline.IsPublished = 0;
 
+
             using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
             {
                 adyContext.MeetingLine.Add(_meetingline);
@@ -452,6 +453,7 @@ namespace adyTask2.Controllers
                 meetingLine.FollowerEmail = mLine.FollowerEmail;
                 meetingLine.IdentifierEmail = mLine.IdentifierEmail;
                 meetingLine.InformedUserEmail = mLine.InformedUserEmail;
+                meetingLine.Title = mLine.Title;
 
                 var sTime = STime.Split('/');
                 var fTime = !string.IsNullOrEmpty(FTime) ? FTime.Split('/') : new string[0];

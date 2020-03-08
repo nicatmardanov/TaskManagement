@@ -491,6 +491,7 @@
         if (isValidDate) {
             var form_data = new FormData();
             form_data.append("MeetingId", $('.meeting_add').data('id'));
+            form_data.append("Title", $('#mlName').val());
             form_data.append("MlType", $('#ml_type').val());
             form_data.append("Description", $('#ml_description').val());
             form_data.append("StartTime", $('#meeting_l_start_date').val());
@@ -1312,6 +1313,7 @@
             fd.append('ResponsibleEmail', $('.ml_up_resp_user').val());
             fd.append('IdentifierEmail', $('.ml_up_ident_user').val());
             fd.append('FollowerEmail', $('.ml_up_follower_user').val());
+            fd.append('Title', $('.ml_up_name').val());
 
             if ($('.ml_up_inf_user').val() != null) {
                 fd.append('InformedUserEmail', $('.ml_up_inf_user').val().join(';'));

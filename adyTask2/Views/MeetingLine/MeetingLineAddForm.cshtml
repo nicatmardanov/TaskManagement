@@ -33,12 +33,22 @@
                                                     <option value="@item.Id">@item.Name</option>
                                                 }
                                             }
-
                                         </select>
                                     </div>
                                 </div>
                             </div>
 
+
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Tapşırığın adı</label>
+
+                                    <div class="col-sm-7">
+                                        <input type="text" placeholder="Tapşırığın adı" class="form-control" id="mlName" />
+                                    </div>
+                                </div>
+                            </div>
 
 
                             <div class="col-md-4">
@@ -51,16 +61,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">Məsul şəxs</label>
-
-                                    <div class="col-sm-7">
-                                        <select class="js-example-basic-single select2c form-control" required name="responsibleUser" id="responsibleUser">
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+                            
 
                         </div>
 
@@ -70,6 +71,16 @@
 
                     <div class="row row_twenty">
 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">Məsul şəxs</label>
+
+                                <div class="col-sm-7">
+                                    <select class="js-example-basic-single select2c form-control" required name="responsibleUser" id="responsibleUser">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="col-md-4">
                             <div class="form-group">
@@ -93,6 +104,12 @@
                             </div>
                         </div>
 
+                    </div>
+
+                    <div class="row row_twenty">
+
+
+
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="col-sm-5 control-label">Başlama Tarixi</label>
@@ -109,32 +126,24 @@
                             </div>
                         </div>
 
-                    </div>
-
-                        <div class="row row_twenty">
 
 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">Bitmə Tarixi</label>
 
+                                <div class="col-sm-7">
+                                    <div class="input-group meeting_l_fi">
+                                        <input type="text" required class="form-control datepicker" id="meeting_l_finish_date" data-format="dd/mm/yyyy" @*value="27/11/2019"*@>
 
-
-                            
-
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">Bitmə Tarixi</label>
-
-                                    <div class="col-sm-7">
-                                        <div class="input-group meeting_l_fi">
-                                            <input type="text" required class="form-control datepicker" id="meeting_l_finish_date" data-format="dd/mm/yyyy" @*value="27/11/2019"*@>
-
-                                            <div class="input-group-addon">
-                                                <a href="javascript:void(0)"><i class="entypo-calendar"></i></a>
-                                            </div>
+                                        <div class="input-group-addon">
+                                            <a href="javascript:void(0)"><i class="entypo-calendar"></i></a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
 
                         <div class="row row_twenty">

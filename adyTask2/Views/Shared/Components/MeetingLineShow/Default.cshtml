@@ -53,17 +53,9 @@
 
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label class="col-sm-5 control-label">Tag</label>
-
+                                <label class="col-sm-5 control-label">Tapşırığın adı</label>
                                 <div class="col-sm-7">
-                                    @{
-                                        string tags = "";
-                                        using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
-                                        {
-                                            tags = string.Join(", ", adyContext.Tags.Where(x => x.Type == 2 && x.RefId == _meetingLine.Id).Select(x => x.Name));
-                                        }
-                                    }
-                                    <span>@tags</span>
+                                    <span>@_meetingLine.Title</span>
                                 </div>
                             </div>
                         </div>
@@ -147,7 +139,7 @@
                     </div>
 
                     <div class="row row_twenty">
-                       
+
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="col-sm-5 control-label">Başlama Tarixi</label>
@@ -202,7 +194,6 @@
                     </div>
 
 
-
                     <div class="row row_twenty">
                         <div class="col-md-10">
                             <div class="form-group">
@@ -221,6 +212,24 @@
                                             <span>@string.Join(", ", user.Select(x => x.FullName))</span>
                                         }
                                     }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row_twenty">
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Tag</label>
+
+                                <div class="col-sm-10">
+                                    @{
+                                        string tags = "";
+                                        using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                        {
+                                            tags = string.Join(", ", adyContext.Tags.Where(x => x.Type == 2 && x.RefId == _meetingLine.Id).Select(x => x.Name));
+                                        }
+                                    }
+                                    <span>@tags</span>
                                 </div>
                             </div>
                         </div>
