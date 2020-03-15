@@ -11,7 +11,7 @@
 
                 <div class="panel-heading">
                     <div class="panel-title">
-                        @*İclas sətiri*@
+                        @*Birbaşa tapşırıq*@
                         @ViewBag.Title
                     </div>
                     @if (ViewBag.SType == 0)
@@ -253,6 +253,7 @@
                                             <th>Əməliyyatlar</th>
                                         }
                                         <th>Növü</th>
+                                        <th>Adı</th>
                                         <th>Açıqlama</th>
                                         <th>İstifadəçi</th>
                                         <th>Yaradılma tarixi</th>
@@ -295,6 +296,7 @@
                                                         }
 
                                                         <td class="meeting_c" data-id="@item.Id">İclas</td>
+                                                        <td class="meeting_c" data-id="@item.Id">@item.Title</td>
                                                         <td class="meeting_c" data-id="@item.Id">@item.Description</td>
                                                         <td class="meeting_c" data-id="@item.Id">@item.Creator.FirstName @item.Creator.LastName</td>
                                                         <td class="meeting_c" data-id="@item.Id">@item.CreateDate.Value.Day/@item.CreateDate.Value.Month/@item.CreateDate.Value.Year</td>
@@ -305,52 +307,53 @@
                                                 else if (mline_new.Type == 2)
                                                 {
                                                     var item = adyContext.MeetingLine.FirstOrDefault(x => x.Id == mline_new.Id);
-                                                    <tr>
+                                <tr>
 
-                                                        @if (item.IsRevised == 1)
-                                                        {
-                                                            <td width="3%" class="meeting_line_c" data-id="@item.Id">@i (R)</td>
-                                                        }
-                                                        else
-                                                        {
-                                                            <td width="3%" class="meeting_line_c" data-id="@item.Id">@i</td>
-                                                        }
+                                    @if (item.IsRevised == 1)
+                                    {
+                                        <td width="3%" class="meeting_line_c" data-id="@item.Id">@i (R)</td>
+                                    }
+                                    else
+                                    {
+                                        <td width="3%" class="meeting_line_c" data-id="@item.Id">@i</td>
+                                    }
 
-                                                        @if (ViewBag.Type == 0 || ViewBag.Type == 2)
-                                                        {
-                                                            <td class="ml_table_operations">
-                                                                <div class="dropdown">
-                                                                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                                                                        Əməliyyatlar
-                                                                        <span class="caret"></span>
-                                                                    </button>
-                                                                    <ul class="dropdown-menu">
-                                                                        <li>
-                                                                            <a href="javascript:void(0)" data-id="@item.Id" class="show_meeting_line_modal meeting_line_c">Bax</a>
-                                                                        </li>
-                                                                        @if (ViewBag.MType == 3)
-                                                                        {
-                                                                            <li>
-                                                                                <a href="/MeetingLine/Status/@item.Id">Statusunu dəyiş</a>
-                                                                            </li>
-                                                                        }
+                                    @if (ViewBag.Type == 0 || ViewBag.Type == 2)
+                                    {
+                                        <td class="ml_table_operations">
+                                            <div class="dropdown">
+                                                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                                    Əməliyyatlar
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a href="javascript:void(0)" data-id="@item.Id" class="show_meeting_line_modal meeting_line_c">Bax</a>
+                                                    </li>
+                                                    @if (ViewBag.MType == 3)
+                                                    {
+                                                        <li>
+                                                            <a href="/MeetingLine/Status/@item.Id">Statusunu dəyiş</a>
+                                                        </li>
+                                                    }
 
-                                                                    </ul>
-                                                                </div>
-                                                            </td>
-                                                        }
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    }
 
-                                                        <td class="meeting_line_c" data-id="@item.Id">@item.MlTypeNavigation.Name</td>
-                                                        <td class="meeting_line_c" data-id="@item.Id">@item.Description</td>
-                                                        <td class="meeting_line_c" data-id="@item.Id">@item.Creator.FirstName @item.Creator.LastName</td>
-                                                        <td class="meeting_line_c" data-id="@item.Id">@item.CreateDate.Value.Day/@item.CreateDate.Value.Month/@item.CreateDate.Value.Year</td>
+                                    <td class="meeting_line_c" data-id="@item.Id">@item.MlTypeNavigation.Name</td>
+                                    <td class="meeting_line_c" data-id="@item.Id">@item.Title</td>
+                                    <td class="meeting_line_c" data-id="@item.Id">@item.Description</td>
+                                    <td class="meeting_line_c" data-id="@item.Id">@item.Creator.FirstName @item.Creator.LastName</td>
+                                    <td class="meeting_line_c" data-id="@item.Id">@item.CreateDate.Value.Day/@item.CreateDate.Value.Month/@item.CreateDate.Value.Year</td>
 
-                                                        @{
-                                                            string status_name = item.StatusId == 1 && item.IsRevised == 1 ? "Revizə" : item.Status.StatusName;
+                                    @{
+                                        string status_name = item.StatusId == 1 && item.IsRevised == 1 ? "Revizə" : item.Status.StatusName;
 
-                                                            <td class="meeting_line_c" data-id="@item.Id">@status_name</td>
-                                                        }
-                                                    </tr>
+                                        <td class="meeting_line_c" data-id="@item.Id">@status_name</td>
+                                    }
+                                </tr>
                                                 }
 
 

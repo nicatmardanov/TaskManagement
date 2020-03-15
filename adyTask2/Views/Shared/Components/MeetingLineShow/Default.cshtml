@@ -11,7 +11,7 @@
 
                 <div class="panel-heading">
                     <div class="panel-title">
-                        İclas sətiri - @_meetingLine.Id
+                        Birbaşa tapşırıq - @_meetingLine.Id
                     </div>
 
                     <div class="panel-options">
@@ -30,26 +30,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label class="col-sm-5 control-label">Departament</label>
-
-                                <div class="col-sm-7">
-                                    @{
-                                        string departments = "";
-
-                                        using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
-                                        {
-                                            var _mlDep = adyContext.MDepartment.Where(x => x.Type == 2 && x.RefId == _meetingLine.Id).Select(x => x.DepartmentId);
-                                            var _depName = adyContext.Department.Where(x => _mlDep.Contains(x.Id)).Select(x => x.Name);
-
-                                            departments = string.Join(", ", _depName);
-                                        }
-                                        <span>@departments</span>
-                                    }
-                                </div>
-                            </div>
-                        </div>
+                        
 
                         <div class="col-md-4">
                             <div class="form-group">
@@ -60,18 +41,23 @@
                             </div>
                         </div>
 
-                    </div>
-
-                    <div class="row row_twenty">
-                        <div class="col-md-10">
+                        <div class="col-md-4">
                             <div class="form-group">
-                                <label for="description" class="col-sm-2 control-label">Açıqlama</label>
+                                <label class="col-sm-5 control-label">Tag</label>
 
-                                <div class="col-sm-10">
-                                    <span class="showDescrtiption">@_meetingLine.Description</span>
+                                <div class="col-sm-7">
+                                    @{
+                                        string tags = "";
+                                        using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                        {
+                                            tags = string.Join(", ", adyContext.Tags.Where(x => x.Type == 2 && x.RefId == _meetingLine.Id).Select(x => x.Name));
+                                        }
+                                    }
+                                    <span>@tags</span>
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
                     <div class="row row_twenty">
@@ -170,27 +156,18 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-
-                        <div class="col-md-4">
+                    <div class="row row_twenty">
+                        <div class="col-md-10">
                             <div class="form-group">
-                                <label class="col-sm-5 control-label">Sənədlər</label>
+                                <label for="description" class="col-sm-2 control-label">Açıqlama</label>
 
-                                <div class="col-sm-7">
-                                    @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
-                                    {
-                                        var _attach = adyContext.Attachment.FirstOrDefault(x => x.Type == 2 && x.RefId == _meetingLine.Id);
-
-                                        if (_attach != null)
-                                        {
-                                            <a href="@_attach.Path" class="attachment btn btn-info btn-file">Endir</a>
-                                        }
-
-                                    }
+                                <div class="col-sm-10">
+                                    <span class="showDescrtiption">@_meetingLine.Description</span>
                                 </div>
                             </div>
                         </div>
-
                     </div>
 
 
@@ -216,24 +193,52 @@
                             </div>
                         </div>
                     </div>
+
+
                     <div class="row row_twenty">
                         <div class="col-md-10">
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">Tag</label>
+                                <label class="col-sm-2 control-label">Departament</label>
 
                                 <div class="col-sm-10">
                                     @{
-                                        string tags = "";
+                                        string departments = "";
+
                                         using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
                                         {
-                                            tags = string.Join(", ", adyContext.Tags.Where(x => x.Type == 2 && x.RefId == _meetingLine.Id).Select(x => x.Name));
+                                            var _mlDep = adyContext.MDepartment.Where(x => x.Type == 2 && x.RefId == _meetingLine.Id).Select(x => x.DepartmentId);
+                                            var _depName = adyContext.Department.Where(x => _mlDep.Contains(x.Id)).Select(x => x.Name);
+
+                                            departments = string.Join(", ", _depName);
                                         }
+                                        <span>@departments</span>
                                     }
-                                    <span>@tags</span>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <div class="row row_twenty">
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Sənədlər</label>
+
+                                <div class="col-sm-10">
+                                    @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                    {
+                                        var _attach = adyContext.Attachment.FirstOrDefault(x => x.Type == 2 && x.RefId == _meetingLine.Id);
+
+                                        if (_attach != null)
+                                        {
+                                            <a href="@_attach.Path" class="attachment btn btn-info btn-file">Endir</a>
+                                        }
+
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>

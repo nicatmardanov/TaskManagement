@@ -39,18 +39,18 @@
 
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label class="col-sm-5 control-label">Departament</label>
+                                <label class="col-sm-5 control-label">Yer</label>
 
                                 <div class="col-sm-7">
-                                    @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                    @if (meeting.Place.HasValue)
                                     {
-                                        var dep_ids = adyContext.MDepartment.Where(x => x.Type == 1 && x.RefId == meeting.Id).Select(x => x.DepartmentId);
-                                        var dep_names = adyContext.Department.Where(x => dep_ids.Contains(x.Id)).Select(x => x.Name);
-                                        <span>@string.Join(',', dep_names)</span>
+                                        <span>@meeting.PlaceNavigation.Name</span>
                                     }
                                 </div>
                             </div>
                         </div>
+
+
 
                     </div>
 
@@ -90,6 +90,28 @@
                             </div>
                         </div>
 
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">Tag</label>
+
+                                <div class="col-sm-7">
+                                    @{
+                                        string tags = "";
+                                        using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                        {
+                                            tags = string.Join(", ", adyContext.Tags.Where(x => x.Type == 1 && x.RefId == meeting.Id).Select(x => x.Name));
+                                        }
+                                    }
+                                    <span>@tags</span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row row_twenty">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="col-sm-5 control-label">Tarix</label>
@@ -105,11 +127,6 @@
                             </div>
                         </div>
 
-                        
-
-                    </div>
-
-                    <div class="row row_twenty">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="col-sm-5 control-label">Başlama saatı</label>
@@ -141,19 +158,25 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label class="col-sm-5 control-label">Yer</label>
 
-                                <div class="col-sm-7">
-                                    @if (meeting.Place.HasValue)
+
+                    </div>
+
+                    <div class="row row_twenty">
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Departament</label>
+
+                                <div class="col-sm-10">
+                                    @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
                                     {
-                                        <span>@meeting.PlaceNavigation.Name</span>
+                                        var dep_ids = adyContext.MDepartment.Where(x => x.Type == 1 && x.RefId == meeting.Id).Select(x => x.DepartmentId);
+                                        var dep_names = adyContext.Department.Where(x => dep_ids.Contains(x.Id)).Select(x => x.Name);
+                                        <span>@string.Join(',', dep_names)</span>
                                     }
                                 </div>
                             </div>
                         </div>
-
                     </div>
 
                     <div class="row row_twenty">
@@ -181,7 +204,30 @@
                     </div>
 
                     <div class="row row_twenty">
-                        
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">ADY xarici iştirakçılar</label>
+
+                                <div class="col-sm-10">
+                                    @if (!string.IsNullOrEmpty(meeting.OtherParticipiants))
+                                    {
+                                        @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
+                                        {
+                                            var oSplit = meeting.OtherParticipiants.Split(';');
+                                            var oUsers = adyContext.OtherParticipiants.Where(x => oSplit.Contains(x.Id.ToString()));
+                                            var user = oUsers.Select(x => new { FullName = x.Name + " " + x.Surname });
+
+                                            <span>@string.Join(", ", user.Select(x => x.FullName))</span>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row row_twenty">
+
                         <div class="col-md-10">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">İştirak edənlər</label>
@@ -209,29 +255,6 @@
                     <div class="row row_twenty">
                         <div class="col-md-10">
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">ADY xarici iştirakçılar</label>
-
-                                <div class="col-sm-10">
-                                    @if (!string.IsNullOrEmpty(meeting.OtherParticipiants))
-                                    {
-                                        @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
-                                        {
-                                            var oSplit = meeting.OtherParticipiants.Split(';');
-                                            var oUsers = adyContext.OtherParticipiants.Where(x => oSplit.Contains(x.Id.ToString()));
-                                            var user = oUsers.Select(x => new { FullName = x.Name + " " + x.Surname });
-
-                                            <span>@string.Join(", ", user.Select(x => x.FullName))</span>
-                                        }
-                                    }
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="row row_twenty">
-                        <div class="col-md-10">
-                            <div class="form-group">
                                 <label for="description" class="col-sm-2 control-label">Açıqlama</label>
 
                                 <div class="col-sm-10">
@@ -239,27 +262,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row row_twenty">
-                        <div class="col-md-10">
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">Tag</label>
-
-                                <div class="col-sm-10">
-                                    @{
-                                        string tags = "";
-                                        using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
-                                        {
-                                            tags = string.Join(", ", adyContext.Tags.Where(x => x.Type == 1 && x.RefId == meeting.Id).Select(x => x.Name));
-                                        }
-                                    }
-                                    <span>@tags</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        
                     </div>
 
                     <div class="row row_twenty">

@@ -202,7 +202,7 @@
             if (!$('.' + className + ' input:required')[i].checkValidity()) {
                 checkVal = false;
                 if ($($($($($('.' + className + ' input:required')[i]).parent().parent())).find('.invalid-feedback')).length == 0) {
-                    if ($($('.' + className + ' input:required')[i]).hasClass('ml_up_f_date') || $($('.' + className + ' input:required')[i]).attr('id') == 'meeting_l_finish_date')
+                    if ($($('.' + className + ' input:required')[i]).hasClass('ml_up_f_date') || $($('.' + className + ' input:required')[i]).attr('id') == 'meeting_l_finish_date') 
                         $($($($('.' + className + ' input:required')[i]).parent()).parent()).append('<div class="invalid-feedback">Zəhmət olmazsa bu sahəni doldurun.</div>');
                     else
                         $($($($('.' + className + ' input:required')[i]).parent())).append('<div class="invalid-feedback">Zəhmət olmazsa bu sahəni doldurun.</div>');

@@ -24,7 +24,7 @@
 
                 <div class="panel-heading">
                     <div class="panel-title">
-                        İclas sətiri düzəliş etmə formu
+                        Birbaşa tapşırığa düzəliş etmə formu
                     </div>
 
                     <div class="panel-options">
@@ -37,7 +37,7 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="col-sm-5 control-label">Qeyd növü</label>
+                                    <label class="col-sm-5 control-label">Qeyd növü <span class="text-danger">*</span></label>
                                     <div class="col-sm-7">
                                         <select class="js-example-basic-single select2c form-control ml_up_type" name="ml_type">
                                             @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
@@ -62,7 +62,7 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="col-sm-5 control-label">Tapşırığın adı</label>
+                                    <label class="col-sm-5 control-label">Tapşırığın adı <span class="text-danger">*</span></label>
 
                                     <div class="col-sm-7">
                                         <input type="text" placeholder="Tapşırığın adı" class="form-control ml_up_name" value="@_meetingLine.Title"  />
@@ -88,7 +88,7 @@
                         <div class="row row_twenty">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="col-sm-5 control-label">Məsul şəxs</label>
+                                    <label class="col-sm-5 control-label">Məsul şəxs <span class="text-danger">*</span></label>
 
                                     <div class="col-sm-7">
                                         <select class="js-example-basic-single select2c form-control ml_up_resp_user" required name="responsibleUser">
@@ -116,7 +116,7 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="col-sm-5 control-label">Təqib edən</label>
+                                    <label class="col-sm-5 control-label">Təqib edən <span class="text-danger">*</span></label>
 
                                     <div class="col-sm-7">
                                         <select class="js-example-basic-single select2c form-control ml_up_follower_user" required name="mlFollowerUser">
@@ -143,7 +143,7 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="col-sm-5 control-label">Təsdiq edən</label>
+                                    <label class="col-sm-5 control-label">Təsdiq edən <span class="text-danger">*</span></label>
 
                                     <div class="col-sm-7">
                                         <select class="js-example-basic-single select2c form-control ml_up_ident_user" required name="identifierUser">
@@ -176,7 +176,7 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="col-sm-5 control-label">Başlama Tarixi</label>
+                                    <label class="col-sm-5 control-label">Başlama Tarixi <span class="text-danger">*</span></label>
 
                                     <div class="col-sm-7">
                                         <div class="input-group">
@@ -195,7 +195,7 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="col-sm-5 control-label">Bitmə Tarixi</label>
+                                    <label class="col-sm-5 control-label">Bitmə Tarixi <span class="text-danger">*</span></label>
 
                                     <div class="col-sm-7">
                                         <div class="input-group meeting_l_fi">
@@ -217,7 +217,7 @@
                         <div class="row row_twenty">
                             <div class="col-md-10">
                                 <div class="form-group">
-                                    <label for="description" class="col-sm-2 control-label">Açıqlama</label>
+                                    <label for="description" class="col-sm-2 control-label">Açıqlama <span class="text-danger">*</span></label>
                                     <div class="col-sm-10">
                                         <textarea class="form-control m_description ml_up_description" required placeholder="Açıqlama" name="description">@_meetingLine.Description</textarea>
                                     </div>
@@ -258,7 +258,7 @@
                         <div class="row row_twenty">
                             <div class="col-md-10">
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">Departament</label>
+                                    <label class="col-sm-2 control-label">Departament <span class="text-danger">*</span></label>
 
                                     <div class="col-sm-10">
 

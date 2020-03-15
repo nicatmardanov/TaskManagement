@@ -222,7 +222,7 @@ namespace adyTask2.Controllers
                     else
                     {
                         Response.StatusCode = 406;
-                        await Response.WriteAsync("İclas sətiri təsdiqlənmək üçün uyğun formada deyil!");
+                        await Response.WriteAsync("Birbaşa tapşırıq təsdiqlənmək üçün uyğun formada deyil!");
                     }
 
                 }

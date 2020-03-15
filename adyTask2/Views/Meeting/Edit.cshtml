@@ -47,7 +47,7 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="col-sm-5 control-label">İclas növü</label>
+                                    <label class="col-sm-5 control-label">İclas növü <span class="text-danger">*</span></label>
                                     <div class="col-sm-7">
                                         <select class="form-control js-example-basic-single select2c" required name="meeting_type" id="meeting_type">
                                             @using (adyTaskManagementContext adyContext = new adyTaskManagementContext())
@@ -98,7 +98,7 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="title" class="col-sm-5 control-label">Mövzu</label>
+                                    <label for="title" class="col-sm-5 control-label">Mövzu <span class="text-danger">*</span></label>
 
                                     <div class="col-sm-7">
                                         <input type="text" required class="form-control" id="title" placeholder="Mövzu" value="@_meeting.Title">
@@ -108,7 +108,7 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="col-sm-5 control-label">Yer</label>
+                                    <label class="col-sm-5 control-label">Yer <span class="text-danger">*</span></label>
 
                                     <div class="col-sm-7">
                                         <select name="place" id="meeting_place" class="js-example-basic-single select2c" required>
@@ -142,7 +142,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="col-sm-5 control-label">İclas rəhbəri</label>
+                                    <label class="col-sm-5 control-label">İclas rəhbəri <span class="text-danger">*</span></label>
 
                                     <div class="col-sm-7">
                                         <select class="form-control js-example-basic-single select2c" required name="ownerUser" id="ownerUser">
@@ -165,7 +165,7 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="col-sm-5 control-label">Təqib edən</label>
+                                    <label class="col-sm-5 control-label">Təqib edən <span class="text-danger">*</span></label>
 
                                     <div class="col-sm-7">
                                         <select class="form-control js-example-basic-single select2c" required name="followerUser" id="followerUser">
@@ -194,7 +194,7 @@
                         <div class="row row_twenty">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="col-sm-5 control-label">Tarix</label>
+                                    <label class="col-sm-5 control-label">Tarix <span class="text-danger">*</span></label>
 
                                     <div class="col-sm-7">
                                         <div class="input-group">
@@ -213,7 +213,7 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="col-sm-5 control-label">Başlama saatı</label>
+                                    <label class="col-sm-5 control-label">Başlama saatı <span class="text-danger">*</span></label>
 
                                     <div class="col-sm-7">
                                         <input type="text" required class="form-control timepicker" id="meeting_start_time" data-template="dropdown" data-show-seconds="false" data-default-time="@StartTime.Hour:@StartTime.Minute" data-show-meridian="false" data-minute-step="5" name="start_date" />
@@ -223,7 +223,7 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="col-sm-5 control-label">Bitmə saatı</label>
+                                    <label class="col-sm-5 control-label">Bitmə saatı <span class="text-danger">*</span></label>
                                     <div class="col-sm-7">
                                         @{
                                             var FinishTime = _meeting.FinishDate.Value;
@@ -238,7 +238,7 @@
                         <div class="row row_twenty">
                             <div class="col-md-10">
                                 <div class="form-group">
-                                    <label for="description" class="col-sm-2 control-label">Açıqlama</label>
+                                    <label for="description" class="col-sm-2 control-label">Açıqlama <span class="text-danger">*</span></label>
 
                                     <div class="col-sm-10">
                                         <textarea class="form-control m_description" id="description" required placeholder="Açıqlama" name="description">@_meeting.Description</textarea>
@@ -250,7 +250,7 @@
                         <div class="row row_twenty">
                             <div class="col-md-10">
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">Departament</label>
+                                    <label class="col-sm-2 control-label">Departament <span class="text-danger">*</span></label>
 
                                     <div class="col-sm-10">
 
@@ -338,7 +338,7 @@
                         <div class="row row_twenty">
                             <div class="col-md-10">
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">İştirak edənlər</label>
+                                    <label class="col-sm-2 control-label">İştirak edənlər <span class="text-danger">*</span></label>
 
                                     <div class="col-sm-10">
 

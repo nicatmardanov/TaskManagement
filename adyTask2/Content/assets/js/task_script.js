@@ -40,7 +40,7 @@
     $('#meeting_line_department').select2(departments);
 
     $mltElement = $('#meeting_line_type').select2({
-        placeholder: "İclas sətirinin növü",
+        placeholder: "Birbaşa tapşırığın növü",
     });
 
     $ncElement = $('#notCompletedButton').select2({

@@ -3,7 +3,7 @@
     var page = parseInt($('#notifications_all').data('page'));
 
     $mltElement = $('#meeting_line_type').select2({
-        placeholder: "İclas sətirinin növü",
+        placeholder: "Birbaşa tapşırığın növü",
     });
 
     $ncElement = $('#notCompletedButton').select2({
@@ -60,7 +60,7 @@
                 success: function (result) {
                     $('#notificationPage').html($($(result).find('#notificationPage')).html());
                     $mltElement = $('#meeting_line_type').select2({
-                        placeholder: "İclas sətirinin növü",
+                        placeholder: "Birbaşa tapşırığın növü",
                     });
 
                     $ncElement = $('#notCompletedButton').select2({
